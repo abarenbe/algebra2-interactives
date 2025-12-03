@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real-World Applications - Polynomial Modeling</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        .back-button {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+        .back-button:hover { background: rgba(255,255,255,0.3); }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #56ab2f;
+            overflow-x: auto;
+        }
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #e9ecef;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s;
+        }
+        .tab:hover { background: #dee2e6; }
+        .tab.active { background: white; color: #56ab2f; }
+        .content { padding: 40px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        h2 { color: #56ab2f; margin-bottom: 20px; font-size: 2em; }
+        h3 { color: #56ab2f; margin: 25px 0 15px 0; font-size: 1.4em; }
+        p { line-height: 1.8; color: #333; margin-bottom: 15px; }
+        .concept-box {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid #56ab2f;
+        }
+        .concept-box strong { color: #56ab2f; font-size: 1.1em; }
+        .example {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .step-indicator { display: flex; gap: 10px; margin: 20px 0; flex-wrap: wrap; }
+        .step-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .step-dot.active { background: #56ab2f; color: white; transform: scale(1.2); }
+        .step-dot.completed { background: #a8e063; color: white; }
+        .nav-button {
+            padding: 12px 24px;
+            background: #56ab2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        .nav-button:hover:not(:disabled) { background: #a8e063; transform: translateY(-2px); }
+        .nav-button:disabled { background: #ccc; cursor: not-allowed; }
+        .example-nav { display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; }
+        .practice-problem {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+        .input-group { margin: 15px 0; }
+        label { display: block; margin-bottom: 8px; color: #495057; font-weight: 600; }
+        input[type="number"], input[type="text"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            border: 2px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        input:focus { outline: none; border-color: #56ab2f; }
+        .submit-button {
+            padding: 12px 30px;
+            background: #56ab2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        .submit-button:hover { background: #a8e063; transform: translateY(-2px); }
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+        .feedback.correct { background: #d4edda; color: #155724; border: 2px solid #c3e6cb; display: block; }
+        .feedback.incorrect { background: #f8d7da; color: #721c24; border: 2px solid #f5c6cb; display: block; }
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .difficulty-selector { display: flex; gap: 15px; margin: 20px 0; flex-wrap: wrap; }
+        .difficulty-button {
+            padding: 10px 20px;
+            border: 2px solid #56ab2f;
+            background: white;
+            color: #56ab2f;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .difficulty-button.active { background: #56ab2f; color: white; }
+        .score-display {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .score-display h3 { color: white; margin: 0 0 10px 0; }
+        .graph-container { margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 12px; }
+        .equation-display {
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            background: #e8f5e9;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .scenario-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        .scenario-card {
+            background: white;
+            border: 2px solid #56ab2f;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+        .scenario-title {
+            color: #56ab2f;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        .slider-container {
+            margin: 20px 0;
+        }
+        input[type="range"] {
+            width: 100%;
+            max-width: 400px;
+        }
+        .slider-value {
+            font-weight: bold;
+            color: #56ab2f;
+            font-size: 1.2em;
+        }
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .content { padding: 20px; }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            .tab { font-size: 0.9em; padding: 15px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">← Back to Section 4.9</a>
+            <h1>Real-World Applications</h1>
+            <p>Model projectile motion, volume, and revenue with polynomials</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">Learn</button>
+            <button class="tab" onclick="showTab('see')">See</button>
+            <button class="tab" onclick="showTab('practice')">Practice</button>
+            <button class="tab" onclick="showTab('do')">Do</button>
+        </div>
+
+        <div class="content">
+            <!-- LEARN TAB -->
+            <div id="learn" class="tab-content active">
+                <h2>Polynomials in the Real World</h2>
+
+                <p>
+                    Polynomial functions model many real-world situations. Understanding these applications
+                    helps you see why polynomial skills are essential for science, engineering, and business.
+                </p>
+
+                <div class="scenario-card">
+                    <div class="scenario-icon">🚀</div>
+                    <div class="scenario-title">Projectile Motion</div>
+                    <p>
+                        When an object is thrown or launched, its height follows a quadratic function:
+                    </p>
+                    <div class="equation-display">h(t) = -16t² + v₀t + h₀</div>
+                    <p>
+                        Where -16 comes from gravity (ft/s²), v₀ is initial velocity, and h₀ is initial height.
+                        The maximum height occurs at the vertex, and the object lands when h(t) = 0.
+                    </p>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-icon">📦</div>
+                    <div class="scenario-title">Volume Optimization</div>
+                    <p>
+                        Creating a box from a flat sheet by cutting corners creates a cubic relationship:
+                    </p>
+                    <div class="equation-display">V(x) = x(L - 2x)(W - 2x)</div>
+                    <p>
+                        Where x is the size of the corner cut, L is length, and W is width. Finding the
+                        maximum volume requires finding where the derivative equals zero.
+                    </p>
+                </div>
+
+                <div class="scenario-card">
+                    <div class="scenario-icon">💰</div>
+                    <div class="scenario-title">Revenue and Profit</div>
+                    <p>
+                        Revenue often follows a quadratic model when price affects demand:
+                    </p>
+                    <div class="equation-display">R(p) = p · D(p) = p(a - bp)</div>
+                    <p>
+                        If D(p) = a - bp (linear demand), then Revenue = ap - bp², a downward parabola.
+                        The optimal price is at the vertex.
+                    </p>
+                </div>
+
+                <h3>Interactive Demo: Projectile Motion</h3>
+                <p>Adjust the initial velocity to see how it affects the trajectory:</p>
+
+                <div class="slider-container">
+                    <label>Initial Velocity (v₀): <span id="velocity-value" class="slider-value">64</span> ft/s</label>
+                    <input type="range" id="velocity-slider" min="20" max="100" value="64" onchange="updateProjectileDemo()">
+                </div>
+
+                <div class="graph-container">
+                    <div id="projectile-demo" style="width: 100%; height: 400px;"></div>
+                </div>
+
+                <div id="projectile-info" class="concept-box"></div>
+            </div>
+
+            <!-- SEE TAB -->
+            <div id="see" class="tab-content">
+                <h2>Worked Examples</h2>
+
+                <div class="step-indicator">
+                    <div class="step-dot active" id="see-dot-1">1</div>
+                    <div class="step-dot" id="see-dot-2">2</div>
+                    <div class="step-dot" id="see-dot-3">3</div>
+                </div>
+
+                <div id="see-example-1" class="example">
+                    <h3>Example 1: Projectile Motion</h3>
+                    <p><strong>Problem:</strong> A ball is thrown upward from ground level with an initial velocity of 48 ft/s. When does it reach maximum height, and what is that height?</p>
+
+                    <p><strong>Step 1:</strong> Write the height function:</p>
+                    <div class="equation-display">h(t) = -16t² + 48t + 0</div>
+
+                    <p><strong>Step 2:</strong> Find the vertex (maximum point):</p>
+                    <p>For h(t) = at² + bt + c, the vertex occurs at t = -b/(2a)</p>
+                    <div class="equation-display">t = -48/(2·(-16)) = -48/(-32) = 1.5 seconds</div>
+
+                    <p><strong>Step 3:</strong> Find maximum height:</p>
+                    <div class="equation-display">h(1.5) = -16(1.5)² + 48(1.5) = -36 + 72 = 36 feet</div>
+
+                    <p><strong>Answer:</strong> Maximum height of 36 feet at t = 1.5 seconds</p>
+
+                    <div class="graph-container">
+                        <div id="example1-graph" style="width: 100%; height: 300px;"></div>
+                    </div>
+                </div>
+
+                <div id="see-example-2" class="example" style="display: none;">
+                    <h3>Example 2: Box Volume Optimization</h3>
+                    <p><strong>Problem:</strong> A 20" × 16" cardboard sheet has squares cut from corners to make a box. What size cuts maximize volume?</p>
+
+                    <p><strong>Step 1:</strong> Write the volume function:</p>
+                    <div class="equation-display">V(x) = x(20 - 2x)(16 - 2x)</div>
+
+                    <p><strong>Step 2:</strong> Expand:</p>
+                    <div class="equation-display">V(x) = x(320 - 40x - 32x + 4x²) = 4x³ - 72x² + 320x</div>
+
+                    <p><strong>Step 3:</strong> Find critical points by setting V'(x) = 0:</p>
+                    <div class="equation-display">V'(x) = 12x² - 144x + 320 = 0</div>
+                    <p>Using quadratic formula: x ≈ 3.03 or x ≈ 8.8</p>
+                    <p>Since x must be less than 8 (half of 16), x ≈ 3.03 inches</p>
+
+                    <p><strong>Step 4:</strong> Calculate maximum volume:</p>
+                    <div class="equation-display">V(3.03) ≈ 420.1 cubic inches</div>
+
+                    <div class="graph-container">
+                        <div id="example2-graph" style="width: 100%; height: 300px;"></div>
+                    </div>
+                </div>
+
+                <div id="see-example-3" class="example" style="display: none;">
+                    <h3>Example 3: Revenue Maximization</h3>
+                    <p><strong>Problem:</strong> A store sells 200 items at $50 each. For every $5 price increase, 10 fewer items sell. What price maximizes revenue?</p>
+
+                    <p><strong>Step 1:</strong> Let x = number of $5 increases:</p>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li>Price = 50 + 5x</li>
+                        <li>Quantity = 200 - 10x</li>
+                    </ul>
+
+                    <p><strong>Step 2:</strong> Write revenue function:</p>
+                    <div class="equation-display">R(x) = (50 + 5x)(200 - 10x)</div>
+                    <div class="equation-display">R(x) = 10000 - 500x + 1000x - 50x² = -50x² + 500x + 10000</div>
+
+                    <p><strong>Step 3:</strong> Find vertex:</p>
+                    <div class="equation-display">x = -500/(2·(-50)) = 5</div>
+
+                    <p><strong>Step 4:</strong> Calculate optimal price and revenue:</p>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li>Optimal price = 50 + 5(5) = $75</li>
+                        <li>Quantity sold = 200 - 10(5) = 150 items</li>
+                        <li>Maximum revenue = 75 × 150 = $11,250</li>
+                    </ul>
+
+                    <div class="graph-container">
+                        <div id="example3-graph" style="width: 100%; height: 300px;"></div>
+                    </div>
+                </div>
+
+                <div class="example-nav">
+                    <button class="nav-button" onclick="previousSeeExample()" id="see-prev">Previous</button>
+                    <button class="nav-button" onclick="nextSeeExample()" id="see-next">Next Example</button>
+                </div>
+            </div>
+
+            <!-- PRACTICE TAB -->
+            <div id="practice" class="tab-content">
+                <h2>Practice Problems</h2>
+                <p>Apply polynomial models to solve real-world problems.</p>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="practice-progress" style="width: 0%">0%</div>
+                </div>
+
+                <div id="practice-problem-container"></div>
+
+                <div class="score-display" id="practice-score-display" style="display: none;">
+                    <h3>Practice Complete!</h3>
+                    <p id="practice-final-score"></p>
+                    <button class="nav-button" onclick="resetPractice()">Try Again</button>
+                </div>
+            </div>
+
+            <!-- DO TAB -->
+            <div id="do" class="tab-content">
+                <h2>Independent Practice</h2>
+                <p>Solve real-world polynomial problems on your own.</p>
+
+                <div class="difficulty-selector">
+                    <button class="difficulty-button active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="difficulty-button" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="difficulty-button" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+
+                <div class="score-display">
+                    <h3>Your Score</h3>
+                    <p id="do-score">0 / 0 (0%)</p>
+                </div>
+
+                <div id="do-problem-container"></div>
+
+                <div class="graph-container">
+                    <div id="do-graph" style="width: 100%; height: 350px;"></div>
+                </div>
+
+                <div class="input-group">
+                    <label id="do-question">Enter your answer:</label>
+                    <input type="number" id="do-answer" step="0.1" placeholder="Answer">
+                </div>
+
+                <button class="submit-button" onclick="checkDoAnswer()">Submit Answer</button>
+                <button class="nav-button" onclick="newDoProblem()" style="margin-left: 10px;">New Problem</button>
+
+                <div id="do-feedback" class="feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+
+            if (tabName === 'see') initSeeGraphs();
+        }
+
+        // Learn tab - Projectile demo
+        function updateProjectileDemo() {
+            const v0 = parseInt(document.getElementById('velocity-slider').value);
+            document.getElementById('velocity-value').textContent = v0;
+
+            const t = [], h = [];
+            const tMax = v0 / 32;
+            const hMax = v0 * v0 / 64;
+            const tLand = v0 / 16;
+
+            for (let time = 0; time <= tLand + 0.5; time += 0.05) {
+                t.push(time);
+                h.push(Math.max(0, -16 * time * time + v0 * time));
+            }
+
+            Plotly.react('projectile-demo', [{
+                x: t,
+                y: h,
+                mode: 'lines',
+                line: { color: '#56ab2f', width: 3 },
+                name: 'Height'
+            }, {
+                x: [tMax],
+                y: [hMax],
+                mode: 'markers',
+                marker: { size: 15, color: '#a8e063', symbol: 'star' },
+                name: 'Maximum'
+            }], {
+                title: `h(t) = -16t² + ${v0}t`,
+                xaxis: { title: 'Time (seconds)', range: [0, tLand + 0.5] },
+                yaxis: { title: 'Height (feet)', range: [0, hMax * 1.1] },
+                showlegend: true
+            });
+
+            document.getElementById('projectile-info').innerHTML = `
+                <strong>Analysis:</strong>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Maximum height: ${hMax.toFixed(1)} feet at t = ${tMax.toFixed(2)} seconds</li>
+                    <li>Lands at t = ${tLand.toFixed(2)} seconds</li>
+                    <li>Equation: h(t) = -16t² + ${v0}t</li>
+                </ul>
+            `;
+        }
+
+        updateProjectileDemo();
+
+        // See tab
+        let currentSeeExample = 1;
+        const totalSeeExamples = 3;
+
+        function initSeeGraphs() {
+            // Example 1: h(t) = -16t² + 48t
+            const t1 = [], h1 = [];
+            for (let t = 0; t <= 3.2; t += 0.05) {
+                t1.push(t);
+                h1.push(-16*t*t + 48*t);
+            }
+            Plotly.react('example1-graph', [
+                { x: t1, y: h1, mode: 'lines', line: { color: '#56ab2f', width: 3 }, name: 'h(t)' },
+                { x: [1.5], y: [36], mode: 'markers', marker: { size: 12, color: '#a8e063' }, name: 'Max (1.5, 36)' }
+            ], { xaxis: { title: 'Time (s)' }, yaxis: { title: 'Height (ft)' }, showlegend: true, margin: { t: 30 } });
+
+            // Example 2: V(x) = 4x³ - 72x² + 320x
+            const x2 = [], v2 = [];
+            for (let x = 0; x <= 8; x += 0.1) {
+                x2.push(x);
+                v2.push(4*x*x*x - 72*x*x + 320*x);
+            }
+            Plotly.react('example2-graph', [
+                { x: x2, y: v2, mode: 'lines', line: { color: '#56ab2f', width: 3 }, name: 'V(x)' },
+                { x: [3.03], y: [420.1], mode: 'markers', marker: { size: 12, color: '#a8e063' }, name: 'Max' }
+            ], { xaxis: { title: 'Cut size (in)' }, yaxis: { title: 'Volume (cu in)' }, showlegend: true, margin: { t: 30 } });
+
+            // Example 3: R(x) = -50x² + 500x + 10000
+            const x3 = [], r3 = [];
+            for (let x = -2; x <= 12; x += 0.2) {
+                x3.push(x);
+                r3.push(-50*x*x + 500*x + 10000);
+            }
+            Plotly.react('example3-graph', [
+                { x: x3, y: r3, mode: 'lines', line: { color: '#56ab2f', width: 3 }, name: 'R(x)' },
+                { x: [5], y: [11250], mode: 'markers', marker: { size: 12, color: '#a8e063' }, name: 'Max ($75)' }
+            ], { xaxis: { title: '$5 price increases' }, yaxis: { title: 'Revenue ($)' }, showlegend: true, margin: { t: 30 } });
+        }
+
+        function nextSeeExample() {
+            if (currentSeeExample < totalSeeExamples) {
+                document.getElementById(`see-example-${currentSeeExample}`).style.display = 'none';
+                document.getElementById(`see-dot-${currentSeeExample}`).classList.remove('active');
+                document.getElementById(`see-dot-${currentSeeExample}`).classList.add('completed');
+                currentSeeExample++;
+                document.getElementById(`see-example-${currentSeeExample}`).style.display = 'block';
+                document.getElementById(`see-dot-${currentSeeExample}`).classList.add('active');
+                updateSeeButtons();
+            }
+        }
+
+        function previousSeeExample() {
+            if (currentSeeExample > 1) {
+                document.getElementById(`see-example-${currentSeeExample}`).style.display = 'none';
+                document.getElementById(`see-dot-${currentSeeExample}`).classList.remove('active');
+                currentSeeExample--;
+                document.getElementById(`see-example-${currentSeeExample}`).style.display = 'block';
+                document.getElementById(`see-dot-${currentSeeExample}`).classList.remove('completed');
+                document.getElementById(`see-dot-${currentSeeExample}`).classList.add('active');
+                updateSeeButtons();
+            }
+        }
+
+        function updateSeeButtons() {
+            document.getElementById('see-prev').disabled = currentSeeExample === 1;
+            document.getElementById('see-next').disabled = currentSeeExample === totalSeeExamples;
+        }
+        updateSeeButtons();
+
+        // Practice tab
+        const practiceProblems = [
+            {
+                type: 'projectile',
+                text: 'A ball is thrown upward with initial velocity 80 ft/s from ground level. What is the maximum height?',
+                answer: 100,
+                hint: 'Use h_max = v₀²/(2·32)',
+                unit: 'feet'
+            },
+            {
+                type: 'projectile',
+                text: 'A rocket is launched from ground level at 128 ft/s. When does it land?',
+                answer: 8,
+                hint: 'Solve -16t² + 128t = 0',
+                unit: 'seconds'
+            },
+            {
+                type: 'revenue',
+                text: 'Revenue R = -2p² + 80p. What price p maximizes revenue?',
+                answer: 20,
+                hint: 'Find vertex: p = -b/(2a)',
+                unit: 'dollars'
+            },
+            {
+                type: 'revenue',
+                text: 'Revenue R = -5x² + 100x + 500. What is the maximum revenue?',
+                answer: 1000,
+                hint: 'Find vertex x, then calculate R(x)',
+                unit: 'dollars'
+            }
+        ];
+
+        let currentPractice = 0;
+        let practiceScore = 0;
+
+        function loadPracticeProblems() {
+            if (currentPractice < practiceProblems.length) {
+                const p = practiceProblems[currentPractice];
+                let html = `<div class="practice-problem">
+                    <h3>Problem ${currentPractice + 1} of ${practiceProblems.length}</h3>
+                    <p>${p.text}</p>
+                    <div class="input-group">
+                        <label>Answer (in ${p.unit}):</label>
+                        <input type="number" id="prac-answer" step="0.1" placeholder="Enter answer">
+                    </div>
+                    <button class="submit-button" onclick="checkPracticeAnswer()">Submit</button>
+                    <button class="nav-button" onclick="showPracticeHint()" style="margin-left: 10px;">Show Hint</button>
+                    <div class="concept-box" id="practice-hint" style="display: none;">${p.hint}</div>
+                    <div id="practice-feedback" class="feedback"></div>
+                </div>`;
+                document.getElementById('practice-problem-container').innerHTML = html;
+
+                document.getElementById('prac-answer').addEventListener('keypress', e => {
+                    if (e.key === 'Enter') checkPracticeAnswer();
+                });
+            } else {
+                showPracticeComplete();
+            }
+        }
+
+        function showPracticeHint() {
+            document.getElementById('practice-hint').style.display = 'block';
+        }
+
+        function checkPracticeAnswer() {
+            const p = practiceProblems[currentPractice];
+            const answer = parseFloat(document.getElementById('prac-answer').value);
+            const feedback = document.getElementById('practice-feedback');
+
+            if (Math.abs(answer - p.answer) < 0.5) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = `Correct! The answer is ${p.answer} ${p.unit}.`;
+                practiceScore++;
+                setTimeout(() => {
+                    currentPractice++;
+                    updatePracticeProgress();
+                    loadPracticeProblems();
+                }, 1500);
+            } else if (!isNaN(answer)) {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = `Not quite. The correct answer is ${p.answer} ${p.unit}. Try again or use the hint.`;
+            }
+        }
+
+        function updatePracticeProgress() {
+            const pct = (currentPractice / practiceProblems.length) * 100;
+            document.getElementById('practice-progress').style.width = pct + '%';
+            document.getElementById('practice-progress').textContent = Math.round(pct) + '%';
+        }
+
+        function showPracticeComplete() {
+            document.getElementById('practice-problem-container').style.display = 'none';
+            document.getElementById('practice-score-display').style.display = 'block';
+            document.getElementById('practice-final-score').textContent =
+                `You got ${practiceScore} out of ${practiceProblems.length} correct (${Math.round(practiceScore/practiceProblems.length*100)}%)`;
+        }
+
+        function resetPractice() {
+            currentPractice = 0;
+            practiceScore = 0;
+            document.getElementById('practice-problem-container').style.display = 'block';
+            document.getElementById('practice-score-display').style.display = 'none';
+            updatePracticeProgress();
+            loadPracticeProblems();
+        }
+
+        loadPracticeProblems();
+
+        // Do tab
+        let doScore = 0, doAttempts = 0, currentDifficulty = 'easy', currentDoProblem = null;
+
+        function setDifficulty(level) {
+            currentDifficulty = level;
+            document.querySelectorAll('.difficulty-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            newDoProblem();
+        }
+
+        function generateDoProblem() {
+            const types = currentDifficulty === 'easy' ? ['projectile'] :
+                          currentDifficulty === 'medium' ? ['projectile', 'revenue'] :
+                          ['projectile', 'revenue', 'volume'];
+            const type = types[Math.floor(Math.random() * types.length)];
+
+            let problem = {};
+
+            if (type === 'projectile') {
+                const v0 = (Math.floor(Math.random() * 6) + 2) * 16; // 32, 48, ..., 112
+                const askFor = Math.random() < 0.5 ? 'maxHeight' : 'landTime';
+
+                if (askFor === 'maxHeight') {
+                    problem = {
+                        text: `A ball is thrown upward at ${v0} ft/s from ground level. What is the maximum height?`,
+                        answer: v0 * v0 / 64,
+                        unit: 'feet',
+                        graphData: { type: 'projectile', v0 }
+                    };
+                } else {
+                    problem = {
+                        text: `A ball is thrown upward at ${v0} ft/s from ground level. When does it land?`,
+                        answer: v0 / 16,
+                        unit: 'seconds',
+                        graphData: { type: 'projectile', v0 }
+                    };
+                }
+            } else if (type === 'revenue') {
+                const a = -(Math.floor(Math.random() * 4) + 1);
+                const b = (Math.floor(Math.random() * 8) + 4) * 10;
+                const optimalP = -b / (2 * a);
+                const maxR = a * optimalP * optimalP + b * optimalP;
+
+                problem = {
+                    text: `Revenue R = ${a}p² + ${b}p. What price p maximizes revenue?`,
+                    answer: optimalP,
+                    unit: 'dollars',
+                    graphData: { type: 'revenue', a, b }
+                };
+            } else {
+                const L = (Math.floor(Math.random() * 4) + 3) * 4; // 12, 16, 20, 24
+                const W = L - 4;
+                // V = x(L-2x)(W-2x), max around x = (L+W - sqrt((L+W)² - 3LW)) / 6
+                const optX = 2; // Simplified for this demo
+
+                problem = {
+                    text: `A ${L}" × ${W}" sheet has corners cut. If cuts are 2" squares, what is the volume?`,
+                    answer: 2 * (L - 4) * (W - 4),
+                    unit: 'cubic inches',
+                    graphData: { type: 'volume', L, W }
+                };
+            }
+
+            return problem;
+        }
+
+        function newDoProblem() {
+            currentDoProblem = generateDoProblem();
+            displayDoProblem();
+            document.getElementById('do-answer').value = '';
+            document.getElementById('do-feedback').style.display = 'none';
+        }
+
+        function displayDoProblem() {
+            const p = currentDoProblem;
+            document.getElementById('do-problem-container').innerHTML = `
+                <div class="practice-problem">
+                    <h3>Solve the Problem</h3>
+                    <p>${p.text}</p>
+                </div>
+            `;
+            document.getElementById('do-question').textContent = `Enter your answer (in ${p.unit}):`;
+
+            // Draw graph based on type
+            const gd = p.graphData;
+            if (gd.type === 'projectile') {
+                const t = [], h = [];
+                const tLand = gd.v0 / 16;
+                for (let time = 0; time <= tLand + 0.2; time += 0.05) {
+                    t.push(time);
+                    h.push(Math.max(0, -16*time*time + gd.v0*time));
+                }
+                Plotly.react('do-graph', [{
+                    x: t, y: h, mode: 'lines', line: { color: '#56ab2f', width: 3 }
+                }], {
+                    title: `h(t) = -16t² + ${gd.v0}t`,
+                    xaxis: { title: 'Time (s)' },
+                    yaxis: { title: 'Height (ft)' }
+                });
+            } else if (gd.type === 'revenue') {
+                const p = [], r = [];
+                const pMax = -gd.b / gd.a * 1.2;
+                for (let price = 0; price <= pMax; price += 0.5) {
+                    p.push(price);
+                    r.push(gd.a*price*price + gd.b*price);
+                }
+                Plotly.react('do-graph', [{
+                    x: p, y: r, mode: 'lines', line: { color: '#56ab2f', width: 3 }
+                }], {
+                    title: `R = ${gd.a}p² + ${gd.b}p`,
+                    xaxis: { title: 'Price ($)' },
+                    yaxis: { title: 'Revenue ($)' }
+                });
+            } else {
+                const x = [], v = [];
+                for (let cut = 0; cut <= Math.min(gd.L, gd.W)/2; cut += 0.2) {
+                    x.push(cut);
+                    v.push(cut * (gd.L - 2*cut) * (gd.W - 2*cut));
+                }
+                Plotly.react('do-graph', [{
+                    x, y: v, mode: 'lines', line: { color: '#56ab2f', width: 3 }
+                }], {
+                    title: `V(x) = x(${gd.L}-2x)(${gd.W}-2x)`,
+                    xaxis: { title: 'Cut size (in)' },
+                    yaxis: { title: 'Volume (cu in)' }
+                });
+            }
+        }
+
+        function checkDoAnswer() {
+            const answer = parseFloat(document.getElementById('do-answer').value);
+            const feedback = document.getElementById('do-feedback');
+
+            if (isNaN(answer)) {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Please enter a number.';
+                return;
+            }
+
+            doAttempts++;
+            const tolerance = currentDoProblem.answer * 0.05 + 0.5;
+
+            if (Math.abs(answer - currentDoProblem.answer) <= tolerance) {
+                doScore++;
+                feedback.className = 'feedback correct';
+                feedback.textContent = `Correct! The answer is ${currentDoProblem.answer} ${currentDoProblem.unit}.`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = `Not quite. The correct answer is ${currentDoProblem.answer} ${currentDoProblem.unit}.`;
+            }
+
+            updateDoScore();
+        }
+
+        function updateDoScore() {
+            const pct = doAttempts > 0 ? Math.round(doScore / doAttempts * 100) : 0;
+            document.getElementById('do-score').textContent = `${doScore} / ${doAttempts} (${pct}%)`;
+        }
+
+        document.getElementById('do-answer').addEventListener('keypress', e => {
+            if (e.key === 'Enter') checkDoAnswer();
+        });
+
+        newDoProblem();
+    </script>
+</body>
+</html>
