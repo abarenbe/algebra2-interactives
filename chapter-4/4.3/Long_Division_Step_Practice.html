@@ -839,14 +839,24 @@
         }
 
         function addEnterListener() {
+            // Individual listeners as backup
             document.querySelectorAll('.term-input').forEach(input => {
                 input.addEventListener('keypress', (e) => {
                     if (e.key === 'Enter') {
+                        e.preventDefault();
                         checkStep();
                     }
                 });
             });
         }
+
+        // Document-level Enter key handler (more reliable)
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && document.activeElement.classList.contains('term-input')) {
+                e.preventDefault();
+                checkStep();
+            }
+        });
 
         // ==================== ANSWER CHECKING ====================
         function checkStep() {

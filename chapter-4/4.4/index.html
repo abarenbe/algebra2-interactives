@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.4 Factoring Polynomials | Algebra 2 Interactives</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .site-nav {
+            background: rgba(0,0,0,0.2);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .nav-link:hover { background: rgba(255,255,255,0.25); }
+        .nav-title { color: white; font-weight: 600; font-size: 1em; }
+        .nav-links { display: flex; gap: 10px; align-items: center; }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p { font-size: 1.1em; opacity: 0.9; }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 10px 18px;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { background: rgba(255,255,255,0.3); }
+        .tab-btn.active { background: white; color: #667eea; font-weight: bold; }
+
+        .section {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .section.active { display: block; }
+
+        h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        h3 { color: #764ba2; margin-top: 25px; }
+
+        .info-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8e8e8 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .formula-box {
+            background: #fff3cd;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #ffc107;
+            font-size: 1.1em;
+            text-align: center;
+        }
+
+        .formula-box code {
+            font-family: 'Courier New', monospace;
+            background: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .problem-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .polynomial-display {
+            font-size: 1.4em;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid #667eea;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1em;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        input[type="text"]:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-success { background: #28a745; color: white; }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+        .feedback.hint { background: #cce5ff; color: #004085; border: 1px solid #b8daff; }
+
+        .step-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            line-height: 2;
+        }
+
+        .step-display .step {
+            padding: 5px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+
+        .step-display .step:last-child { border-bottom: none; }
+        .step-display .highlight { background: #fff3cd; padding: 2px 6px; border-radius: 4px; }
+
+        .score-display {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .options { display: grid; gap: 10px; margin: 15px 0; }
+
+        .option-btn {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover { border-color: #667eea; background: #f0f0ff; }
+        .option-btn.correct { background: #d4edda; border-color: #28a745; }
+        .option-btn.incorrect { background: #f8d7da; border-color: #dc3545; }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .example-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .example-card h4 {
+            color: #667eea;
+            margin: 0 0 10px 0;
+            font-size: 0.95em;
+        }
+
+        .example-card .problem { font-weight: bold; margin-bottom: 8px; }
+        .example-card .solution { color: #28a745; }
+
+        .graph-container {
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            .tab-btn { padding: 8px 14px; font-size: 0.85em; }
+            .polynomial-display { font-size: 1.2em; }
+            .site-nav { justify-content: center; }
+            .nav-title { width: 100%; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="../" class="nav-link">&larr; Chapter 4</a>
+        <span class="nav-title">4.4 Factoring Polynomials</span>
+        <div class="nav-links">
+            <a href="../4.3/" class="nav-link">&larr; 4.3</a>
+            <a href="../4.5/" class="nav-link" style="opacity:0.5;pointer-events:none;">4.5 &rarr;</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>4.4 Factoring Polynomials</h1>
+            <p>Master factoring techniques and the Factor Theorem</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showSection('learn')">Learn</button>
+            <button class="tab-btn" onclick="showSection('gcf')">GCF Factoring</button>
+            <button class="tab-btn" onclick="showSection('cubes')">Sum/Diff of Cubes</button>
+            <button class="tab-btn" onclick="showSection('grouping')">Factor by Grouping</button>
+            <button class="tab-btn" onclick="showSection('theorem')">Factor Theorem</button>
+            <button class="tab-btn" onclick="showSection('practice')">Practice Quiz</button>
+        </div>
+
+        <!-- LEARN SECTION -->
+        <div id="learn" class="section active">
+            <h2>Factoring Polynomials</h2>
+
+            <div class="info-box">
+                <p>A polynomial is <strong>factored completely</strong> when it's written as a product of unfactorable polynomials with integer coefficients.</p>
+            </div>
+
+            <h3>1. Finding Common Monomial Factors (GCF)</h3>
+            <p>Always start by factoring out the greatest common factor from all terms.</p>
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>Example 1</h4>
+                    <div class="problem">x³ - 4x² - 5x</div>
+                    <div class="solution">= x(x² - 4x - 5)<br>= x(x - 5)(x + 1)</div>
+                </div>
+                <div class="example-card">
+                    <h4>Example 2</h4>
+                    <div class="problem">3y⁵ - 48y³</div>
+                    <div class="solution">= 3y³(y² - 16)<br>= 3y³(y - 4)(y + 4)</div>
+                </div>
+            </div>
+
+            <h3>2. Sum and Difference of Two Cubes</h3>
+            <div class="formula-box">
+                <strong>Sum of Cubes:</strong> a³ + b³ = (a + b)(a² - ab + b²)<br><br>
+                <strong>Difference of Cubes:</strong> a³ - b³ = (a - b)(a² + ab + b²)
+            </div>
+            <p><strong>Memory trick:</strong> "SOAP" - <u>S</u>ame sign, <u>O</u>pposite sign, <u>A</u>lways <u>P</u>ositive</p>
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>Sum: x³ + 64</h4>
+                    <div class="problem">x³ + 4³</div>
+                    <div class="solution">= (x + 4)(x² - 4x + 16)</div>
+                </div>
+                <div class="example-card">
+                    <h4>Difference: 27x³ - 8</h4>
+                    <div class="problem">(3x)³ - 2³</div>
+                    <div class="solution">= (3x - 2)(9x² + 6x + 4)</div>
+                </div>
+            </div>
+
+            <h3>3. Factor by Grouping</h3>
+            <p>For 4-term polynomials, group pairs of terms that share common factors.</p>
+            <div class="formula-box">
+                ra + rb + sa + sb = r(a + b) + s(a + b) = (r + s)(a + b)
+            </div>
+            <div class="example-card">
+                <h4>Example: z³ + 5z² - 4z - 20</h4>
+                <div class="step-display">
+                    <div class="step">z³ + 5z² - 4z - 20</div>
+                    <div class="step">= z²(z + 5) - 4(z + 5) <span class="highlight">Group and factor</span></div>
+                    <div class="step">= (z² - 4)(z + 5) <span class="highlight">Factor out (z + 5)</span></div>
+                    <div class="step">= (z - 2)(z + 2)(z + 5) <span class="highlight">Difference of squares</span></div>
+                </div>
+            </div>
+
+            <h3>4. The Factor Theorem</h3>
+            <div class="formula-box">
+                A polynomial f(x) has a factor <strong>(x - k)</strong> if and only if <strong>f(k) = 0</strong>
+            </div>
+            <div class="info-box">
+                <p><strong>In other words:</strong> (x - k) is a factor of f(x) if and only if k is a zero of f.</p>
+                <p>Use synthetic division to test if a value is a zero and to find the quotient.</p>
+            </div>
+        </div>
+
+        <!-- GCF FACTORING SECTION -->
+        <div id="gcf" class="section">
+            <h2>GCF Factoring Practice</h2>
+            <p>Factor out the greatest common factor, then factor completely.</p>
+
+            <div class="score-display">
+                Score: <span id="gcf-score">0</span> / <span id="gcf-total">0</span>
+                <div class="progress-bar"><div class="progress-fill" id="gcf-progress" style="width:0%"></div></div>
+            </div>
+
+            <div class="problem-card">
+                <h3>Factor completely:</h3>
+                <div class="polynomial-display" id="gcf-problem"></div>
+                <div class="input-group">
+                    <input type="text" id="gcf-answer" placeholder="Enter factored form, e.g., x(x-2)(x+3)">
+                    <button class="btn btn-primary" onclick="checkGCF()">Check</button>
+                </div>
+                <div class="feedback" id="gcf-feedback"></div>
+                <button class="btn btn-secondary" onclick="showGCFHint()" style="margin-top:10px;">Show Hint</button>
+                <button class="btn btn-success" onclick="newGCFProblem()" style="margin-top:10px;">New Problem</button>
+            </div>
+        </div>
+
+        <!-- SUM/DIFFERENCE OF CUBES SECTION -->
+        <div id="cubes" class="section">
+            <h2>Sum and Difference of Cubes</h2>
+
+            <div class="formula-box">
+                <strong>a³ + b³ = (a + b)(a² - ab + b²)</strong><br>
+                <strong>a³ - b³ = (a - b)(a² + ab + b²)</strong>
+            </div>
+
+            <div class="score-display">
+                Score: <span id="cubes-score">0</span> / <span id="cubes-total">0</span>
+                <div class="progress-bar"><div class="progress-fill" id="cubes-progress" style="width:0%"></div></div>
+            </div>
+
+            <div class="problem-card">
+                <h3>Factor completely:</h3>
+                <div class="polynomial-display" id="cubes-problem"></div>
+                <div class="options" id="cubes-options"></div>
+                <div class="feedback" id="cubes-feedback"></div>
+                <button class="btn btn-success" onclick="newCubesProblem()" style="margin-top:15px;">New Problem</button>
+            </div>
+        </div>
+
+        <!-- FACTOR BY GROUPING SECTION -->
+        <div id="grouping" class="section">
+            <h2>Factor by Grouping</h2>
+            <p>Group terms, factor each group, then factor out the common binomial.</p>
+
+            <div class="score-display">
+                Score: <span id="group-score">0</span> / <span id="group-total">0</span>
+                <div class="progress-bar"><div class="progress-fill" id="group-progress" style="width:0%"></div></div>
+            </div>
+
+            <div class="problem-card">
+                <h3>Factor completely:</h3>
+                <div class="polynomial-display" id="group-problem"></div>
+                <div class="input-group">
+                    <input type="text" id="group-answer" placeholder="Enter factored form">
+                    <button class="btn btn-primary" onclick="checkGrouping()">Check</button>
+                </div>
+                <div class="feedback" id="group-feedback"></div>
+                <div id="group-steps" class="step-display" style="display:none;"></div>
+                <button class="btn btn-secondary" onclick="showGroupingSteps()" style="margin-top:10px;">Show Steps</button>
+                <button class="btn btn-success" onclick="newGroupingProblem()" style="margin-top:10px;">New Problem</button>
+            </div>
+        </div>
+
+        <!-- FACTOR THEOREM SECTION -->
+        <div id="theorem" class="section">
+            <h2>Factor Theorem Explorer</h2>
+
+            <div class="info-box">
+                <p><strong>Factor Theorem:</strong> (x - k) is a factor of f(x) if and only if f(k) = 0</p>
+            </div>
+
+            <div class="problem-card">
+                <h3>Test if a binomial is a factor:</h3>
+                <div class="polynomial-display" id="theorem-polynomial">f(x) = x³ - 6x² + 11x - 6</div>
+
+                <p>Is <span id="theorem-binomial" style="font-weight:bold;color:#667eea;">(x - 2)</span> a factor?</p>
+
+                <div class="options">
+                    <button class="option-btn" onclick="checkTheorem(true)">Yes, it's a factor</button>
+                    <button class="option-btn" onclick="checkTheorem(false)">No, it's not a factor</button>
+                </div>
+
+                <div class="feedback" id="theorem-feedback"></div>
+                <div id="theorem-work" class="step-display" style="display:none;"></div>
+
+                <button class="btn btn-success" onclick="newTheoremProblem()" style="margin-top:15px;">New Problem</button>
+            </div>
+
+            <h3>Graph Visualization</h3>
+            <div id="theorem-graph" class="graph-container"></div>
+        </div>
+
+        <!-- PRACTICE QUIZ SECTION -->
+        <div id="practice" class="section">
+            <h2>Mixed Factoring Practice</h2>
+            <p>Test your skills with all factoring techniques!</p>
+
+            <div class="score-display">
+                Score: <span id="quiz-score">0</span> / <span id="quiz-total">0</span>
+                <div class="progress-bar"><div class="progress-fill" id="quiz-progress" style="width:0%"></div></div>
+            </div>
+
+            <div id="quiz-container"></div>
+
+            <button class="btn btn-primary" onclick="generateQuiz()" style="margin-top:20px;">New Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let gcfScore = 0, gcfTotal = 0;
+        let cubesScore = 0, cubesTotal = 0;
+        let groupScore = 0, groupTotal = 0;
+        let quizScore = 0, quizTotal = 0;
+        let currentGCF = null;
+        let currentCubes = null;
+        let currentGrouping = null;
+        let currentTheorem = null;
+
+        // Tab navigation
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+
+            if (id === 'gcf' && !currentGCF) newGCFProblem();
+            if (id === 'cubes' && !currentCubes) newCubesProblem();
+            if (id === 'grouping' && !currentGrouping) newGroupingProblem();
+            if (id === 'theorem' && !currentTheorem) newTheoremProblem();
+            if (id === 'practice' && quizTotal === 0) generateQuiz();
+        }
+
+        // GCF FACTORING
+        const gcfProblems = [
+            {expr: "x³ - 4x² - 5x", answers: ["x(x-5)(x+1)", "x(x+1)(x-5)"], hint: "Factor out x first, then factor the trinomial"},
+            {expr: "2x³ - 18x", answers: ["2x(x-3)(x+3)", "2x(x+3)(x-3)"], hint: "Factor out 2x, then use difference of squares"},
+            {expr: "3y⁵ - 48y³", answers: ["3y³(y-4)(y+4)", "3y³(y+4)(y-4)"], hint: "Factor out 3y³, then use difference of squares"},
+            {expr: "x⁴ - 16x²", answers: ["x²(x-4)(x+4)", "x²(x+4)(x-4)"], hint: "Factor out x², then use difference of squares"},
+            {expr: "5z⁴ + 30z³ + 45z²", answers: ["5z²(z+3)²", "5z²(z+3)(z+3)"], hint: "Factor out 5z², then recognize perfect square trinomial"},
+            {expr: "4x³ - 36x", answers: ["4x(x-3)(x+3)", "4x(x+3)(x-3)"], hint: "Factor out 4x first"},
+            {expr: "x³ - 7x² + 10x", answers: ["x(x-2)(x-5)", "x(x-5)(x-2)"], hint: "Factor out x, then factor the trinomial"},
+        ];
+
+        function newGCFProblem() {
+            currentGCF = gcfProblems[Math.floor(Math.random() * gcfProblems.length)];
+            document.getElementById('gcf-problem').textContent = currentGCF.expr;
+            document.getElementById('gcf-answer').value = '';
+            document.getElementById('gcf-feedback').className = 'feedback';
+            document.getElementById('gcf-feedback').style.display = 'none';
+        }
+
+        function normalizeAnswer(str) {
+            return str.replace(/\s+/g, '').replace(/\*/g, '').toLowerCase();
+        }
+
+        function checkGCF() {
+            const userAnswer = normalizeAnswer(document.getElementById('gcf-answer').value);
+            const feedback = document.getElementById('gcf-feedback');
+
+            const isCorrect = currentGCF.answers.some(ans => normalizeAnswer(ans) === userAnswer);
+
+            gcfTotal++;
+            if (isCorrect) {
+                gcfScore++;
+                feedback.innerHTML = '<strong>Correct!</strong> Great factoring!';
+                feedback.className = 'feedback correct show';
+            } else {
+                feedback.innerHTML = `<strong>Not quite.</strong> The correct answer is: ${currentGCF.answers[0]}`;
+                feedback.className = 'feedback incorrect show';
+            }
+
+            document.getElementById('gcf-score').textContent = gcfScore;
+            document.getElementById('gcf-total').textContent = gcfTotal;
+            document.getElementById('gcf-progress').style.width = `${(gcfScore/gcfTotal)*100}%`;
+        }
+
+        function showGCFHint() {
+            const feedback = document.getElementById('gcf-feedback');
+            feedback.innerHTML = `<strong>Hint:</strong> ${currentGCF.hint}`;
+            feedback.className = 'feedback hint show';
+        }
+
+        // SUM/DIFFERENCE OF CUBES
+        const cubesProblems = [
+            {expr: "x³ + 8", correct: "(x + 2)(x² - 2x + 4)", options: ["(x + 2)(x² - 2x + 4)", "(x + 2)(x² + 2x + 4)", "(x - 2)(x² + 2x + 4)", "(x + 2)³"]},
+            {expr: "x³ - 27", correct: "(x - 3)(x² + 3x + 9)", options: ["(x - 3)(x² + 3x + 9)", "(x - 3)(x² - 3x + 9)", "(x + 3)(x² - 3x + 9)", "(x - 3)³"]},
+            {expr: "8x³ + 1", correct: "(2x + 1)(4x² - 2x + 1)", options: ["(2x + 1)(4x² - 2x + 1)", "(2x + 1)(4x² + 2x + 1)", "(2x - 1)(4x² + 2x + 1)", "(8x + 1)(x² - x + 1)"]},
+            {expr: "27x³ - 64", correct: "(3x - 4)(9x² + 12x + 16)", options: ["(3x - 4)(9x² + 12x + 16)", "(3x - 4)(9x² - 12x + 16)", "(3x + 4)(9x² - 12x + 16)", "(27x - 64)(x² + x + 1)"]},
+            {expr: "x³ + 125", correct: "(x + 5)(x² - 5x + 25)", options: ["(x + 5)(x² - 5x + 25)", "(x + 5)(x² + 5x + 25)", "(x - 5)(x² + 5x + 25)", "(x + 5)³"]},
+            {expr: "64x³ - 1", correct: "(4x - 1)(16x² + 4x + 1)", options: ["(4x - 1)(16x² + 4x + 1)", "(4x - 1)(16x² - 4x + 1)", "(4x + 1)(16x² - 4x + 1)", "(8x - 1)(8x² + x + 1)"]},
+        ];
+
+        function newCubesProblem() {
+            currentCubes = cubesProblems[Math.floor(Math.random() * cubesProblems.length)];
+            document.getElementById('cubes-problem').textContent = currentCubes.expr;
+            document.getElementById('cubes-feedback').className = 'feedback';
+
+            const optionsDiv = document.getElementById('cubes-options');
+            const shuffled = [...currentCubes.options].sort(() => Math.random() - 0.5);
+            optionsDiv.innerHTML = shuffled.map(opt =>
+                `<button class="option-btn" onclick="checkCubes(this, '${opt}')">${opt}</button>`
+            ).join('');
+        }
+
+        function checkCubes(btn, answer) {
+            const feedback = document.getElementById('cubes-feedback');
+            const correct = answer === currentCubes.correct;
+
+            document.querySelectorAll('#cubes-options .option-btn').forEach(b => b.disabled = true);
+
+            cubesTotal++;
+            if (correct) {
+                cubesScore++;
+                btn.classList.add('correct');
+                feedback.innerHTML = '<strong>Correct!</strong> Well done!';
+                feedback.className = 'feedback correct show';
+            } else {
+                btn.classList.add('incorrect');
+                feedback.innerHTML = `<strong>Incorrect.</strong> The answer is: ${currentCubes.correct}`;
+                feedback.className = 'feedback incorrect show';
+            }
+
+            document.getElementById('cubes-score').textContent = cubesScore;
+            document.getElementById('cubes-total').textContent = cubesTotal;
+            document.getElementById('cubes-progress').style.width = `${(cubesScore/cubesTotal)*100}%`;
+        }
+
+        // FACTOR BY GROUPING
+        const groupingProblems = [
+            {expr: "x³ + 5x² - 4x - 20", answers: ["(x+5)(x-2)(x+2)", "(x+5)(x+2)(x-2)", "(x-2)(x+2)(x+5)"], steps: ["x²(x + 5) - 4(x + 5)", "(x² - 4)(x + 5)", "(x - 2)(x + 2)(x + 5)"]},
+            {expr: "x³ - x² - 9x + 9", answers: ["(x-1)(x-3)(x+3)", "(x-1)(x+3)(x-3)"], steps: ["x²(x - 1) - 9(x - 1)", "(x² - 9)(x - 1)", "(x - 3)(x + 3)(x - 1)"]},
+            {expr: "x³ + 2x² - x - 2", answers: ["(x+2)(x-1)(x+1)", "(x+2)(x+1)(x-1)"], steps: ["x²(x + 2) - 1(x + 2)", "(x² - 1)(x + 2)", "(x - 1)(x + 1)(x + 2)"]},
+            {expr: "x³ - 3x² - 4x + 12", answers: ["(x-3)(x-2)(x+2)", "(x-3)(x+2)(x-2)"], steps: ["x²(x - 3) - 4(x - 3)", "(x² - 4)(x - 3)", "(x - 2)(x + 2)(x - 3)"]},
+        ];
+
+        function newGroupingProblem() {
+            currentGrouping = groupingProblems[Math.floor(Math.random() * groupingProblems.length)];
+            document.getElementById('group-problem').textContent = currentGrouping.expr;
+            document.getElementById('group-answer').value = '';
+            document.getElementById('group-feedback').className = 'feedback';
+            document.getElementById('group-steps').style.display = 'none';
+        }
+
+        function checkGrouping() {
+            const userAnswer = normalizeAnswer(document.getElementById('group-answer').value);
+            const feedback = document.getElementById('group-feedback');
+
+            const isCorrect = currentGrouping.answers.some(ans => normalizeAnswer(ans) === userAnswer);
+
+            groupTotal++;
+            if (isCorrect) {
+                groupScore++;
+                feedback.innerHTML = '<strong>Correct!</strong> Excellent grouping!';
+                feedback.className = 'feedback correct show';
+            } else {
+                feedback.innerHTML = `<strong>Not quite.</strong> The answer is: ${currentGrouping.answers[0]}`;
+                feedback.className = 'feedback incorrect show';
+            }
+
+            document.getElementById('group-score').textContent = groupScore;
+            document.getElementById('group-total').textContent = groupTotal;
+            document.getElementById('group-progress').style.width = `${(groupScore/groupTotal)*100}%`;
+        }
+
+        function showGroupingSteps() {
+            const stepsDiv = document.getElementById('group-steps');
+            stepsDiv.style.display = 'block';
+            stepsDiv.innerHTML = '<strong>Steps:</strong><br>' + currentGrouping.steps.map((s, i) =>
+                `<div class="step">${i + 1}. ${s}</div>`
+            ).join('');
+        }
+
+        // FACTOR THEOREM
+        const theoremProblems = [
+            {poly: "x³ - 6x² + 11x - 6", coeffs: [1, -6, 11, -6], testValue: 2, isFactor: true},
+            {poly: "x³ - 6x² + 11x - 6", coeffs: [1, -6, 11, -6], testValue: 1, isFactor: true},
+            {poly: "x³ - 6x² + 11x - 6", coeffs: [1, -6, 11, -6], testValue: 3, isFactor: true},
+            {poly: "x³ - 6x² + 11x - 6", coeffs: [1, -6, 11, -6], testValue: 4, isFactor: false},
+            {poly: "x³ + 2x² - 5x - 6", coeffs: [1, 2, -5, -6], testValue: 2, isFactor: true},
+            {poly: "x³ + 2x² - 5x - 6", coeffs: [1, 2, -5, -6], testValue: -1, isFactor: true},
+            {poly: "x³ + 2x² - 5x - 6", coeffs: [1, 2, -5, -6], testValue: 4, isFactor: false},
+            {poly: "2x³ - 3x² - 11x + 6", coeffs: [2, -3, -11, 6], testValue: 3, isFactor: true},
+            {poly: "2x³ - 3x² - 11x + 6", coeffs: [2, -3, -11, 6], testValue: 2, isFactor: false},
+        ];
+
+        function newTheoremProblem() {
+            currentTheorem = theoremProblems[Math.floor(Math.random() * theoremProblems.length)];
+            document.getElementById('theorem-polynomial').textContent = `f(x) = ${currentTheorem.poly}`;
+
+            const k = currentTheorem.testValue;
+            const binomial = k >= 0 ? `(x - ${k})` : `(x + ${Math.abs(k)})`;
+            document.getElementById('theorem-binomial').textContent = binomial;
+
+            document.getElementById('theorem-feedback').className = 'feedback';
+            document.getElementById('theorem-work').style.display = 'none';
+
+            document.querySelectorAll('#theorem .option-btn').forEach(b => {
+                b.disabled = false;
+                b.classList.remove('correct', 'incorrect');
+            });
+
+            drawTheoremGraph();
+        }
+
+        function checkTheorem(userSaysYes) {
+            const feedback = document.getElementById('theorem-feedback');
+            const workDiv = document.getElementById('theorem-work');
+            const correct = userSaysYes === currentTheorem.isFactor;
+
+            document.querySelectorAll('#theorem .option-btn').forEach(b => b.disabled = true);
+
+            // Calculate f(k) using synthetic division style
+            const k = currentTheorem.testValue;
+            const coeffs = currentTheorem.coeffs;
+            let result = coeffs[0];
+            for (let i = 1; i < coeffs.length; i++) {
+                result = result * k + coeffs[i];
+            }
+
+            if (correct) {
+                event.target.classList.add('correct');
+                feedback.innerHTML = '<strong>Correct!</strong>';
+                feedback.className = 'feedback correct show';
+            } else {
+                event.target.classList.add('incorrect');
+                feedback.innerHTML = '<strong>Incorrect.</strong>';
+                feedback.className = 'feedback incorrect show';
+            }
+
+            workDiv.style.display = 'block';
+            workDiv.innerHTML = `
+                <strong>Solution:</strong><br>
+                To test if (x - ${k}) is a factor, evaluate f(${k}):<br><br>
+                f(${k}) = ${coeffs[0]}(${k})³ + (${coeffs[1]})(${k})² + (${coeffs[2]})(${k}) + (${coeffs[3]})<br>
+                f(${k}) = ${result}<br><br>
+                Since f(${k}) ${result === 0 ? '= 0' : '≠ 0'}, (x - ${k}) <strong>${result === 0 ? 'IS' : 'is NOT'}</strong> a factor.
+            `;
+        }
+
+        function drawTheoremGraph() {
+            const coeffs = currentTheorem.coeffs;
+            const xVals = [], yVals = [];
+
+            for (let x = -5; x <= 7; x += 0.1) {
+                xVals.push(x);
+                let y = 0;
+                for (let i = 0; i < coeffs.length; i++) {
+                    y += coeffs[i] * Math.pow(x, coeffs.length - 1 - i);
+                }
+                yVals.push(y);
+            }
+
+            // Mark the test point
+            const k = currentTheorem.testValue;
+            let fk = 0;
+            for (let i = 0; i < coeffs.length; i++) {
+                fk += coeffs[i] * Math.pow(k, coeffs.length - 1 - i);
+            }
+
+            Plotly.newPlot('theorem-graph', [
+                {x: xVals, y: yVals, type: 'scatter', mode: 'lines', line: {color: '#667eea', width: 3}, name: 'f(x)'},
+                {x: [k], y: [fk], type: 'scatter', mode: 'markers', marker: {color: fk === 0 ? '#28a745' : '#dc3545', size: 12}, name: `f(${k}) = ${fk}`}
+            ], {
+                title: `Graph of f(x) = ${currentTheorem.poly}`,
+                xaxis: {title: 'x', zeroline: true, zerolinecolor: '#999', range: [-5, 7]},
+                yaxis: {title: 'f(x)', zeroline: true, zerolinecolor: '#999'},
+                margin: {t: 50, b: 50, l: 50, r: 30},
+                showlegend: true
+            }, {responsive: true});
+        }
+
+        // PRACTICE QUIZ
+        function generateQuiz() {
+            quizScore = 0;
+            quizTotal = 0;
+            document.getElementById('quiz-score').textContent = '0';
+            document.getElementById('quiz-total').textContent = '0';
+            document.getElementById('quiz-progress').style.width = '0%';
+
+            const questions = [
+                {q: "Factor: x³ - 8", options: ["(x-2)(x²+2x+4)", "(x-2)(x²-2x+4)", "(x+2)(x²-2x+4)", "(x-2)³"], correct: 0},
+                {q: "Factor: x³ + 64", options: ["(x+4)(x²+4x+16)", "(x+4)(x²-4x+16)", "(x-4)(x²+4x+16)", "(x+4)³"], correct: 1},
+                {q: "Factor: x³ - 4x² - 9x + 36", options: ["(x-4)(x-3)(x+3)", "(x+4)(x-3)(x+3)", "(x-4)(x²-9)", "(x-4)(x-9)"], correct: 0},
+                {q: "Factor: 2x³ - 50x", options: ["2x(x-5)(x+5)", "2x(x²-25)", "2(x³-25x)", "x(2x-50)"], correct: 0},
+                {q: "Is (x-3) a factor of x³ - 7x² + 14x - 8?", options: ["Yes", "No"], correct: 1},
+                {q: "Factor: 27x³ + 1", options: ["(3x+1)(9x²-3x+1)", "(3x+1)(9x²+3x+1)", "(3x-1)(9x²+3x+1)", "(27x+1)(x²-x+1)"], correct: 0},
+                {q: "What is the GCF of 6x⁴ - 18x³ + 12x²?", options: ["6x²", "6x", "3x²", "2x²"], correct: 0},
+                {q: "Factor: x⁴ - 16", options: ["(x²+4)(x-2)(x+2)", "(x-2)²(x+2)²", "(x²-4)(x²+4)", "(x-4)(x+4)"], correct: 0},
+            ];
+
+            const shuffled = [...questions].sort(() => Math.random() - 0.5).slice(0, 5);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            shuffled.forEach((q, idx) => {
+                const div = document.createElement('div');
+                div.className = 'problem-card';
+                div.innerHTML = `
+                    <h3>Question ${idx + 1}</h3>
+                    <p style="font-size:1.1em;"><strong>${q.q}</strong></p>
+                    <div class="options">
+                        ${q.options.map((opt, i) => `
+                            <button class="option-btn" onclick="checkQuizAnswer(this, ${i === q.correct}, ${idx})">${opt}</button>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="quiz-feedback-${idx}"></div>
+                `;
+                container.appendChild(div);
+            });
+
+            quizTotal = shuffled.length;
+            document.getElementById('quiz-total').textContent = quizTotal;
+        }
+
+        function checkQuizAnswer(btn, correct, idx) {
+            const feedback = document.getElementById(`quiz-feedback-${idx}`);
+            btn.parentElement.querySelectorAll('.option-btn').forEach(b => b.disabled = true);
+
+            if (correct) {
+                btn.classList.add('correct');
+                quizScore++;
+                feedback.innerHTML = '<strong>Correct!</strong>';
+                feedback.className = 'feedback correct show';
+            } else {
+                btn.classList.add('incorrect');
+                feedback.innerHTML = '<strong>Incorrect.</strong>';
+                feedback.className = 'feedback incorrect show';
+            }
+
+            document.getElementById('quiz-score').textContent = quizScore;
+            document.getElementById('quiz-progress').style.width = `${(quizScore/quizTotal)*100}%`;
+        }
+    </script>
+</body>
+</html>
