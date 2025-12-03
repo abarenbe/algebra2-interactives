@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.1 Graphing Polynomial Functions | Algebra 2 Interactives</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation Bar */
+        .site-nav {
+            background: rgba(0,0,0,0.2);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .nav-title {
+            color: white;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .nav-link.disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .section {
+            display: none;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: #764ba2;
+            margin-top: 25px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .quiz-container {
+            margin: 20px 0;
+        }
+
+        .question {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+
+        .question p {
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        .options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: left;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .option-btn.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+
+        .option-btn.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.3em;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            min-width: 120px;
+        }
+
+        input[type="number"], input[type="text"] {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            width: 100px;
+        }
+
+        input[type="number"]:focus, input[type="text"]:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .graph-container {
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .coefficient-inputs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .coef-input {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .coef-input label {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .coef-input input {
+            width: 100%;
+        }
+
+        .end-behavior-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .end-behavior-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .end-behavior-card:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+        }
+
+        .end-behavior-card.selected {
+            border-color: #667eea;
+            background: #f0f0ff;
+        }
+
+        .end-behavior-card h4 {
+            color: #667eea;
+            margin-top: 0;
+        }
+
+        .arrow-diagram {
+            font-size: 2em;
+            margin: 10px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .eval-result {
+            font-size: 1.5em;
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .step-display {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            line-height: 1.8;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+        }
+
+        .practice-problem {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .function-display {
+            font-size: 1.3em;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid #667eea;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .tab-btn {
+                padding: 10px 16px;
+                font-size: 0.9em;
+            }
+
+            .section {
+                padding: 20px;
+            }
+
+            .site-nav {
+                justify-content: center;
+            }
+
+            .nav-title {
+                width: 100%;
+                text-align: center;
+                order: -1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="site-nav">
+        <a href="../" class="nav-link">&larr; Chapter 4</a>
+        <span class="nav-title">4.1 Graphing Polynomial Functions</span>
+        <div class="nav-links">
+            <a href="../4.2/" class="nav-link">Next: 4.2 &rarr;</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>4.1 Graphing Polynomial Functions</h1>
+            <p>Interactive Learning Experience</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showSection('learn')">Learn</button>
+            <button class="tab-btn" onclick="showSection('identify')">Identify Polynomials</button>
+            <button class="tab-btn" onclick="showSection('evaluate')">Evaluate</button>
+            <button class="tab-btn" onclick="showSection('endbehavior')">End Behavior</button>
+            <button class="tab-btn" onclick="showSection('graph')">Graph Explorer</button>
+            <button class="tab-btn" onclick="showSection('practice')">Practice Quiz</button>
+        </div>
+
+        <!-- LEARN SECTION -->
+        <div id="learn" class="section active">
+            <h2>What is a Polynomial Function?</h2>
+
+            <div class="info-box">
+                <p><strong>A polynomial function</strong> has the form:</p>
+                <p style="font-size: 1.2em; text-align: center;">
+                    f(x) = a<sub>n</sub>x<sup>n</sup> + a<sub>n-1</sub>x<sup>n-1</sup> + ... + a<sub>1</sub>x + a<sub>0</sub>
+                </p>
+                <p>Where all exponents are <strong>whole numbers</strong> and all coefficients are <strong>real numbers</strong>.</p>
+            </div>
+
+            <h3>Types of Polynomial Functions</h3>
+            <table>
+                <tr>
+                    <th>Degree</th>
+                    <th>Type</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td>0</td>
+                    <td>Constant</td>
+                    <td>f(x) = 5</td>
+                </tr>
+                <tr>
+                    <td>1</td>
+                    <td>Linear</td>
+                    <td>f(x) = 3x - 2</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Quadratic</td>
+                    <td>f(x) = x² + 4x - 1</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Cubic</td>
+                    <td>f(x) = 2x³ - x² + 5</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>Quartic</td>
+                    <td>f(x) = x⁴ - 3x² + 2</td>
+                </tr>
+            </table>
+
+            <h3>NOT Polynomials - Watch Out!</h3>
+            <div class="info-box">
+                <p>A function is <strong>NOT</strong> a polynomial if it contains:</p>
+                <ul>
+                    <li><strong>Negative exponents:</strong> 5x<sup>-2</sup> (same as 5/x²)</li>
+                    <li><strong>Fractional exponents:</strong> x<sup>1/2</sup> (same as √x)</li>
+                    <li><strong>Variables in denominators:</strong> 1/x</li>
+                    <li><strong>Variables as exponents:</strong> 2<sup>x</sup></li>
+                </ul>
+            </div>
+
+            <h3>Key Vocabulary</h3>
+            <ul>
+                <li><strong>Leading Coefficient:</strong> The coefficient of the term with the highest degree</li>
+                <li><strong>Degree:</strong> The highest exponent in the polynomial</li>
+                <li><strong>Standard Form:</strong> Terms ordered from highest to lowest degree</li>
+                <li><strong>End Behavior:</strong> What happens to f(x) as x → ±∞</li>
+            </ul>
+        </div>
+
+        <!-- IDENTIFY SECTION -->
+        <div id="identify" class="section">
+            <h2>Identify Polynomial Functions</h2>
+            <p>Determine whether each function is a polynomial. If it is, identify its degree, type, and leading coefficient.</p>
+
+            <div class="score-display">
+                Score: <span id="identify-score">0</span> / <span id="identify-total">0</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="identify-progress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="identify-quiz"></div>
+
+            <button class="btn btn-primary" onclick="generateIdentifyQuiz()" style="margin-top: 20px;">New Questions</button>
+        </div>
+
+        <!-- EVALUATE SECTION -->
+        <div id="evaluate" class="section">
+            <h2>Evaluate Polynomial Functions</h2>
+            <p>Practice substituting values into polynomial functions.</p>
+
+            <div class="practice-problem">
+                <h3>Function:</h3>
+                <div class="function-display" id="eval-function">f(x) = 2x³ - 5x² + 3x - 7</div>
+
+                <div class="input-group">
+                    <label>Evaluate at x = </label>
+                    <input type="number" id="eval-x" value="2">
+                    <button class="btn btn-primary" onclick="evaluateFunction()">Calculate</button>
+                    <button class="btn btn-secondary" onclick="generateEvalProblem()">New Problem</button>
+                </div>
+            </div>
+
+            <div id="eval-steps" class="step-display" style="display: none;"></div>
+
+            <div class="eval-result" id="eval-result" style="display: none;"></div>
+
+            <h3>Try Your Own Polynomial</h3>
+            <div class="coefficient-inputs">
+                <div class="coef-input">
+                    <label>a (x³ coef)</label>
+                    <input type="number" id="custom-a" value="2">
+                </div>
+                <div class="coef-input">
+                    <label>b (x² coef)</label>
+                    <input type="number" id="custom-b" value="-5">
+                </div>
+                <div class="coef-input">
+                    <label>c (x coef)</label>
+                    <input type="number" id="custom-c" value="3">
+                </div>
+                <div class="coef-input">
+                    <label>d (constant)</label>
+                    <input type="number" id="custom-d" value="-7">
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="setCustomFunction()">Use This Function</button>
+        </div>
+
+        <!-- END BEHAVIOR SECTION -->
+        <div id="endbehavior" class="section">
+            <h2>End Behavior of Polynomial Functions</h2>
+
+            <div class="info-box">
+                <p>End behavior depends on <strong>two things</strong>:</p>
+                <ol>
+                    <li><strong>Degree:</strong> Is it odd or even?</li>
+                    <li><strong>Leading Coefficient:</strong> Is it positive or negative?</li>
+                </ol>
+            </div>
+
+            <h3>End Behavior Patterns</h3>
+            <div class="end-behavior-grid">
+                <div class="end-behavior-card" onclick="showEndBehaviorGraph('odd', 'positive')">
+                    <h4>Odd Degree, Positive Lead</h4>
+                    <div class="arrow-diagram">↙ ↗</div>
+                    <p>Falls left, Rises right</p>
+                    <small>x → -∞: f(x) → -∞<br>x → +∞: f(x) → +∞</small>
+                </div>
+                <div class="end-behavior-card" onclick="showEndBehaviorGraph('odd', 'negative')">
+                    <h4>Odd Degree, Negative Lead</h4>
+                    <div class="arrow-diagram">↖ ↘</div>
+                    <p>Rises left, Falls right</p>
+                    <small>x → -∞: f(x) → +∞<br>x → +∞: f(x) → -∞</small>
+                </div>
+                <div class="end-behavior-card" onclick="showEndBehaviorGraph('even', 'positive')">
+                    <h4>Even Degree, Positive Lead</h4>
+                    <div class="arrow-diagram">↖ ↗</div>
+                    <p>Rises both sides</p>
+                    <small>x → -∞: f(x) → +∞<br>x → +∞: f(x) → +∞</small>
+                </div>
+                <div class="end-behavior-card" onclick="showEndBehaviorGraph('even', 'negative')">
+                    <h4>Even Degree, Negative Lead</h4>
+                    <div class="arrow-diagram">↙ ↘</div>
+                    <p>Falls both sides</p>
+                    <small>x → -∞: f(x) → -∞<br>x → +∞: f(x) → -∞</small>
+                </div>
+            </div>
+
+            <div id="end-behavior-graph" class="graph-container"></div>
+
+            <h3>Practice: Match the End Behavior</h3>
+            <div class="practice-problem">
+                <p id="end-behavior-question">Click a card above to see its graph, then try the practice below.</p>
+                <div class="function-display" id="eb-practice-function"></div>
+                <div class="options" id="eb-options"></div>
+                <div class="feedback" id="eb-feedback"></div>
+                <button class="btn btn-primary" onclick="generateEndBehaviorPractice()" style="margin-top: 15px;">New Problem</button>
+            </div>
+        </div>
+
+        <!-- GRAPH EXPLORER SECTION -->
+        <div id="graph" class="section">
+            <h2>Polynomial Graph Explorer</h2>
+            <p>Adjust the coefficients to see how they affect the graph.</p>
+
+            <h3>Build Your Polynomial: f(x) = ax⁴ + bx³ + cx² + dx + e</h3>
+
+            <div class="coefficient-inputs">
+                <div class="coef-input">
+                    <label>a (x⁴)</label>
+                    <input type="number" id="coef-a" value="0" step="0.1" onchange="updateGraph()">
+                </div>
+                <div class="coef-input">
+                    <label>b (x³)</label>
+                    <input type="number" id="coef-b" value="1" step="0.1" onchange="updateGraph()">
+                </div>
+                <div class="coef-input">
+                    <label>c (x²)</label>
+                    <input type="number" id="coef-c" value="0" step="0.1" onchange="updateGraph()">
+                </div>
+                <div class="coef-input">
+                    <label>d (x)</label>
+                    <input type="number" id="coef-d" value="-3" step="0.1" onchange="updateGraph()">
+                </div>
+                <div class="coef-input">
+                    <label>e (constant)</label>
+                    <input type="number" id="coef-e" value="0" step="0.1" onchange="updateGraph()">
+                </div>
+            </div>
+
+            <div class="function-display" id="current-function">f(x) = x³ - 3x</div>
+
+            <div id="main-graph" class="graph-container"></div>
+
+            <div class="info-box" id="graph-info">
+                <p><strong>Degree:</strong> <span id="info-degree">3</span> (<span id="info-type">Cubic</span>)</p>
+                <p><strong>Leading Coefficient:</strong> <span id="info-lead">1</span> (<span id="info-sign">Positive</span>)</p>
+                <p><strong>End Behavior:</strong> <span id="info-end">Falls left, Rises right</span></p>
+            </div>
+
+            <h3>Preset Examples</h3>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-secondary" onclick="setPreset(0, 0, 1, 0, 0)">Quadratic: x²</button>
+                <button class="btn btn-secondary" onclick="setPreset(0, 1, 0, -3, 0)">Cubic: x³ - 3x</button>
+                <button class="btn btn-secondary" onclick="setPreset(1, 0, -2, 0, 0)">Quartic: x⁴ - 2x²</button>
+                <button class="btn btn-secondary" onclick="setPreset(0, -1, 0, 3, 0)">Negative Cubic: -x³ + 3x</button>
+                <button class="btn btn-secondary" onclick="setPreset(-1, 0, 2, 0, -1)">Negative Quartic: -x⁴ + 2x² - 1</button>
+            </div>
+        </div>
+
+        <!-- PRACTICE QUIZ SECTION -->
+        <div id="practice" class="section">
+            <h2>Practice Quiz</h2>
+            <p>Test your knowledge of polynomial functions!</p>
+
+            <div class="score-display">
+                Score: <span id="quiz-score">0</span> / <span id="quiz-total">0</span>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="quiz-progress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div id="quiz-container"></div>
+
+            <button class="btn btn-primary" onclick="generateQuiz()" style="margin-top: 20px;">New Quiz</button>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentEvalFunction = {a: 2, b: -5, c: 3, d: -7};
+        let identifyScore = 0;
+        let identifyTotal = 0;
+        let quizScore = 0;
+        let quizTotal = 0;
+
+        // Tab navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            event.target.classList.add('active');
+
+            if (sectionId === 'graph') {
+                updateGraph();
+            }
+            if (sectionId === 'identify' && identifyTotal === 0) {
+                generateIdentifyQuiz();
+            }
+            if (sectionId === 'practice' && quizTotal === 0) {
+                generateQuiz();
+            }
+            if (sectionId === 'endbehavior') {
+                showEndBehaviorGraph('odd', 'positive');
+                generateEndBehaviorPractice();
+            }
+        }
+
+        // IDENTIFY POLYNOMIALS
+        const identifyQuestions = [
+            {func: "f(x) = 3x⁴ - 2x² + 5x - 1", isPoly: true, degree: 4, type: "Quartic", lead: 3},
+            {func: "f(x) = x³ + 2x⁻¹ - 5", isPoly: false, reason: "Contains negative exponent (x⁻¹)"},
+            {func: "f(x) = √2·x³ - 4x + 7", isPoly: true, degree: 3, type: "Cubic", lead: "√2"},
+            {func: "f(x) = 5x² + 3ˣ - 2", isPoly: false, reason: "Contains variable exponent (3ˣ)"},
+            {func: "f(x) = -7x⁵ + x³ - 9", isPoly: true, degree: 5, type: "Quintic", lead: -7},
+            {func: "f(x) = 4/x + 2x² - 1", isPoly: false, reason: "Contains variable in denominator (4/x)"},
+            {func: "f(x) = 0.5x⁴ - 3x³ + x", isPoly: true, degree: 4, type: "Quartic", lead: 0.5},
+            {func: "f(x) = √x + 5x² - 3", isPoly: false, reason: "Contains √x (fractional exponent)"},
+            {func: "f(x) = -2x² + 8x - 15", isPoly: true, degree: 2, type: "Quadratic", lead: -2},
+            {func: "f(x) = x³ - 4x² + x - 6", isPoly: true, degree: 3, type: "Cubic", lead: 1},
+            {func: "f(x) = 2ˣ + x² - 1", isPoly: false, reason: "Contains exponential term (2ˣ)"},
+            {func: "f(x) = -x⁶ + 3x⁴ - 2x² + 1", isPoly: true, degree: 6, type: "Degree 6", lead: -1}
+        ];
+
+        function generateIdentifyQuiz() {
+            identifyScore = 0;
+            identifyTotal = 0;
+            document.getElementById('identify-score').textContent = '0';
+            document.getElementById('identify-total').textContent = '0';
+            document.getElementById('identify-progress').style.width = '0%';
+
+            const shuffled = [...identifyQuestions].sort(() => Math.random() - 0.5).slice(0, 5);
+            const container = document.getElementById('identify-quiz');
+            container.innerHTML = '';
+
+            shuffled.forEach((q, idx) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `
+                    <p><strong>Question ${idx + 1}:</strong> ${q.func}</p>
+                    <div class="options">
+                        <button class="option-btn" onclick="checkIdentify(this, ${q.isPoly}, ${idx}, true)">
+                            Yes, it's a polynomial
+                        </button>
+                        <button class="option-btn" onclick="checkIdentify(this, ${q.isPoly}, ${idx}, false)">
+                            No, it's not a polynomial
+                        </button>
+                    </div>
+                    <div class="feedback" id="identify-feedback-${idx}"></div>
+                `;
+                container.appendChild(div);
+            });
+
+            identifyTotal = shuffled.length;
+            document.getElementById('identify-total').textContent = identifyTotal;
+
+            container.dataset.questions = JSON.stringify(shuffled);
+        }
+
+        function checkIdentify(btn, isPoly, idx, userAnswer) {
+            const container = document.getElementById('identify-quiz');
+            const questions = JSON.parse(container.dataset.questions);
+            const q = questions[idx];
+            const feedback = document.getElementById(`identify-feedback-${idx}`);
+
+            btn.parentElement.querySelectorAll('.option-btn').forEach(b => {
+                b.disabled = true;
+                b.style.cursor = 'default';
+            });
+
+            const correct = isPoly === userAnswer;
+
+            if (correct) {
+                btn.classList.add('correct');
+                identifyScore++;
+                feedback.className = 'feedback correct show';
+                if (isPoly) {
+                    feedback.innerHTML = `<strong>Correct!</strong> This is a ${q.type} polynomial (degree ${q.degree}) with leading coefficient ${q.lead}.`;
+                } else {
+                    feedback.innerHTML = `<strong>Correct!</strong> ${q.reason}`;
+                }
+            } else {
+                btn.classList.add('incorrect');
+                feedback.className = 'feedback incorrect show';
+                if (isPoly) {
+                    feedback.innerHTML = `<strong>Incorrect.</strong> This IS a polynomial - ${q.type} (degree ${q.degree}) with leading coefficient ${q.lead}.`;
+                } else {
+                    feedback.innerHTML = `<strong>Incorrect.</strong> This is NOT a polynomial. ${q.reason}`;
+                }
+            }
+
+            document.getElementById('identify-score').textContent = identifyScore;
+            document.getElementById('identify-progress').style.width =
+                `${(identifyScore / identifyTotal) * 100}%`;
+        }
+
+        // EVALUATE FUNCTIONS
+        function generateEvalProblem() {
+            const coefficients = [
+                {a: 2, b: -5, c: 3, d: -7},
+                {a: -1, b: 4, c: -2, d: 5},
+                {a: 3, b: -1, c: 0, d: -4},
+                {a: -2, b: 0, c: 5, d: 1},
+                {a: 1, b: -3, c: 2, d: -6}
+            ];
+
+            currentEvalFunction = coefficients[Math.floor(Math.random() * coefficients.length)];
+            updateEvalDisplay();
+            document.getElementById('eval-steps').style.display = 'none';
+            document.getElementById('eval-result').style.display = 'none';
+        }
+
+        function updateEvalDisplay() {
+            const {a, b, c, d} = currentEvalFunction;
+            let funcStr = 'f(x) = ';
+
+            if (a !== 0) funcStr += `${a}x³ `;
+            if (b !== 0) funcStr += `${b >= 0 && a !== 0 ? '+ ' : ''}${b}x² `;
+            if (c !== 0) funcStr += `${c >= 0 ? '+ ' : ''}${c}x `;
+            if (d !== 0) funcStr += `${d >= 0 ? '+ ' : ''}${d}`;
+
+            document.getElementById('eval-function').textContent = funcStr;
+        }
+
+        function evaluateFunction() {
+            const x = parseFloat(document.getElementById('eval-x').value);
+            const {a, b, c, d} = currentEvalFunction;
+
+            const x3 = Math.pow(x, 3);
+            const x2 = Math.pow(x, 2);
+
+            const term1 = a * x3;
+            const term2 = b * x2;
+            const term3 = c * x;
+            const result = term1 + term2 + term3 + d;
+
+            const steps = document.getElementById('eval-steps');
+            steps.style.display = 'block';
+            steps.innerHTML = `
+                <strong>Step-by-step solution:</strong><br><br>
+                f(${x}) = ${a}(${x})³ ${b >= 0 ? '+' : ''} ${b}(${x})² ${c >= 0 ? '+' : ''} ${c}(${x}) ${d >= 0 ? '+' : ''} ${d}<br><br>
+                <span class="highlight">Calculate powers:</span><br>
+                &nbsp;&nbsp;(${x})³ = ${x3}<br>
+                &nbsp;&nbsp;(${x})² = ${x2}<br><br>
+                <span class="highlight">Multiply:</span><br>
+                &nbsp;&nbsp;${a} × ${x3} = ${term1}<br>
+                &nbsp;&nbsp;${b} × ${x2} = ${term2}<br>
+                &nbsp;&nbsp;${c} × ${x} = ${term3}<br><br>
+                <span class="highlight">Add all terms:</span><br>
+                &nbsp;&nbsp;${term1} + (${term2}) + (${term3}) + (${d}) = <strong>${result}</strong>
+            `;
+
+            const resultDiv = document.getElementById('eval-result');
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `<strong>f(${x}) = ${result}</strong>`;
+        }
+
+        function setCustomFunction() {
+            currentEvalFunction = {
+                a: parseFloat(document.getElementById('custom-a').value) || 0,
+                b: parseFloat(document.getElementById('custom-b').value) || 0,
+                c: parseFloat(document.getElementById('custom-c').value) || 0,
+                d: parseFloat(document.getElementById('custom-d').value) || 0
+            };
+            updateEvalDisplay();
+            document.getElementById('eval-steps').style.display = 'none';
+            document.getElementById('eval-result').style.display = 'none';
+        }
+
+        // END BEHAVIOR
+        function showEndBehaviorGraph(degree, sign) {
+            document.querySelectorAll('.end-behavior-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            if (event && event.target) {
+                event.target.closest('.end-behavior-card').classList.add('selected');
+            }
+
+            let func, title;
+            if (degree === 'odd' && sign === 'positive') {
+                func = x => Math.pow(x, 3);
+                title = 'y = x³ (Odd degree, Positive leading coefficient)';
+            } else if (degree === 'odd' && sign === 'negative') {
+                func = x => -Math.pow(x, 3);
+                title = 'y = -x³ (Odd degree, Negative leading coefficient)';
+            } else if (degree === 'even' && sign === 'positive') {
+                func = x => Math.pow(x, 4);
+                title = 'y = x⁴ (Even degree, Positive leading coefficient)';
+            } else {
+                func = x => -Math.pow(x, 4);
+                title = 'y = -x⁴ (Even degree, Negative leading coefficient)';
+            }
+
+            const xVals = [];
+            const yVals = [];
+            for (let x = -2; x <= 2; x += 0.1) {
+                xVals.push(x);
+                yVals.push(func(x));
+            }
+
+            Plotly.newPlot('end-behavior-graph', [{
+                x: xVals,
+                y: yVals,
+                type: 'scatter',
+                mode: 'lines',
+                line: {color: '#667eea', width: 3}
+            }], {
+                title: title,
+                xaxis: {title: 'x', zeroline: true, zerolinecolor: '#999'},
+                yaxis: {title: 'f(x)', zeroline: true, zerolinecolor: '#999'},
+                margin: {t: 50, b: 50, l: 50, r: 30}
+            }, {responsive: true});
+        }
+
+        function generateEndBehaviorPractice() {
+            const problems = [
+                {func: "f(x) = 2x³ - 5x + 1", degree: "odd", sign: "positive"},
+                {func: "f(x) = -3x⁴ + x² - 2", degree: "even", sign: "negative"},
+                {func: "f(x) = -x⁵ + 4x³ - x", degree: "odd", sign: "negative"},
+                {func: "f(x) = x⁶ - 2x⁴ + 3", degree: "even", sign: "positive"},
+                {func: "f(x) = 5x⁷ - x³ + 2x", degree: "odd", sign: "positive"},
+                {func: "f(x) = -2x² + 8x - 3", degree: "even", sign: "negative"},
+                {func: "f(x) = 4x⁴ + x² + 1", degree: "even", sign: "positive"},
+                {func: "f(x) = -x³ + 6x² - 4", degree: "odd", sign: "negative"}
+            ];
+
+            const problem = problems[Math.floor(Math.random() * problems.length)];
+
+            document.getElementById('eb-practice-function').textContent = problem.func;
+
+            const options = [
+                {text: "↙ ↗ Falls left, Rises right", degree: "odd", sign: "positive"},
+                {text: "↖ ↘ Rises left, Falls right", degree: "odd", sign: "negative"},
+                {text: "↖ ↗ Rises both sides", degree: "even", sign: "positive"},
+                {text: "↙ ↘ Falls both sides", degree: "even", sign: "negative"}
+            ];
+
+            const optionsDiv = document.getElementById('eb-options');
+            optionsDiv.innerHTML = '';
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.textContent = opt.text;
+                btn.onclick = function() {
+                    checkEndBehavior(this, opt.degree === problem.degree && opt.sign === problem.sign, problem);
+                };
+                optionsDiv.appendChild(btn);
+            });
+
+            document.getElementById('eb-feedback').className = 'feedback';
+        }
+
+        function checkEndBehavior(btn, correct, problem) {
+            const feedback = document.getElementById('eb-feedback');
+
+            document.querySelectorAll('#eb-options .option-btn').forEach(b => {
+                b.disabled = true;
+            });
+
+            if (correct) {
+                btn.classList.add('correct');
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = `<strong>Correct!</strong> The degree is ${problem.degree} and the leading coefficient is ${problem.sign}.`;
+            } else {
+                btn.classList.add('incorrect');
+                feedback.className = 'feedback incorrect show';
+                feedback.innerHTML = `<strong>Incorrect.</strong> The degree is ${problem.degree} and the leading coefficient is ${problem.sign}.`;
+            }
+        }
+
+        // GRAPH EXPLORER
+        function updateGraph() {
+            const a = parseFloat(document.getElementById('coef-a').value) || 0;
+            const b = parseFloat(document.getElementById('coef-b').value) || 0;
+            const c = parseFloat(document.getElementById('coef-c').value) || 0;
+            const d = parseFloat(document.getElementById('coef-d').value) || 0;
+            const e = parseFloat(document.getElementById('coef-e').value) || 0;
+
+            const xVals = [];
+            const yVals = [];
+            for (let x = -5; x <= 5; x += 0.1) {
+                xVals.push(x);
+                yVals.push(a*Math.pow(x,4) + b*Math.pow(x,3) + c*Math.pow(x,2) + d*x + e);
+            }
+
+            let funcStr = 'f(x) = ';
+            let terms = [];
+            if (a !== 0) terms.push(`${a === 1 ? '' : a === -1 ? '-' : a}x⁴`);
+            if (b !== 0) terms.push(`${b === 1 ? '' : b === -1 ? '-' : b}x³`);
+            if (c !== 0) terms.push(`${c === 1 ? '' : c === -1 ? '-' : c}x²`);
+            if (d !== 0) terms.push(`${d === 1 ? '' : d === -1 ? '-' : d}x`);
+            if (e !== 0) terms.push(`${e}`);
+
+            if (terms.length === 0) terms.push('0');
+
+            funcStr += terms.join(' + ').replace(/\+ -/g, '- ');
+            document.getElementById('current-function').textContent = funcStr;
+
+            let degree, type, lead;
+            if (a !== 0) { degree = 4; type = 'Quartic'; lead = a; }
+            else if (b !== 0) { degree = 3; type = 'Cubic'; lead = b; }
+            else if (c !== 0) { degree = 2; type = 'Quadratic'; lead = c; }
+            else if (d !== 0) { degree = 1; type = 'Linear'; lead = d; }
+            else { degree = 0; type = 'Constant'; lead = e; }
+
+            document.getElementById('info-degree').textContent = degree;
+            document.getElementById('info-type').textContent = type;
+            document.getElementById('info-lead').textContent = lead;
+            document.getElementById('info-sign').textContent = lead >= 0 ? 'Positive' : 'Negative';
+
+            let endBehavior;
+            if (degree === 0) {
+                endBehavior = 'Constant (horizontal line)';
+            } else if (degree % 2 === 0) {
+                endBehavior = lead > 0 ? 'Rises both sides ↖ ↗' : 'Falls both sides ↙ ↘';
+            } else {
+                endBehavior = lead > 0 ? 'Falls left, Rises right ↙ ↗' : 'Rises left, Falls right ↖ ↘';
+            }
+            document.getElementById('info-end').textContent = endBehavior;
+
+            Plotly.newPlot('main-graph', [{
+                x: xVals,
+                y: yVals,
+                type: 'scatter',
+                mode: 'lines',
+                line: {color: '#667eea', width: 3}
+            }], {
+                xaxis: {title: 'x', range: [-5, 5], zeroline: true, zerolinecolor: '#999'},
+                yaxis: {title: 'f(x)', zeroline: true, zerolinecolor: '#999'},
+                margin: {t: 20, b: 50, l: 50, r: 30}
+            }, {responsive: true});
+        }
+
+        function setPreset(a, b, c, d, e) {
+            document.getElementById('coef-a').value = a;
+            document.getElementById('coef-b').value = b;
+            document.getElementById('coef-c').value = c;
+            document.getElementById('coef-d').value = d;
+            document.getElementById('coef-e').value = e;
+            updateGraph();
+        }
+
+        // PRACTICE QUIZ
+        function generateQuiz() {
+            quizScore = 0;
+            quizTotal = 0;
+            document.getElementById('quiz-score').textContent = '0';
+            document.getElementById('quiz-total').textContent = '0';
+            document.getElementById('quiz-progress').style.width = '0%';
+
+            const questions = [
+                {
+                    q: "What is the degree of f(x) = 3x⁵ - 2x³ + x - 7?",
+                    options: ["3", "5", "7", "1"],
+                    correct: 1,
+                    explanation: "The degree is the highest exponent, which is 5."
+                },
+                {
+                    q: "What is the leading coefficient of f(x) = -4x³ + 2x² - x + 5?",
+                    options: ["5", "2", "-4", "-1"],
+                    correct: 2,
+                    explanation: "The leading coefficient is the coefficient of the highest degree term: -4."
+                },
+                {
+                    q: "Which function is NOT a polynomial?",
+                    options: ["f(x) = 5x³ - 2x + 1", "f(x) = x⁴ + √3", "f(x) = 2/x + x²", "f(x) = -x² + 7"],
+                    correct: 2,
+                    explanation: "2/x = 2x⁻¹ contains a negative exponent, so it's not a polynomial."
+                },
+                {
+                    q: "What is the end behavior of f(x) = 2x⁴ - x² + 3?",
+                    options: ["Falls left, Rises right", "Rises both sides", "Falls both sides", "Rises left, Falls right"],
+                    correct: 1,
+                    explanation: "Even degree (4) with positive leading coefficient (2) means rises on both sides."
+                },
+                {
+                    q: "What is the end behavior of f(x) = -x³ + 5x - 2?",
+                    options: ["Falls left, Rises right", "Rises both sides", "Falls both sides", "Rises left, Falls right"],
+                    correct: 3,
+                    explanation: "Odd degree (3) with negative leading coefficient (-1) means rises left, falls right."
+                },
+                {
+                    q: "What type of polynomial is f(x) = x⁴ - 3x² + 2?",
+                    options: ["Quadratic", "Cubic", "Quartic", "Quintic"],
+                    correct: 2,
+                    explanation: "Degree 4 polynomials are called quartic."
+                },
+                {
+                    q: "Evaluate f(x) = x³ - 2x + 1 when x = 2",
+                    options: ["5", "7", "9", "3"],
+                    correct: 0,
+                    explanation: "f(2) = (2)³ - 2(2) + 1 = 8 - 4 + 1 = 5"
+                },
+                {
+                    q: "Which has an odd degree and negative leading coefficient?",
+                    options: ["f(x) = x⁴ - 2x", "f(x) = -x³ + x", "f(x) = x³ - 1", "f(x) = -x² + 3"],
+                    correct: 1,
+                    explanation: "-x³ + x has degree 3 (odd) and leading coefficient -1 (negative)."
+                }
+            ];
+
+            const shuffled = [...questions].sort(() => Math.random() - 0.5).slice(0, 5);
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            shuffled.forEach((q, idx) => {
+                const div = document.createElement('div');
+                div.className = 'question';
+                div.innerHTML = `
+                    <p><strong>Question ${idx + 1}:</strong> ${q.q}</p>
+                    <div class="options">
+                        ${q.options.map((opt, i) => `
+                            <button class="option-btn" onclick="checkQuiz(this, ${i === q.correct}, ${idx}, '${q.explanation.replace(/'/g, "\\'")}')">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                    <div class="feedback" id="quiz-feedback-${idx}"></div>
+                `;
+                container.appendChild(div);
+            });
+
+            quizTotal = shuffled.length;
+            document.getElementById('quiz-total').textContent = quizTotal;
+        }
+
+        function checkQuiz(btn, correct, idx, explanation) {
+            const feedback = document.getElementById(`quiz-feedback-${idx}`);
+
+            btn.parentElement.querySelectorAll('.option-btn').forEach(b => {
+                b.disabled = true;
+                b.style.cursor = 'default';
+            });
+
+            if (correct) {
+                btn.classList.add('correct');
+                quizScore++;
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = `<strong>Correct!</strong> ${explanation}`;
+            } else {
+                btn.classList.add('incorrect');
+                feedback.className = 'feedback incorrect show';
+                feedback.innerHTML = `<strong>Incorrect.</strong> ${explanation}`;
+            }
+
+            document.getElementById('quiz-score').textContent = quizScore;
+            document.getElementById('quiz-progress').style.width =
+                `${(quizScore / quizTotal) * 100}%`;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Nothing needed on initial load
+        });
+    </script>
+</body>
+</html>

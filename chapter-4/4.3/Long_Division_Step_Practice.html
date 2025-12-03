@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Long Division - Step-by-Step Practice</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #4a148c 0%, #7b1fa2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #4a148c;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        /* Score Display */
+        .score-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #4a148c 0%, #7b1fa2 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item .label {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .score-item .value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        /* Problem Selection */
+        .problem-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .problem-btn {
+            padding: 10px 20px;
+            border: 2px solid #7b1fa2;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .problem-btn:hover {
+            background: #f3e5f5;
+        }
+
+        .problem-btn.active {
+            background: #7b1fa2;
+            color: white;
+        }
+
+        /* Division Display */
+        .division-workspace {
+            background: #fafafa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .division-grid {
+            display: inline-block;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 1.3em;
+            line-height: 1.8;
+        }
+
+        .division-row {
+            display: flex;
+            align-items: center;
+            min-height: 45px;
+        }
+
+        .divisor-area {
+            display: flex;
+            align-items: flex-start;
+            margin-right: 5px;
+        }
+
+        .divisor {
+            padding-right: 10px;
+            white-space: nowrap;
+        }
+
+        .division-symbol {
+            font-size: 1.2em;
+            margin-right: 5px;
+        }
+
+        .dividend-area {
+            border-top: 3px solid #333;
+            border-left: 3px solid #333;
+            border-top-left-radius: 10px;
+            padding: 5px 15px 5px 10px;
+            min-width: 300px;
+        }
+
+        .quotient-area {
+            margin-left: 60px;
+            margin-bottom: 5px;
+            min-height: 40px;
+            padding-left: 10px;
+        }
+
+        .work-row {
+            margin-left: 60px;
+            padding-left: 10px;
+            display: flex;
+            align-items: center;
+            min-height: 40px;
+        }
+
+        .subtract-line {
+            border-bottom: 2px solid #333;
+            margin: 5px 0;
+        }
+
+        /* Term cells */
+        .term-cell {
+            display: inline-block;
+            min-width: 60px;
+            text-align: center;
+            padding: 2px 5px;
+        }
+
+        .term-cell.input-cell {
+            position: relative;
+        }
+
+        .term-input {
+            width: 65px;
+            padding: 8px;
+            border: 2px solid #7b1fa2;
+            border-radius: 8px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 1em;
+            text-align: center;
+            background: white;
+        }
+
+        .term-input:focus {
+            outline: none;
+            border-color: #4a148c;
+            box-shadow: 0 0 0 3px rgba(123, 31, 162, 0.2);
+        }
+
+        .term-input.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .term-input.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .term-fixed {
+            padding: 8px;
+        }
+
+        .term-placeholder {
+            color: #ccc;
+        }
+
+        .term-highlight {
+            background: #fff9c4;
+            border-radius: 5px;
+        }
+
+        .term-result {
+            color: #4a148c;
+            font-weight: bold;
+        }
+
+        /* Step Instructions */
+        .step-instruction {
+            background: linear-gradient(135deg, #e1bee7 0%, #ce93d8 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .step-instruction h3 {
+            margin: 0 0 10px 0;
+            color: #4a148c;
+        }
+
+        .step-instruction p {
+            margin: 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .step-instruction .math {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        /* Feedback */
+        .feedback-box {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+            text-align: center;
+        }
+
+        .feedback-box.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-box.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border: 2px solid #4caf50;
+        }
+
+        .feedback-box.incorrect {
+            background: #ffebee;
+            color: #c62828;
+            border: 2px solid #f44336;
+        }
+
+        .feedback-box.hint {
+            background: #fff3e0;
+            color: #e65100;
+            border: 2px solid #ff9800;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4a148c 0%, #7b1fa2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 20, 140, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #9e9e9e;
+            color: white;
+        }
+
+        .btn-success {
+            background: #4caf50;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ff9800;
+            color: white;
+        }
+
+        .buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* Progress indicator */
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.complete {
+            background: #4caf50;
+        }
+
+        .progress-dot.current {
+            background: #7b1fa2;
+            transform: scale(1.3);
+        }
+
+        .progress-dot.error {
+            background: #f44336;
+        }
+
+        /* Completion message */
+        .completion-message {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
+        .completion-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .completion-message h2 {
+            color: #4caf50;
+            margin-bottom: 15px;
+        }
+
+        .completion-message .final-answer {
+            font-size: 1.4em;
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.6em; }
+            .division-grid { font-size: 1em; }
+            .term-input { width: 50px; padding: 6px; }
+            .term-cell { min-width: 45px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Long Division Step-by-Step Practice</h1>
+            <p>Work through each step - get instant feedback!</p>
+        </header>
+
+        <div class="card">
+            <div class="score-bar">
+                <div class="score-item">
+                    <div class="label">Problem</div>
+                    <div class="value"><span id="current-problem">1</span> / <span id="total-problems">5</span></div>
+                </div>
+                <div class="score-item">
+                    <div class="label">Steps Correct</div>
+                    <div class="value" id="steps-correct">0</div>
+                </div>
+                <div class="score-item">
+                    <div class="label">Mistakes</div>
+                    <div class="value" id="mistakes">0</div>
+                </div>
+            </div>
+
+            <div class="problem-selector">
+                <button class="problem-btn active" onclick="selectDifficulty('easy')">Easy</button>
+                <button class="problem-btn" onclick="selectDifficulty('medium')">Medium</button>
+                <button class="problem-btn" onclick="selectDifficulty('hard')">Hard</button>
+            </div>
+
+            <h2 id="problem-title">Divide: (x² + 5x + 6) ÷ (x + 2)</h2>
+
+            <div class="progress-steps" id="progress-steps"></div>
+
+            <div class="division-workspace" id="workspace">
+                <!-- Division grid will be built here -->
+            </div>
+
+            <div class="step-instruction" id="step-instruction">
+                <h3>Step 1: Divide</h3>
+                <p>What do you get when you divide the leading term of the dividend by the leading term of the divisor?</p>
+                <div class="math">x² ÷ x = ?</div>
+            </div>
+
+            <div class="feedback-box" id="feedback"></div>
+
+            <div class="buttons-row">
+                <button class="btn btn-warning" onclick="showHint()">Hint</button>
+                <button class="btn btn-primary" id="check-btn" onclick="checkStep()">Check Step</button>
+                <button class="btn btn-secondary" onclick="skipStep()">Skip Step</button>
+            </div>
+
+            <div class="completion-message" id="completion">
+                <h2>Problem Complete!</h2>
+                <div class="final-answer" id="final-answer"></div>
+                <button class="btn btn-success" onclick="nextProblem()">Next Problem</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== PROBLEM DATA ====================
+        const problems = {
+            easy: [
+                {
+                    dividend: [1, 5, 6],      // x² + 5x + 6
+                    divisor: [1, 2],          // x + 2
+                    quotient: [1, 3],         // x + 3
+                    remainder: 0
+                },
+                {
+                    dividend: [1, 7, 12],     // x² + 7x + 12
+                    divisor: [1, 3],          // x + 3
+                    quotient: [1, 4],         // x + 4
+                    remainder: 0
+                },
+                {
+                    dividend: [1, 4, 3],      // x² + 4x + 3
+                    divisor: [1, 1],          // x + 1
+                    quotient: [1, 3],         // x + 3
+                    remainder: 0
+                },
+                {
+                    dividend: [1, -1, -6],    // x² - x - 6
+                    divisor: [1, 2],          // x + 2
+                    quotient: [1, -3],        // x - 3
+                    remainder: 0
+                },
+                {
+                    dividend: [1, 2, -8],     // x² + 2x - 8
+                    divisor: [1, -2],         // x - 2
+                    quotient: [1, 4],         // x + 4
+                    remainder: 0
+                }
+            ],
+            medium: [
+                {
+                    dividend: [1, 3, 5],      // x² + 3x + 5
+                    divisor: [1, 2],          // x + 2
+                    quotient: [1, 1],         // x + 1
+                    remainder: 3
+                },
+                {
+                    dividend: [2, 5, 3],      // 2x² + 5x + 3
+                    divisor: [1, 1],          // x + 1
+                    quotient: [2, 3],         // 2x + 3
+                    remainder: 0
+                },
+                {
+                    dividend: [1, -2, -5, 6], // x³ - 2x² - 5x + 6
+                    divisor: [1, -1],         // x - 1
+                    quotient: [1, -1, -6],    // x² - x - 6
+                    remainder: 0
+                },
+                {
+                    dividend: [1, 1, -5, 3],  // x³ + x² - 5x + 3
+                    divisor: [1, -1],         // x - 1
+                    quotient: [1, 2, -3],     // x² + 2x - 3
+                    remainder: 0
+                },
+                {
+                    dividend: [2, -3, 0, 5],  // 2x³ - 3x² + 5
+                    divisor: [1, -2],         // x - 2
+                    quotient: [2, 1, 2],      // 2x² + x + 2
+                    remainder: 9
+                }
+            ],
+            hard: [
+                {
+                    dividend: [1, 0, 0, -8],  // x³ - 8
+                    divisor: [1, -2],         // x - 2
+                    quotient: [1, 2, 4],      // x² + 2x + 4
+                    remainder: 0
+                },
+                {
+                    dividend: [1, -4, 6, -4, 1], // x⁴ - 4x³ + 6x² - 4x + 1
+                    divisor: [1, -1],            // x - 1
+                    quotient: [1, -3, 3, -1],    // x³ - 3x² + 3x - 1
+                    remainder: 0
+                },
+                {
+                    dividend: [1, 0, -4, 0, 3],  // x⁴ - 4x² + 3
+                    divisor: [1, -1],            // x - 1
+                    quotient: [1, 1, -3, -3],    // x³ + x² - 3x - 3
+                    remainder: 0
+                },
+                {
+                    dividend: [2, 1, -5, 2],     // 2x³ + x² - 5x + 2
+                    divisor: [1, 2],             // x + 2
+                    quotient: [2, -3, 1],        // 2x² - 3x + 1
+                    remainder: 0
+                },
+                {
+                    dividend: [1, -1, 0, -1, 1], // x⁴ - x³ - x + 1
+                    divisor: [1, -1],            // x - 1
+                    quotient: [1, 0, 0, -1],     // x³ - 1
+                    remainder: 0
+                }
+            ]
+        };
+
+        // ==================== STATE ====================
+        let currentDifficulty = 'easy';
+        let currentProblemIndex = 0;
+        let currentProblem = null;
+        let currentStep = 0;
+        let stepsCorrect = 0;
+        let mistakes = 0;
+        let stepData = [];
+        let totalSteps = 0;
+
+        // ==================== INITIALIZATION ====================
+        function init() {
+            loadProblem();
+        }
+
+        function selectDifficulty(diff) {
+            currentDifficulty = diff;
+            currentProblemIndex = 0;
+            document.querySelectorAll('.problem-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            loadProblem();
+        }
+
+        function loadProblem() {
+            const problemSet = problems[currentDifficulty];
+            currentProblem = problemSet[currentProblemIndex % problemSet.length];
+            currentStep = 0;
+            stepData = generateStepData(currentProblem);
+            totalSteps = stepData.length;
+
+            document.getElementById('current-problem').textContent = currentProblemIndex + 1;
+            document.getElementById('total-problems').textContent = problemSet.length;
+            document.getElementById('problem-title').innerHTML =
+                `Divide: (${formatPoly(currentProblem.dividend)}) ÷ (${formatPoly(currentProblem.divisor)})`;
+
+            document.getElementById('completion').classList.remove('show');
+
+            buildProgressDots();
+            buildWorkspace();
+            updateInstruction();
+            document.getElementById('feedback').classList.remove('show');
+        }
+
+        // ==================== STEP GENERATION ====================
+        function generateStepData(problem) {
+            const steps = [];
+            const dividend = [...problem.dividend];
+            const divisor = problem.divisor;
+            const quotient = problem.quotient;
+            const dividendDeg = dividend.length - 1;
+            const divisorDeg = divisor.length - 1;
+
+            let remainder = [...dividend];
+
+            for (let i = 0; i < quotient.length; i++) {
+                const qTerm = quotient[i];
+                const qPower = dividendDeg - divisorDeg - i;
+
+                // Step: Divide
+                steps.push({
+                    type: 'divide',
+                    position: i,
+                    leadingDividend: remainder[i],
+                    leadingDividendPower: dividendDeg - i,
+                    leadingDivisor: divisor[0],
+                    leadingDivisorPower: divisorDeg,
+                    answer: qTerm,
+                    answerPower: qPower
+                });
+
+                // Calculate multiplication result
+                const multResult = [];
+                for (let j = 0; j < divisor.length; j++) {
+                    multResult.push(qTerm * divisor[j]);
+                }
+
+                // Step: Multiply
+                steps.push({
+                    type: 'multiply',
+                    position: i,
+                    quotientTerm: qTerm,
+                    quotientPower: qPower,
+                    divisor: divisor,
+                    answer: multResult
+                });
+
+                // Calculate subtraction result
+                const subResult = [];
+                for (let j = 0; j < multResult.length; j++) {
+                    subResult.push(remainder[i + j] - multResult[j]);
+                }
+
+                // Step: Subtract
+                steps.push({
+                    type: 'subtract',
+                    position: i,
+                    minuend: remainder.slice(i, i + divisor.length),
+                    subtrahend: multResult,
+                    answer: subResult
+                });
+
+                // Update remainder
+                for (let j = 0; j < subResult.length; j++) {
+                    remainder[i + j] = subResult[j];
+                }
+            }
+
+            return steps;
+        }
+
+        // ==================== UI BUILDING ====================
+        function buildProgressDots() {
+            const container = document.getElementById('progress-steps');
+            container.innerHTML = '';
+            for (let i = 0; i < totalSteps; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot' + (i === 0 ? ' current' : '');
+                container.appendChild(dot);
+            }
+        }
+
+        function buildWorkspace() {
+            const workspace = document.getElementById('workspace');
+            const dividendDeg = currentProblem.dividend.length - 1;
+            const divisorDeg = currentProblem.divisor.length - 1;
+            const quotientLen = currentProblem.quotient.length;
+
+            let html = '<div class="division-grid">';
+
+            // Quotient row
+            html += '<div class="quotient-area">';
+            for (let i = 0; i < quotientLen; i++) {
+                html += `<span class="term-cell" id="quotient-${i}"></span>`;
+            }
+            html += '</div>';
+
+            // Divisor and dividend row
+            html += '<div class="division-row">';
+            html += '<div class="divisor-area">';
+            html += `<span class="divisor">${formatPoly(currentProblem.divisor)}</span>`;
+            html += '</div>';
+            html += '<div class="dividend-area">';
+            for (let i = 0; i < currentProblem.dividend.length; i++) {
+                const coef = currentProblem.dividend[i];
+                const power = dividendDeg - i;
+                html += `<span class="term-cell term-fixed">${formatTerm(coef, power, i === 0)}</span>`;
+            }
+            html += '</div>';
+            html += '</div>';
+
+            // Work rows (will be added dynamically)
+            html += '<div id="work-rows"></div>';
+
+            html += '</div>';
+            workspace.innerHTML = html;
+        }
+
+        function updateInstruction() {
+            const instruction = document.getElementById('step-instruction');
+            const step = stepData[currentStep];
+
+            if (!step) {
+                showCompletion();
+                return;
+            }
+
+            let title = '';
+            let desc = '';
+            let math = '';
+
+            if (step.type === 'divide') {
+                title = `Step ${currentStep + 1}: Divide`;
+                desc = 'Divide the leading term of what remains by the leading term of the divisor.';
+                math = `${formatTerm(step.leadingDividend, step.leadingDividendPower, true)} ÷ ${formatTerm(step.leadingDivisor, step.leadingDivisorPower, true)} = ?`;
+                showDivideInput(step);
+            } else if (step.type === 'multiply') {
+                title = `Step ${currentStep + 1}: Multiply`;
+                desc = `Multiply the divisor by ${formatTerm(step.quotientTerm, step.quotientPower, true)}`;
+                math = `${formatTerm(step.quotientTerm, step.quotientPower, true)} × (${formatPoly(step.divisor)}) = ?`;
+                showMultiplyInput(step);
+            } else if (step.type === 'subtract') {
+                title = `Step ${currentStep + 1}: Subtract`;
+                desc = 'Subtract and bring down the next term (if any).';
+                math = `(${formatPolyFromTerms(step.minuend, currentProblem.dividend.length - 1 - step.position)}) − (${formatPolyFromTerms(step.subtrahend, currentProblem.dividend.length - 1 - step.position)}) = ?`;
+                showSubtractInput(step);
+            }
+
+            instruction.innerHTML = `
+                <h3>${title}</h3>
+                <p>${desc}</p>
+                <div class="math">${math}</div>
+            `;
+        }
+
+        function showDivideInput(step) {
+            const quotientCell = document.getElementById(`quotient-${step.position}`);
+            quotientCell.innerHTML = `<input type="text" class="term-input" id="current-input" placeholder="?" autofocus>`;
+            quotientCell.classList.add('term-highlight');
+            document.getElementById('current-input').focus();
+            addEnterListener();
+        }
+
+        function showMultiplyInput(step) {
+            const workRows = document.getElementById('work-rows');
+            const startPower = currentProblem.dividend.length - 1 - step.position;
+
+            let html = `<div class="work-row" id="mult-row-${step.position}">`;
+            // Add spacer cells for indentation based on position
+            for (let s = 0; s < step.position; s++) {
+                html += `<span class="term-cell"></span>`;
+            }
+            for (let i = 0; i < step.answer.length; i++) {
+                html += `<span class="term-cell input-cell">
+                    <input type="text" class="term-input" id="mult-input-${i}" placeholder="?">
+                </span>`;
+            }
+            html += '</div>';
+            workRows.innerHTML += html;
+
+            document.getElementById('mult-input-0').focus();
+            addEnterListener();
+        }
+
+        function showSubtractInput(step) {
+            const workRows = document.getElementById('work-rows');
+            const lastRow = workRows.lastElementChild;
+            if (lastRow) {
+                lastRow.innerHTML += '<span class="term-cell term-fixed subtract-line" style="width:100%"></span>';
+            }
+
+            // Determine how many terms to show (including brought down term if any)
+            const position = step.position;
+            const remainingTerms = currentProblem.dividend.length - position - step.answer.length;
+            const showTerms = step.answer.length + (remainingTerms > 0 ? 1 : 0);
+
+            let html = `<div class="work-row" id="sub-row-${step.position}">`;
+            // Add spacer cells for indentation based on position
+            for (let s = 0; s < step.position; s++) {
+                html += `<span class="term-cell"></span>`;
+            }
+            for (let i = 0; i < showTerms; i++) {
+                if (i < step.answer.length) {
+                    html += `<span class="term-cell input-cell">
+                        <input type="text" class="term-input" id="sub-input-${i}" placeholder="?">
+                    </span>`;
+                } else {
+                    // Brought down term
+                    const broughtDownIdx = position + step.answer.length;
+                    const broughtDownCoef = currentProblem.dividend[broughtDownIdx];
+                    const broughtDownPower = currentProblem.dividend.length - 1 - broughtDownIdx;
+                    html += `<span class="term-cell term-fixed" id="brought-down">${formatTerm(broughtDownCoef, broughtDownPower, false)}</span>`;
+                }
+            }
+            html += '</div>';
+            workRows.innerHTML += html;
+
+            document.getElementById('sub-input-0').focus();
+            addEnterListener();
+        }
+
+        function addEnterListener() {
+            document.querySelectorAll('.term-input').forEach(input => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        checkStep();
+                    }
+                });
+            });
+        }
+
+        // ==================== ANSWER CHECKING ====================
+        function checkStep() {
+            const step = stepData[currentStep];
+            let isCorrect = false;
+            let userAnswers = [];
+
+            if (step.type === 'divide') {
+                const input = document.getElementById('current-input');
+                const userVal = parseTermInput(input.value, step.answerPower);
+                userAnswers = [userVal];
+                isCorrect = (userVal === step.answer);
+
+                if (isCorrect) {
+                    input.classList.add('correct');
+                    input.disabled = true;
+                    const quotientCell = document.getElementById(`quotient-${step.position}`);
+                    quotientCell.classList.remove('term-highlight');
+                    quotientCell.innerHTML = `<span class="term-fixed term-result">${formatTerm(step.answer, step.answerPower, step.position === 0)}</span>`;
+                } else {
+                    input.classList.add('incorrect');
+                    setTimeout(() => input.classList.remove('incorrect'), 500);
+                }
+            } else if (step.type === 'multiply') {
+                userAnswers = [];
+                isCorrect = true;
+                for (let i = 0; i < step.answer.length; i++) {
+                    const input = document.getElementById(`mult-input-${i}`);
+                    const power = currentProblem.dividend.length - 1 - step.position - i;
+                    const userVal = parseTermInput(input.value, power);
+                    userAnswers.push(userVal);
+                    if (userVal !== step.answer[i]) {
+                        isCorrect = false;
+                        input.classList.add('incorrect');
+                        setTimeout(() => input.classList.remove('incorrect'), 500);
+                    } else {
+                        input.classList.add('correct');
+                    }
+                }
+
+                if (isCorrect) {
+                    const row = document.getElementById(`mult-row-${step.position}`);
+                    let html = '';
+                    // Add spacer cells for indentation
+                    for (let s = 0; s < step.position; s++) {
+                        html += `<span class="term-cell"></span>`;
+                    }
+                    for (let i = 0; i < step.answer.length; i++) {
+                        const power = currentProblem.dividend.length - 1 - step.position - i;
+                        html += `<span class="term-cell term-fixed">${formatTerm(step.answer[i], power, i === 0)}</span>`;
+                    }
+                    row.innerHTML = html;
+                }
+            } else if (step.type === 'subtract') {
+                userAnswers = [];
+                isCorrect = true;
+                for (let i = 0; i < step.answer.length; i++) {
+                    const input = document.getElementById(`sub-input-${i}`);
+                    const power = currentProblem.dividend.length - 1 - step.position - i;
+                    const userVal = parseTermInput(input.value, power);
+                    userAnswers.push(userVal);
+
+                    // First term should be 0 after subtraction
+                    if (userVal !== step.answer[i]) {
+                        isCorrect = false;
+                        input.classList.add('incorrect');
+                        setTimeout(() => input.classList.remove('incorrect'), 500);
+                    } else {
+                        input.classList.add('correct');
+                    }
+                }
+
+                if (isCorrect) {
+                    const row = document.getElementById(`sub-row-${step.position}`);
+                    let html = '';
+                    // Add spacer cells for indentation
+                    for (let s = 0; s < step.position; s++) {
+                        html += `<span class="term-cell"></span>`;
+                    }
+                    for (let i = 0; i < step.answer.length; i++) {
+                        const power = currentProblem.dividend.length - 1 - step.position - i;
+                        // Skip the first term (should be 0)
+                        if (i > 0 || step.answer[i] !== 0) {
+                            html += `<span class="term-cell term-fixed">${formatTerm(step.answer[i], power, i === 0)}</span>`;
+                        } else {
+                            html += `<span class="term-cell term-fixed"></span>`;
+                        }
+                    }
+                    // Add brought down term if exists
+                    const broughtDown = document.getElementById('brought-down');
+                    if (broughtDown) {
+                        html += broughtDown.outerHTML;
+                    }
+                    row.innerHTML = html;
+                }
+            }
+
+            showFeedback(isCorrect, step);
+
+            if (isCorrect) {
+                stepsCorrect++;
+                document.getElementById('steps-correct').textContent = stepsCorrect;
+                updateProgressDot(currentStep, 'complete');
+                currentStep++;
+                if (currentStep < totalSteps) {
+                    updateProgressDot(currentStep, 'current');
+                }
+                setTimeout(() => {
+                    document.getElementById('feedback').classList.remove('show');
+                    updateInstruction();
+                }, 800);
+            } else {
+                mistakes++;
+                document.getElementById('mistakes').textContent = mistakes;
+                updateProgressDot(currentStep, 'error');
+                setTimeout(() => {
+                    updateProgressDot(currentStep, 'current');
+                }, 500);
+            }
+        }
+
+        function parseTermInput(input, power) {
+            input = input.trim().toLowerCase().replace(/\s+/g, '');
+
+            // Handle just a number
+            if (/^-?\d+$/.test(input)) {
+                return parseInt(input);
+            }
+
+            // Handle coefficient with variable
+            let match = input.match(/^(-?\d*)x(\^(\d+))?$/);
+            if (match) {
+                let coef = match[1] === '' || match[1] === '+' ? 1 : (match[1] === '-' ? -1 : parseInt(match[1]));
+                return coef;
+            }
+
+            // Handle 0
+            if (input === '0') return 0;
+
+            // Try parsing as number anyway
+            const num = parseFloat(input);
+            return isNaN(num) ? null : num;
+        }
+
+        function showFeedback(isCorrect, step) {
+            const feedback = document.getElementById('feedback');
+            if (isCorrect) {
+                feedback.className = 'feedback-box correct show';
+                feedback.innerHTML = '<strong>Correct!</strong> Great work!';
+            } else {
+                feedback.className = 'feedback-box incorrect show';
+                let hint = '';
+                if (step.type === 'divide') {
+                    hint = `Remember: ${formatTerm(step.leadingDividend, step.leadingDividendPower, true)} ÷ ${formatTerm(step.leadingDivisor, step.leadingDivisorPower, true)} = ${formatTerm(step.answer, step.answerPower, true)}`;
+                } else if (step.type === 'multiply') {
+                    hint = 'Multiply each term of the divisor by the quotient term.';
+                } else if (step.type === 'subtract') {
+                    hint = 'Subtract each term carefully. Remember: subtracting a negative is adding!';
+                }
+                feedback.innerHTML = `<strong>Not quite.</strong> Try again!<br><small>${hint}</small>`;
+            }
+        }
+
+        function showHint() {
+            const step = stepData[currentStep];
+            const feedback = document.getElementById('feedback');
+            feedback.className = 'feedback-box hint show';
+
+            let hint = '';
+            if (step.type === 'divide') {
+                hint = `Divide coefficients: ${step.leadingDividend} ÷ ${step.leadingDivisor} = ${step.answer}. The variable part: x^${step.leadingDividendPower} ÷ x^${step.leadingDivisorPower} = x^${step.answerPower}`;
+            } else if (step.type === 'multiply') {
+                hint = `Multiply ${formatTerm(step.quotientTerm, step.quotientPower, true)} by each term of (${formatPoly(step.divisor)}). Answer: ${formatPolyFromTerms(step.answer, currentProblem.dividend.length - 1 - step.position)}`;
+            } else if (step.type === 'subtract') {
+                hint = `The answer should be: ${formatPolyFromTerms(step.answer, currentProblem.dividend.length - 1 - step.position)}. Note: the leading term should be 0!`;
+            }
+
+            feedback.innerHTML = `<strong>Hint:</strong> ${hint}`;
+        }
+
+        function skipStep() {
+            const step = stepData[currentStep];
+
+            if (step.type === 'divide') {
+                const quotientCell = document.getElementById(`quotient-${step.position}`);
+                quotientCell.classList.remove('term-highlight');
+                quotientCell.innerHTML = `<span class="term-fixed term-result">${formatTerm(step.answer, step.answerPower, step.position === 0)}</span>`;
+            } else if (step.type === 'multiply') {
+                const row = document.getElementById(`mult-row-${step.position}`);
+                let html = '';
+                // Add spacer cells for indentation
+                for (let s = 0; s < step.position; s++) {
+                    html += `<span class="term-cell"></span>`;
+                }
+                for (let i = 0; i < step.answer.length; i++) {
+                    const power = currentProblem.dividend.length - 1 - step.position - i;
+                    html += `<span class="term-cell term-fixed">${formatTerm(step.answer[i], power, i === 0)}</span>`;
+                }
+                row.innerHTML = html;
+            } else if (step.type === 'subtract') {
+                const row = document.getElementById(`sub-row-${step.position}`);
+                let html = '';
+                // Add spacer cells for indentation
+                for (let s = 0; s < step.position; s++) {
+                    html += `<span class="term-cell"></span>`;
+                }
+                for (let i = 0; i < step.answer.length; i++) {
+                    const power = currentProblem.dividend.length - 1 - step.position - i;
+                    if (i > 0 || step.answer[i] !== 0) {
+                        html += `<span class="term-cell term-fixed">${formatTerm(step.answer[i], power, i === 0)}</span>`;
+                    } else {
+                        html += `<span class="term-cell term-fixed"></span>`;
+                    }
+                }
+                const broughtDown = document.getElementById('brought-down');
+                if (broughtDown) {
+                    html += broughtDown.outerHTML;
+                }
+                row.innerHTML = html;
+            }
+
+            mistakes++;
+            document.getElementById('mistakes').textContent = mistakes;
+            updateProgressDot(currentStep, 'complete');
+            currentStep++;
+            if (currentStep < totalSteps) {
+                updateProgressDot(currentStep, 'current');
+            }
+            document.getElementById('feedback').classList.remove('show');
+            updateInstruction();
+        }
+
+        function updateProgressDot(index, state) {
+            const dots = document.querySelectorAll('.progress-dot');
+            if (dots[index]) {
+                dots[index].className = 'progress-dot ' + state;
+            }
+        }
+
+        function showCompletion() {
+            document.getElementById('step-instruction').style.display = 'none';
+            document.getElementById('workspace').style.display = 'none';
+            document.querySelector('.buttons-row').style.display = 'none';
+
+            const completion = document.getElementById('completion');
+            completion.classList.add('show');
+
+            const quotientStr = formatPoly(currentProblem.quotient);
+            const remainderStr = currentProblem.remainder;
+
+            let answerHtml = `<strong>Quotient:</strong> ${quotientStr}<br>`;
+            answerHtml += `<strong>Remainder:</strong> ${remainderStr}`;
+
+            if (remainderStr === 0) {
+                answerHtml += `<br><br><em>(${formatPoly(currentProblem.divisor)}) is a factor!</em>`;
+            }
+
+            document.getElementById('final-answer').innerHTML = answerHtml;
+        }
+
+        function nextProblem() {
+            currentProblemIndex++;
+            document.getElementById('step-instruction').style.display = 'block';
+            document.getElementById('workspace').style.display = 'block';
+            document.querySelector('.buttons-row').style.display = 'flex';
+            loadProblem();
+        }
+
+        // ==================== FORMATTING ====================
+        function formatPoly(coeffs) {
+            const degree = coeffs.length - 1;
+            let terms = [];
+
+            coeffs.forEach((c, i) => {
+                const power = degree - i;
+                if (c === 0 && coeffs.length > 1) return;
+
+                let term = formatTerm(c, power, terms.length === 0);
+                terms.push(term);
+            });
+
+            return terms.join(' ').replace(/\+ -/g, '- ').replace(/  /g, ' ').trim() || '0';
+        }
+
+        function formatTerm(coef, power, isFirst) {
+            if (coef === 0) return '0';
+
+            let sign = '';
+            if (!isFirst) {
+                sign = coef >= 0 ? '+ ' : '- ';
+            } else if (coef < 0) {
+                sign = '-';
+            }
+
+            const absCoef = Math.abs(coef);
+
+            if (power === 0) {
+                return sign + absCoef;
+            } else if (power === 1) {
+                return sign + (absCoef === 1 ? '' : absCoef) + 'x';
+            } else {
+                return sign + (absCoef === 1 ? '' : absCoef) + 'x<sup>' + power + '</sup>';
+            }
+        }
+
+        function formatPolyFromTerms(coeffs, startPower) {
+            let terms = [];
+            coeffs.forEach((c, i) => {
+                const power = startPower - i;
+                if (c === 0 && coeffs.length > 1) return;
+                terms.push(formatTerm(c, power, terms.length === 0));
+            });
+            return terms.join(' ').replace(/\+ -/g, '- ').replace(/  /g, ' ').trim() || '0';
+        }
+
+        // Initialize on load
+        init();
+    </script>
+</body>
+</html>

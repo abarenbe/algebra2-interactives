@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4.2 Adding, Subtracting, and Multiplying Polynomials - Interactive</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 0;
+        }
+
+        /* Navigation Bar */
+        .site-nav {
+            background: rgba(0,0,0,0.2);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .nav-link:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        .nav-title {
+            color: white;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .tab:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: white;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .concept-box {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .concept-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .concept-box p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .example {
+            background: #fff3e0;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .example-title {
+            font-weight: bold;
+            color: #e65100;
+            margin-bottom: 10px;
+        }
+
+        .problem-section {
+            margin-top: 30px;
+        }
+
+        .problem-section h3 {
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .problem-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+
+        .polynomial-display {
+            font-size: 1.3rem;
+            text-align: center;
+            padding: 20px;
+            background: #f5f5f5;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+        }
+
+        .operation {
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .input-group input.correct {
+            border-color: #4caf50;
+            background: #e8f5e9;
+        }
+
+        .input-group input.incorrect {
+            border-color: #f44336;
+            background: #ffebee;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-hint {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #e8f5e9;
+            color: #2e7d32;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #ffebee;
+            color: #c62828;
+            display: block;
+        }
+
+        .feedback.hint {
+            background: #fff3e0;
+            color: #e65100;
+            display: block;
+        }
+
+        .score-display {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .score-display h2 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            height: 10px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .step-by-step {
+            background: #e3f2fd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .step {
+            padding: 10px 0;
+            border-bottom: 1px dashed #90caf9;
+        }
+
+        .step:last-child {
+            border-bottom: none;
+        }
+
+        .step-number {
+            background: #2196f3;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-right: 10px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .foil-grid {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            gap: 5px;
+            max-width: 300px;
+            margin: 20px auto;
+            text-align: center;
+        }
+
+        .foil-cell {
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 8px;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+        }
+
+        .foil-header {
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        .foil-result {
+            background: #e8f5e9;
+        }
+
+        sup {
+            font-size: 0.7em;
+        }
+
+        .buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .polynomial-display {
+                font-size: 1rem;
+            }
+            .tab {
+                padding: 10px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="site-nav">
+        <a href="../" class="nav-link">&larr; Chapter 4</a>
+        <span class="nav-title">4.2 Polynomial Operations</span>
+        <div class="nav-links">
+            <a href="../4.1/" class="nav-link">&larr; 4.1</a>
+            <a href="../4.3/" class="nav-link">4.3 &rarr;</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>4.2 Polynomial Operations</h1>
+        <p class="subtitle">Adding, Subtracting, and Multiplying Polynomials</p>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showSection('learn')">Learn</button>
+            <button class="tab" onclick="showSection('adding')">Adding</button>
+            <button class="tab" onclick="showSection('subtracting')">Subtracting</button>
+            <button class="tab" onclick="showSection('multiplying')">Multiplying</button>
+            <button class="tab" onclick="showSection('challenge')">Challenge</button>
+        </div>
+
+        <!-- LEARN SECTION -->
+        <div id="learn" class="section">
+            <div class="card">
+                <div class="concept-box">
+                    <h3>Adding Polynomials</h3>
+                    <p>To add polynomials, combine <strong>like terms</strong> (terms with the same variable and exponent).</p>
+                </div>
+
+                <div class="example">
+                    <div class="example-title">Example: Add (3x² + 2x - 5) + (x² - 4x + 7)</div>
+                    <div class="step-by-step">
+                        <div class="step"><span class="step-number">1</span>Group like terms: (3x² + x²) + (2x + (-4x)) + (-5 + 7)</div>
+                        <div class="step"><span class="step-number">2</span>Combine coefficients: 4x² + (-2x) + 2</div>
+                        <div class="step"><span class="step-number">3</span>Final answer: <strong>4x² - 2x + 2</strong></div>
+                    </div>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Subtracting Polynomials</h3>
+                    <p>To subtract polynomials, <strong>distribute the negative</strong> to all terms in the second polynomial, then combine like terms.</p>
+                </div>
+
+                <div class="example">
+                    <div class="example-title">Example: Subtract (5x² - 3x + 4) - (2x² + x - 6)</div>
+                    <div class="step-by-step">
+                        <div class="step"><span class="step-number">1</span>Distribute negative: 5x² - 3x + 4 - 2x² - x + 6</div>
+                        <div class="step"><span class="step-number">2</span>Group like terms: (5x² - 2x²) + (-3x - x) + (4 + 6)</div>
+                        <div class="step"><span class="step-number">3</span>Final answer: <strong>3x² - 4x + 10</strong></div>
+                    </div>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Multiplying Polynomials</h3>
+                    <p>Use the <strong>distributive property</strong>: multiply each term in the first polynomial by each term in the second polynomial, then combine like terms.</p>
+                </div>
+
+                <div class="example">
+                    <div class="example-title">Example: Multiply (x + 3)(x - 2) using FOIL</div>
+                    <div class="foil-grid">
+                        <div class="foil-cell foil-header">×</div>
+                        <div class="foil-cell foil-header">x</div>
+                        <div class="foil-cell foil-header">-2</div>
+                        <div class="foil-cell foil-header">x</div>
+                        <div class="foil-cell">x²</div>
+                        <div class="foil-cell">-2x</div>
+                        <div class="foil-cell foil-header">+3</div>
+                        <div class="foil-cell">3x</div>
+                        <div class="foil-cell">-6</div>
+                    </div>
+                    <div class="step-by-step">
+                        <div class="step"><span class="step-number">F</span>First: x · x = x²</div>
+                        <div class="step"><span class="step-number">O</span>Outer: x · (-2) = -2x</div>
+                        <div class="step"><span class="step-number">I</span>Inner: 3 · x = 3x</div>
+                        <div class="step"><span class="step-number">L</span>Last: 3 · (-2) = -6</div>
+                        <div class="step"><span class="step-number">+</span>Combine: x² + (-2x + 3x) - 6 = <strong>x² + x - 6</strong></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADDING SECTION -->
+        <div id="adding" class="section hidden">
+            <div class="score-display">
+                <h2 id="add-score">0 / 0</h2>
+                <p>Problems Correct</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="add-progress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="problem-section">
+                    <h3><span class="problem-number" id="add-num">1</span> Add the polynomials:</h3>
+                    <div class="polynomial-display" id="add-problem"></div>
+
+                    <div class="input-group">
+                        <label>Enter your answer in standard form (e.g., 3x^2 + 2x - 5):</label>
+                        <input type="text" id="add-answer" placeholder="Type your answer here...">
+                    </div>
+
+                    <div class="feedback" id="add-feedback"></div>
+
+                    <div class="buttons-row">
+                        <button class="btn btn-hint" onclick="showHint('add')">Show Hint</button>
+                        <button class="btn btn-primary" onclick="checkAnswer('add')">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="nextProblem('add')">Next Problem</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBTRACTING SECTION -->
+        <div id="subtracting" class="section hidden">
+            <div class="score-display">
+                <h2 id="sub-score">0 / 0</h2>
+                <p>Problems Correct</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="sub-progress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="problem-section">
+                    <h3><span class="problem-number" id="sub-num">1</span> Subtract the polynomials:</h3>
+                    <div class="polynomial-display" id="sub-problem"></div>
+
+                    <div class="input-group">
+                        <label>Enter your answer in standard form (e.g., 3x^2 + 2x - 5):</label>
+                        <input type="text" id="sub-answer" placeholder="Type your answer here...">
+                    </div>
+
+                    <div class="feedback" id="sub-feedback"></div>
+
+                    <div class="buttons-row">
+                        <button class="btn btn-hint" onclick="showHint('sub')">Show Hint</button>
+                        <button class="btn btn-primary" onclick="checkAnswer('sub')">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="nextProblem('sub')">Next Problem</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MULTIPLYING SECTION -->
+        <div id="multiplying" class="section hidden">
+            <div class="score-display">
+                <h2 id="mult-score">0 / 0</h2>
+                <p>Problems Correct</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="mult-progress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="problem-section">
+                    <h3><span class="problem-number" id="mult-num">1</span> Multiply the polynomials:</h3>
+                    <div class="polynomial-display" id="mult-problem"></div>
+
+                    <div class="input-group">
+                        <label>Enter your answer in standard form (e.g., x^2 + 5x - 6):</label>
+                        <input type="text" id="mult-answer" placeholder="Type your answer here...">
+                    </div>
+
+                    <div class="feedback" id="mult-feedback"></div>
+
+                    <div class="buttons-row">
+                        <button class="btn btn-hint" onclick="showHint('mult')">Show Hint</button>
+                        <button class="btn btn-primary" onclick="checkAnswer('mult')">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="nextProblem('mult')">Next Problem</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHALLENGE SECTION -->
+        <div id="challenge" class="section hidden">
+            <div class="score-display">
+                <h2 id="chal-score">0 / 0</h2>
+                <p>Problems Correct</p>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="chal-progress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="problem-section">
+                    <h3><span class="problem-number" id="chal-num">1</span> <span id="chal-type">Mixed Problem</span>:</h3>
+                    <div class="polynomial-display" id="chal-problem"></div>
+
+                    <div class="input-group">
+                        <label>Enter your answer in standard form:</label>
+                        <input type="text" id="chal-answer" placeholder="Type your answer here...">
+                    </div>
+
+                    <div class="feedback" id="chal-feedback"></div>
+
+                    <div class="buttons-row">
+                        <button class="btn btn-hint" onclick="showHint('chal')">Show Hint</button>
+                        <button class="btn btn-primary" onclick="checkAnswer('chal')">Check Answer</button>
+                        <button class="btn btn-secondary" onclick="nextProblem('chal')">Next Problem</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Problem data
+        const problems = {
+            add: [
+                { p1: [3, 2, -5], p2: [1, -4, 7], answer: [4, -2, 2], hint: "Combine like terms: (3+1)x² + (2-4)x + (-5+7)" },
+                { p1: [2, 5, 1], p2: [4, -3, 6], answer: [6, 2, 7], hint: "Group by degree: x² terms, x terms, constants" },
+                { p1: [5, -2, 3], p2: [-2, 7, -1], answer: [3, 5, 2], hint: "5 + (-2) = 3 for x² term" },
+                { p1: [1, 0, -4], p2: [2, 3, 8], answer: [3, 3, 4], hint: "Don't forget the x term in the first polynomial is 0x" },
+                { p1: [-3, 4, 2], p2: [5, -1, -6], answer: [2, 3, -4], hint: "Be careful with the signs!" },
+                { p1: [4, -6, 0], p2: [-1, 2, 5], answer: [3, -4, 5], hint: "4 + (-1) = 3 for the x² term" },
+                { p1: [6, 1, -3], p2: [-4, -1, 7], answer: [2, 0, 4], hint: "The x terms cancel out: 1 + (-1) = 0" },
+                { p1: [2, -3, 5], p2: [3, 3, -2], answer: [5, 0, 3], hint: "The x terms cancel: -3 + 3 = 0" }
+            ],
+            sub: [
+                { p1: [5, -3, 4], p2: [2, 1, -6], answer: [3, -4, 10], hint: "Distribute negative: 5x² - 3x + 4 - 2x² - x + 6" },
+                { p1: [7, 2, -1], p2: [3, 5, 4], answer: [4, -3, -5], hint: "Remember to change signs: -(3x² + 5x + 4) = -3x² - 5x - 4" },
+                { p1: [4, -1, 6], p2: [-2, 3, 2], answer: [6, -4, 4], hint: "4 - (-2) = 6 for the x² term" },
+                { p1: [3, 0, -5], p2: [1, -4, 2], answer: [2, 4, -7], hint: "0 - (-4) = 4 for the x term" },
+                { p1: [6, -2, 3], p2: [6, -2, 3], answer: [0, 0, 0], hint: "Subtracting a polynomial from itself gives 0" },
+                { p1: [-2, 5, 1], p2: [3, -4, -2], answer: [-5, 9, 3], hint: "-2 - 3 = -5 for x² term" },
+                { p1: [8, -3, 2], p2: [5, 1, -4], answer: [3, -4, 6], hint: "Careful: -3 - 1 = -4" },
+                { p1: [1, 4, -2], p2: [-3, 4, 5], answer: [4, 0, -7], hint: "The x terms: 4 - 4 = 0" }
+            ],
+            mult: [
+                { p1: [1, 3], p2: [1, -2], answer: [1, 1, -6], hint: "FOIL: First, Outer, Inner, Last" },
+                { p1: [1, -4], p2: [1, 5], answer: [1, 1, -20], hint: "F: x·x, O: x·5, I: -4·x, L: -4·5" },
+                { p1: [2, 1], p2: [1, 3], answer: [2, 7, 3], hint: "2x·x = 2x², 2x·3 = 6x, 1·x = x, 1·3 = 3" },
+                { p1: [1, -2], p2: [1, -2], answer: [1, -4, 4], hint: "This is (x-2)² - a perfect square!" },
+                { p1: [1, 5], p2: [1, -5], answer: [1, 0, -25], hint: "Difference of squares: (a+b)(a-b) = a² - b²" },
+                { p1: [3, -1], p2: [2, 4], answer: [6, 10, -4], hint: "3x·2x = 6x², 3x·4 = 12x, -1·2x = -2x" },
+                { p1: [2, -3], p2: [2, 3], answer: [4, 0, -9], hint: "Difference of squares pattern!" },
+                { p1: [1, 2], p2: [1, 2], answer: [1, 4, 4], hint: "Perfect square: (x+2)² = x² + 4x + 4" }
+            ],
+            chal: [
+                { type: "add", p1: [2, -5, 3, 1], p2: [1, 4, -2, 5], answer: [3, -1, 1, 6], hint: "Add like terms for each degree", degree: 3 },
+                { type: "sub", p1: [4, 0, -3, 2], p2: [1, -2, 5, -1], answer: [3, 2, -8, 3], hint: "Distribute the negative first", degree: 3 },
+                { type: "mult", p1: [1, 2, -1], p2: [1, 3], answer: [1, 5, 5, -3], hint: "Multiply each term in first by each in second", degree: 3 },
+                { type: "mult", p1: [2, -1], p2: [1, 0, 3], answer: [2, -1, 6, -3], hint: "Don't forget the 0x term!", degree: 3 },
+                { type: "add", p1: [1, -2, 0, 4], p2: [-1, 3, -2, 1], answer: [0, 1, -2, 5], hint: "The x³ terms cancel out", degree: 3 },
+                { type: "mult", p1: [1, -1, 2], p2: [1, 1], answer: [1, 0, 1, 2], hint: "Multiply term by term, then combine", degree: 3 },
+                { type: "sub", p1: [3, -1, 2, -4], p2: [1, 2, -3, 1], answer: [2, -3, 5, -5], hint: "Change all signs in second polynomial", degree: 3 },
+                { type: "mult", p1: [1, 1], p2: [1, 1], p3: [1, 1], answer: [1, 3, 3, 1], hint: "This is (x+1)³ - first multiply two, then the third", degree: 3 }
+            ]
+        };
+
+        // State
+        const state = {
+            add: { current: 0, correct: 0, total: 0 },
+            sub: { current: 0, correct: 0, total: 0 },
+            mult: { current: 0, correct: 0, total: 0 },
+            chal: { current: 0, correct: 0, total: 0 }
+        };
+
+        // Initialize
+        function init() {
+            shuffleProblems();
+            loadProblem('add');
+            loadProblem('sub');
+            loadProblem('mult');
+            loadProblem('chal');
+
+            // Add enter key listeners
+            ['add', 'sub', 'mult', 'chal'].forEach(type => {
+                document.getElementById(`${type}-answer`).addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') checkAnswer(type);
+                });
+            });
+        }
+
+        function shuffleProblems() {
+            Object.keys(problems).forEach(key => {
+                problems[key] = problems[key].sort(() => Math.random() - 0.5);
+            });
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function formatPolynomial(coeffs, variable = 'x') {
+            const degree = coeffs.length - 1;
+            let terms = [];
+
+            coeffs.forEach((c, i) => {
+                const power = degree - i;
+                if (c === 0) return;
+
+                let term = '';
+                const absC = Math.abs(c);
+                const sign = c < 0 ? ' - ' : (terms.length > 0 ? ' + ' : '');
+
+                if (power === 0) {
+                    term = absC.toString();
+                } else if (power === 1) {
+                    term = (absC === 1 ? '' : absC) + variable;
+                } else {
+                    term = (absC === 1 ? '' : absC) + variable + '<sup>' + power + '</sup>';
+                }
+
+                terms.push(sign + term);
+            });
+
+            return terms.length > 0 ? terms.join('') : '0';
+        }
+
+        function loadProblem(type) {
+            const prob = problems[type][state[type].current % problems[type].length];
+            const display = document.getElementById(`${type}-problem`);
+
+            if (type === 'chal') {
+                document.getElementById('chal-type').textContent =
+                    prob.type === 'add' ? 'Add' : (prob.type === 'sub' ? 'Subtract' : 'Multiply');
+            }
+
+            let html = '';
+            if (type === 'add') {
+                html = `(${formatPolynomial(prob.p1)}) <span class="operation">+</span> (${formatPolynomial(prob.p2)})`;
+            } else if (type === 'sub') {
+                html = `(${formatPolynomial(prob.p1)}) <span class="operation">−</span> (${formatPolynomial(prob.p2)})`;
+            } else if (type === 'mult') {
+                html = `(${formatPolynomial(prob.p1)}) <span class="operation">·</span> (${formatPolynomial(prob.p2)})`;
+            } else if (type === 'chal') {
+                if (prob.type === 'mult' && prob.p3) {
+                    html = `(${formatPolynomial(prob.p1)}) <span class="operation">·</span> (${formatPolynomial(prob.p2)}) <span class="operation">·</span> (${formatPolynomial(prob.p3)})`;
+                } else if (prob.type === 'add') {
+                    html = `(${formatPolynomial(prob.p1)}) <span class="operation">+</span> (${formatPolynomial(prob.p2)})`;
+                } else if (prob.type === 'sub') {
+                    html = `(${formatPolynomial(prob.p1)}) <span class="operation">−</span> (${formatPolynomial(prob.p2)})`;
+                } else {
+                    html = `(${formatPolynomial(prob.p1)}) <span class="operation">·</span> (${formatPolynomial(prob.p2)})`;
+                }
+            }
+
+            display.innerHTML = html;
+            document.getElementById(`${type}-answer`).value = '';
+            document.getElementById(`${type}-answer`).className = '';
+            document.getElementById(`${type}-feedback`).className = 'feedback';
+            document.getElementById(`${type}-feedback`).innerHTML = '';
+            document.getElementById(`${type}-num`).textContent = state[type].current + 1;
+        }
+
+        function parseAnswer(input) {
+            // Normalize the input
+            let str = input.toLowerCase()
+                .replace(/\s+/g, '')
+                .replace(/−/g, '-')
+                .replace(/\*\*/g, '^')
+                .replace(/x\^(\d+)/g, (_, p) => 'x' + p)
+                .replace(/(\d)x/g, '$1*x')
+                .replace(/x(?!\d)/g, 'x1');
+
+            // Parse into coefficients
+            const maxDegree = 5;
+            const coeffs = new Array(maxDegree + 1).fill(0);
+
+            // Handle terms
+            const termRegex = /([+-]?\d*)\*?x(\d+)|([+-]?\d+)(?![x\d])/g;
+            let match;
+
+            // Add leading + if needed for parsing
+            if (str[0] !== '+' && str[0] !== '-') str = '+' + str;
+
+            // Split into terms
+            const terms = str.match(/[+-][^+-]+/g) || [];
+
+            terms.forEach(term => {
+                term = term.trim();
+                if (term.includes('x')) {
+                    // Has variable
+                    let [coef, power] = term.split('x');
+                    coef = coef === '+' || coef === '' ? 1 : (coef === '-' ? -1 : parseInt(coef));
+                    power = power === '' || power === '1' ? 1 : parseInt(power);
+                    if (power <= maxDegree) coeffs[maxDegree - power] = coef;
+                } else {
+                    // Constant
+                    coeffs[maxDegree] = parseInt(term);
+                }
+            });
+
+            // Trim leading zeros
+            while (coeffs.length > 1 && coeffs[0] === 0) coeffs.shift();
+
+            return coeffs;
+        }
+
+        function arraysEqual(a, b) {
+            // Normalize both arrays (remove leading zeros)
+            while (a.length > 1 && a[0] === 0) a = a.slice(1);
+            while (b.length > 1 && b[0] === 0) b = b.slice(1);
+
+            if (a.length !== b.length) return false;
+            return a.every((val, i) => val === b[i]);
+        }
+
+        function checkAnswer(type) {
+            const input = document.getElementById(`${type}-answer`);
+            const feedback = document.getElementById(`${type}-feedback`);
+            const prob = problems[type][state[type].current % problems[type].length];
+
+            const userAnswer = parseAnswer(input.value);
+            const correct = arraysEqual(userAnswer, prob.answer);
+
+            state[type].total++;
+
+            if (correct) {
+                state[type].correct++;
+                input.className = 'correct';
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '✓ Correct! Great job!';
+            } else {
+                input.className = 'incorrect';
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = `✗ Not quite. The correct answer is: <strong>${formatPolynomial(prob.answer)}</strong>`;
+            }
+
+            updateScore(type);
+        }
+
+        function showHint(type) {
+            const feedback = document.getElementById(`${type}-feedback`);
+            const prob = problems[type][state[type].current % problems[type].length];
+            feedback.className = 'feedback hint';
+            feedback.innerHTML = '💡 Hint: ' + prob.hint;
+        }
+
+        function nextProblem(type) {
+            state[type].current++;
+            if (state[type].current >= problems[type].length) {
+                shuffleProblems();
+            }
+            loadProblem(type);
+        }
+
+        function updateScore(type) {
+            const scoreEl = document.getElementById(`${type}-score`);
+            const progressEl = document.getElementById(`${type}-progress`);
+
+            scoreEl.textContent = `${state[type].correct} / ${state[type].total}`;
+            const percent = state[type].total > 0 ? (state[type].correct / state[type].total * 100) : 0;
+            progressEl.style.width = percent + '%';
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
