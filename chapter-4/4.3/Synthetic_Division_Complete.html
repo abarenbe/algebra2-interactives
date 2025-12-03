@@ -12,14 +12,18 @@
 
         body {
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
             min-height: 100vh;
         }
-
+        .site-nav { background: rgba(0,0,0,0.2); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .nav-link { color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; background: rgba(255,255,255,0.15); transition: all 0.3s ease; font-size: 0.95em; }
+        .nav-link:hover { background: rgba(255,255,255,0.25); }
+        .nav-title { color: white; font-weight: 600; font-size: 1em; }
         .container {
             max-width: 1000px;
             margin: 0 auto;
+            padding: 20px;
         }
 
         header {
@@ -875,6 +879,10 @@
     </style>
 </head>
 <body>
+    <nav class="site-nav">
+        <a href="./" class="nav-link">&larr; Section 4.3</a>
+        <span class="nav-title">Synthetic Division Complete</span>
+    </nav>
     <div class="container">
         <header>
             <h1>Synthetic Division</h1>

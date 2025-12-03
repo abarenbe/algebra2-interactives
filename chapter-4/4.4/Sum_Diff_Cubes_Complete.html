@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sum & Difference of Cubes | 4.4 Factoring Polynomials</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .site-nav {
+            background: rgba(0,0,0,0.2);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .nav-link:hover { background: rgba(255,255,255,0.25); }
+        .nav-title { color: white; font-weight: 600; font-size: 1em; }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p { font-size: 1.1em; opacity: 0.9; }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { background: rgba(255,255,255,0.3); }
+        .tab-btn.active { background: white; color: #667eea; font-weight: bold; }
+
+        .section {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .section.active { display: block; }
+
+        h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        h3 { color: #764ba2; margin-top: 25px; }
+
+        .info-box {
+            background: linear-gradient(135deg, #e8f4fd 0%, #e0e7ff 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .why-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .formula-box {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #ffc107;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .soap-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #c7d2fe 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #6366f1;
+            text-align: center;
+        }
+
+        .soap-letter {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
+            border-radius: 50%;
+            background: #667eea;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin: 0 5px;
+        }
+
+        .example-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .example-card h4 {
+            color: #667eea;
+            margin: 0 0 15px 0;
+        }
+
+        .polynomial-display {
+            font-size: 1.4em;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid #667eea;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .step-navigator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .step-nav-btn {
+            padding: 10px 20px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .step-nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+        }
+
+        .step-nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .step-indicator {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .step-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active { background: #667eea; transform: scale(1.2); }
+        .step-dot.completed { background: #28a745; }
+
+        .watch-step {
+            background: #f0f4ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 150px;
+        }
+
+        .watch-step-title {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .watch-work {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            line-height: 2;
+        }
+
+        .highlight { background: #fff3cd; padding: 2px 6px; border-radius: 4px; }
+        .highlight-green { background: #d4edda; padding: 2px 6px; border-radius: 4px; }
+        .highlight-blue { background: #cce5ff; padding: 2px 6px; border-radius: 4px; }
+
+        .problem-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .step-container {
+            background: #f0f4ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .step-number.completed { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+
+        .step-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .step-content { margin-left: 47px; }
+
+        .step-completed-text {
+            color: #28a745;
+            font-weight: 500;
+            margin-left: 47px;
+            padding: 8px 12px;
+            background: #d4edda;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1em;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        input[type="text"]:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        input[type="text"].correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        input[type="text"].incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            padding: 12px 24px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .radio-option:hover { border-color: #667eea; background: #f0f0ff; }
+        .radio-option.selected { border-color: #667eea; background: #e0e7ff; }
+        .radio-option.correct { border-color: #28a745; background: #d4edda; }
+        .radio-option.incorrect { border-color: #dc3545; background: #f8d7da; }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success { background: #28a745; color: white; }
+        .btn-success:hover { background: #218838; }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        .score-display {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .hidden { display: none !important; }
+
+        .scratch-workspace {
+            background: #fffbeb;
+            border: 2px dashed #f59e0b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .scratch-workspace h4 {
+            margin: 0 0 15px 0;
+            color: #92400e;
+        }
+
+        .scratch-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 10px 15px;
+            align-items: center;
+        }
+
+        .scratch-label {
+            font-weight: 500;
+            color: #78716c;
+            text-align: right;
+        }
+
+        .scratch-input {
+            padding: 10px 12px;
+            border: 1px dashed #d4d4d4;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            background: rgba(255,255,255,0.8);
+            max-width: 250px;
+        }
+
+        .scratch-input:focus {
+            border-color: #667eea;
+            border-style: solid;
+            outline: none;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .diff-btn {
+            padding: 8px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .diff-btn:hover { border-color: #667eea; }
+        .diff-btn.active { background: #667eea; color: white; border-color: #667eea; }
+
+        .final-answer-section {
+            background: #e0e7ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .final-answer-section h4 {
+            margin: 0 0 15px 0;
+            color: #4338ca;
+        }
+
+        .example-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.6em; }
+            .tab-btn { padding: 10px 16px; font-size: 0.9em; }
+            .polynomial-display { font-size: 1.2em; }
+            .step-content { margin-left: 0; margin-top: 10px; }
+            .step-completed-text { margin-left: 0; }
+            .scratch-grid { grid-template-columns: 1fr; }
+            .scratch-label { text-align: left; }
+            .scratch-input { max-width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="./" class="nav-link">&larr; 4.4 Factoring</a>
+        <span class="nav-title">Sum & Difference of Cubes</span>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Sum & Difference of Cubes</h1>
+            <p>Factor expressions of the form a<sup>3</sup> + b<sup>3</sup> and a<sup>3</sup> - b<sup>3</sup></p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showSection('learn')">Learn</button>
+            <button class="tab-btn" onclick="showSection('watch')">See Examples</button>
+            <button class="tab-btn" onclick="showSection('practice')">Guided Practice</button>
+            <button class="tab-btn" onclick="showSection('solo')">Solo Practice</button>
+        </div>
+
+        <!-- LEARN SECTION -->
+        <div id="learn" class="section active">
+            <h2>Understanding Sum & Difference of Cubes</h2>
+
+            <div class="formula-box">
+                <strong>Sum of Cubes:</strong> a<sup>3</sup> + b<sup>3</sup> = (a + b)(a<sup>2</sup> - ab + b<sup>2</sup>)<br><br>
+                <strong>Difference of Cubes:</strong> a<sup>3</sup> - b<sup>3</sup> = (a - b)(a<sup>2</sup> + ab + b<sup>2</sup>)
+            </div>
+
+            <div class="why-box">
+                <h3 style="margin-top:0;">Why Do These Formulas Work?</h3>
+                <p>Let's verify by expanding (a + b)(a<sup>2</sup> - ab + b<sup>2</sup>):</p>
+                <div style="font-family:'Courier New', monospace; line-height:2; padding:10px; background:white; border-radius:8px; margin:10px 0;">
+                    (a + b)(a<sup>2</sup> - ab + b<sup>2</sup>)<br>
+                    = a(a<sup>2</sup> - ab + b<sup>2</sup>) + b(a<sup>2</sup> - ab + b<sup>2</sup>)<br>
+                    = a<sup>3</sup> - a<sup>2</sup>b + ab<sup>2</sup> + a<sup>2</sup>b - ab<sup>2</sup> + b<sup>3</sup><br>
+                    = a<sup>3</sup> + b<sup>3</sup> <span style="color:#28a745;">✓ The middle terms cancel!</span>
+                </div>
+                <p>The same cancellation happens with the difference formula. This is why the trinomial factor has that specific pattern - it's designed so the middle terms cancel when multiplied out!</p>
+            </div>
+
+            <div class="soap-box">
+                <h3 style="margin-top:0;">Memory Trick: SOAP</h3>
+                <p>The signs in the factored form follow the pattern:</p>
+                <div style="margin:15px 0;">
+                    <span class="soap-letter">S</span>ame &nbsp;
+                    <span class="soap-letter">O</span>pposite &nbsp;
+                    <span class="soap-letter">A</span>lways &nbsp;
+                    <span class="soap-letter">P</span>ositive
+                </div>
+                <p><strong>Example:</strong> x<sup>3</sup> <span style="color:#dc3545;font-weight:bold;">+</span> 8</p>
+                <p style="font-family:'Courier New', monospace; font-size:1.1em;">
+                    = (x <span style="color:#dc3545;font-weight:bold;">+</span> 2)(x<sup>2</sup> <span style="color:#0d6efd;font-weight:bold;">-</span> 2x <span style="color:#28a745;font-weight:bold;">+</span> 4)
+                </p>
+                <p style="font-size:0.9em;">
+                    <span style="color:#dc3545;">Same</span> as original sign |
+                    <span style="color:#0d6efd;">Opposite</span> of original |
+                    <span style="color:#28a745;">Always Positive</span>
+                </p>
+            </div>
+
+            <h3>Perfect Cubes to Know</h3>
+            <div class="info-box">
+                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap:10px; text-align:center;">
+                    <div>1<sup>3</sup> = 1</div>
+                    <div>2<sup>3</sup> = 8</div>
+                    <div>3<sup>3</sup> = 27</div>
+                    <div>4<sup>3</sup> = 64</div>
+                    <div>5<sup>3</sup> = 125</div>
+                    <div>6<sup>3</sup> = 216</div>
+                </div>
+                <p style="margin-top:15px;"><strong>With variables:</strong> (2x)<sup>3</sup> = 8x<sup>3</sup>, (3x)<sup>3</sup> = 27x<sup>3</sup>, (4x)<sup>3</sup> = 64x<sup>3</sup></p>
+            </div>
+
+            <h3>Step-by-Step Process</h3>
+            <div class="example-card">
+                <h4>How to Factor Sum/Difference of Cubes</h4>
+                <ol>
+                    <li><strong>Identify if it's a sum (+) or difference (-)</strong></li>
+                    <li><strong>Find "a":</strong> The cube root of the first term</li>
+                    <li><strong>Find "b":</strong> The cube root of the second term</li>
+                    <li><strong>Write the binomial:</strong> (a ± b) using SOAP - Same sign</li>
+                    <li><strong>Write the trinomial:</strong> (a<sup>2</sup> ∓ ab + b<sup>2</sup>) using SOAP</li>
+                </ol>
+            </div>
+
+            <div class="example-grid">
+                <div class="example-card">
+                    <h4>Sum Example: x<sup>3</sup> + 64</h4>
+                    <div style="font-family:'Courier New', monospace; line-height:2;">
+                        a = x (cube root of x<sup>3</sup>)<br>
+                        b = 4 (cube root of 64)<br>
+                        = <span class="highlight-green">(x + 4)(x<sup>2</sup> - 4x + 16)</span>
+                    </div>
+                </div>
+                <div class="example-card">
+                    <h4>Diff Example: 27x<sup>3</sup> - 8</h4>
+                    <div style="font-family:'Courier New', monospace; line-height:2;">
+                        a = 3x (cube root of 27x<sup>3</sup>)<br>
+                        b = 2 (cube root of 8)<br>
+                        = <span class="highlight-green">(3x - 2)(9x<sup>2</sup> + 6x + 4)</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- WATCH SECTION -->
+        <div id="watch" class="section">
+            <h2>See Examples Step by Step</h2>
+
+            <div class="difficulty-selector">
+                <button class="diff-btn active" onclick="selectWatchExample(0)">Example 1</button>
+                <button class="diff-btn" onclick="selectWatchExample(1)">Example 2</button>
+                <button class="diff-btn" onclick="selectWatchExample(2)">Example 3</button>
+            </div>
+
+            <div class="polynomial-display" id="watch-problem">x<sup>3</sup> + 8</div>
+
+            <div class="step-dots" id="watch-dots"></div>
+
+            <div class="watch-step" id="watch-step-content">
+                <div class="watch-step-title" id="watch-step-title">Step 1</div>
+                <div class="watch-work" id="watch-work"></div>
+            </div>
+
+            <div class="step-navigator">
+                <button class="step-nav-btn" id="watch-prev" onclick="watchPrev()">← Previous</button>
+                <span class="step-indicator" id="watch-indicator">Step 1 of 5</span>
+                <button class="step-nav-btn" id="watch-next" onclick="watchNext()">Next →</button>
+            </div>
+        </div>
+
+        <!-- PRACTICE SECTION -->
+        <div id="practice" class="section">
+            <h2>Guided Practice</h2>
+            <p>Factor each expression step by step using SOAP!</p>
+
+            <div class="score-display">
+                Score: <span id="practice-score">0</span> / <span id="practice-total">0</span>
+                <div class="progress-bar"><div class="progress-fill" id="practice-progress" style="width:0%"></div></div>
+            </div>
+
+            <div class="problem-card">
+                <h3>Factor completely:</h3>
+                <div class="polynomial-display" id="practice-problem"></div>
+
+                <!-- Step 1: Sum or Difference -->
+                <div class="step-container" id="practice-step1">
+                    <div class="step-header">
+                        <div class="step-number" id="practice-step1-num">1</div>
+                        <div class="step-title">Is this a sum or difference of cubes?</div>
+                    </div>
+                    <div class="step-content" id="practice-step1-content">
+                        <div class="radio-group">
+                            <div class="radio-option" onclick="selectType('sum')">Sum (+)</div>
+                            <div class="radio-option" onclick="selectType('diff')">Difference (-)</div>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="practice-step1-complete"></div>
+                </div>
+
+                <!-- Step 2: What is a? -->
+                <div class="step-container hidden" id="practice-step2">
+                    <div class="step-header">
+                        <div class="step-number" id="practice-step2-num">2</div>
+                        <div class="step-title">What is "a"? (cube root of first term)</div>
+                    </div>
+                    <div class="step-content" id="practice-step2-content">
+                        <div class="input-group">
+                            <input type="text" id="practice-step2-answer" placeholder="e.g., x or 3x">
+                            <button class="btn btn-primary" onclick="checkPracticeStep2()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="practice-step2-complete"></div>
+                </div>
+
+                <!-- Step 3: What is b? -->
+                <div class="step-container hidden" id="practice-step3">
+                    <div class="step-header">
+                        <div class="step-number" id="practice-step3-num">3</div>
+                        <div class="step-title">What is "b"? (cube root of second term)</div>
+                    </div>
+                    <div class="step-content" id="practice-step3-content">
+                        <div class="input-group">
+                            <input type="text" id="practice-step3-answer" placeholder="e.g., 2 or 4">
+                            <button class="btn btn-primary" onclick="checkPracticeStep3()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="practice-step3-complete"></div>
+                </div>
+
+                <!-- Step 4: Binomial factor -->
+                <div class="step-container hidden" id="practice-step4">
+                    <div class="step-header">
+                        <div class="step-number" id="practice-step4-num">4</div>
+                        <div class="step-title">Write the binomial factor (a ± b)</div>
+                    </div>
+                    <div class="step-content" id="practice-step4-content">
+                        <div class="input-group">
+                            <input type="text" id="practice-step4-answer" placeholder="e.g., (x+2)">
+                            <button class="btn btn-primary" onclick="checkPracticeStep4()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="practice-step4-complete"></div>
+                </div>
+
+                <!-- Step 5: Trinomial factor -->
+                <div class="step-container hidden" id="practice-step5">
+                    <div class="step-header">
+                        <div class="step-number" id="practice-step5-num">5</div>
+                        <div class="step-title">Write the trinomial factor (a² ∓ ab + b²)</div>
+                    </div>
+                    <div class="step-content" id="practice-step5-content">
+                        <div class="input-group">
+                            <input type="text" id="practice-step5-answer" placeholder="e.g., (x²-2x+4)">
+                            <button class="btn btn-primary" onclick="checkPracticeStep5()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="practice-step5-complete"></div>
+                </div>
+
+                <div class="feedback" id="practice-feedback"></div>
+                <button class="btn btn-success" onclick="newPracticeProblem()" style="margin-top:15px;">New Problem</button>
+            </div>
+        </div>
+
+        <!-- SOLO SECTION -->
+        <div id="solo" class="section">
+            <h2>Solo Practice</h2>
+            <p>Work through problems independently using the scratch workspace.</p>
+
+            <div class="difficulty-selector">
+                <button class="diff-btn active" onclick="setSoloDifficulty('easy')">Easy</button>
+                <button class="diff-btn" onclick="setSoloDifficulty('medium')">Medium</button>
+                <button class="diff-btn" onclick="setSoloDifficulty('hard')">Hard</button>
+            </div>
+
+            <div class="score-display">
+                Score: <span id="solo-score">0</span> / <span id="solo-total">0</span>
+                <div class="progress-bar"><div class="progress-fill" id="solo-progress" style="width:0%"></div></div>
+            </div>
+
+            <div class="problem-card">
+                <h3>Factor completely:</h3>
+                <div class="polynomial-display" id="solo-problem"></div>
+
+                <div class="scratch-workspace">
+                    <h4>Scratch Workspace (SOAP)</h4>
+                    <div class="scratch-grid">
+                        <span class="scratch-label">Sum or Diff?</span>
+                        <input type="text" class="scratch-input" id="scratch-type" placeholder="sum / difference">
+
+                        <span class="scratch-label">a =</span>
+                        <input type="text" class="scratch-input" id="scratch-a" placeholder="cube root of first term">
+
+                        <span class="scratch-label">b =</span>
+                        <input type="text" class="scratch-input" id="scratch-b" placeholder="cube root of second term">
+
+                        <span class="scratch-label">Binomial:</span>
+                        <input type="text" class="scratch-input" id="scratch-binomial" placeholder="(a ± b)">
+
+                        <span class="scratch-label">a² =</span>
+                        <input type="text" class="scratch-input" id="scratch-a2" placeholder="a squared">
+
+                        <span class="scratch-label">ab =</span>
+                        <input type="text" class="scratch-input" id="scratch-ab" placeholder="a times b">
+
+                        <span class="scratch-label">b² =</span>
+                        <input type="text" class="scratch-input" id="scratch-b2" placeholder="b squared">
+
+                        <span class="scratch-label">Trinomial:</span>
+                        <input type="text" class="scratch-input" id="scratch-trinomial" placeholder="(a² ∓ ab + b²)">
+                    </div>
+                </div>
+
+                <div class="final-answer-section">
+                    <h4>Final Answer</h4>
+                    <div class="input-group">
+                        <input type="text" id="solo-answer" placeholder="Enter completely factored form">
+                        <button class="btn btn-primary" onclick="checkSoloAnswer()">Submit</button>
+                    </div>
+                </div>
+
+                <div class="feedback" id="solo-feedback"></div>
+                <button class="btn btn-success" onclick="newSoloProblem()" style="margin-top:15px;">New Problem</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab navigation
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+
+            if (id === 'watch') initWatch();
+            if (id === 'practice' && !currentPractice) newPracticeProblem();
+            if (id === 'solo' && !currentSolo) newSoloProblem();
+        }
+
+        function normalizeAnswer(str) {
+            return str.replace(/\s+/g, '').replace(/\*/g, '').replace(/\^/g, '').replace(/\u00B2/g, '2').replace(/\u00B3/g, '3').replace(/\u2074/g, '4').replace(/\u2075/g, '5').toLowerCase();
+        }
+
+        function checkAnswerMatch(userAnswer, correctAnswers) {
+            const normalized = normalizeAnswer(userAnswer);
+            return correctAnswers.some(ans => normalizeAnswer(ans) === normalized);
+        }
+
+        // =====================
+        // WATCH SECTION
+        // =====================
+        const watchExamples = [
+            {
+                problem: "x³ + 8",
+                problemHTML: "x<sup>3</sup> + 8",
+                steps: [
+                    { title: "Step 1: Identify the type", content: "x³ <span class='highlight'>+</span> 8<br><br>This is a <strong>SUM</strong> of cubes (positive sign between terms)" },
+                    { title: "Step 2: Find 'a'", content: "What cubed gives x³?<br><br>a = <span class='highlight'>x</span> because x³ = x · x · x" },
+                    { title: "Step 3: Find 'b'", content: "What cubed gives 8?<br><br>b = <span class='highlight'>2</span> because 2³ = 8" },
+                    { title: "Step 4: Apply SOAP", content: "Using a = x, b = 2, and SOAP:<br><br><span class='highlight-blue'>S</span>ame sign as original (+): (x <strong>+</strong> 2)<br><span class='highlight-blue'>O</span>pposite sign (-): x² <strong>-</strong> 2x<br><span class='highlight-blue'>A</span>lways <span class='highlight-blue'>P</span>ositive (+): <strong>+</strong> 4" },
+                    { title: "Step 5: Write the answer", content: "x³ + 8<br>= <span class='highlight-green'>(x + 2)(x² - 2x + 4)</span><br><br><strong>Verify:</strong> (x+2)(x²-2x+4) = x³-2x²+4x+2x²-4x+8 = x³+8 ✓" }
+                ]
+            },
+            {
+                problem: "27x³ - 64",
+                problemHTML: "27x<sup>3</sup> - 64",
+                steps: [
+                    { title: "Step 1: Identify the type", content: "27x³ <span class='highlight'>-</span> 64<br><br>This is a <strong>DIFFERENCE</strong> of cubes (negative sign)" },
+                    { title: "Step 2: Find 'a'", content: "What cubed gives 27x³?<br><br>(3x)³ = 3³ · x³ = 27x³<br><br>a = <span class='highlight'>3x</span>" },
+                    { title: "Step 3: Find 'b'", content: "What cubed gives 64?<br><br>4³ = 64<br><br>b = <span class='highlight'>4</span>" },
+                    { title: "Step 4: Apply SOAP", content: "Using a = 3x, b = 4, and SOAP:<br><br><span class='highlight-blue'>S</span>ame sign (-): (3x <strong>-</strong> 4)<br><span class='highlight-blue'>O</span>pposite sign (+): (3x)² <strong>+</strong> (3x)(4)<br><span class='highlight-blue'>A</span>lways <span class='highlight-blue'>P</span>ositive: <strong>+</strong> 4²<br><br>= (3x - 4)(9x² + 12x + 16)" },
+                    { title: "Step 5: Write the answer", content: "27x³ - 64<br>= <span class='highlight-green'>(3x - 4)(9x² + 12x + 16)</span>" }
+                ]
+            },
+            {
+                problem: "8x³ + 125",
+                problemHTML: "8x<sup>3</sup> + 125",
+                steps: [
+                    { title: "Step 1: Identify the type", content: "8x³ <span class='highlight'>+</span> 125<br><br>This is a <strong>SUM</strong> of cubes" },
+                    { title: "Step 2: Find 'a'", content: "What cubed gives 8x³?<br><br>(2x)³ = 8x³<br><br>a = <span class='highlight'>2x</span>" },
+                    { title: "Step 3: Find 'b'", content: "What cubed gives 125?<br><br>5³ = 125<br><br>b = <span class='highlight'>5</span>" },
+                    { title: "Step 4: Apply SOAP", content: "Using a = 2x, b = 5, and SOAP:<br><br>Binomial: (2x <strong>+</strong> 5) <span style='color:#666;'>← Same sign</span><br><br>Trinomial: <br>• a² = (2x)² = 4x²<br>• ab = (2x)(5) = 10x <span style='color:#666;'>← use Opposite sign: -10x</span><br>• b² = 5² = 25 <span style='color:#666;'>← Always Positive</span><br><br>= (4x² - 10x + 25)" },
+                    { title: "Step 5: Write the answer", content: "8x³ + 125<br>= <span class='highlight-green'>(2x + 5)(4x² - 10x + 25)</span>" }
+                ]
+            }
+        ];
+
+        let currentWatchExample = 0;
+        let currentWatchStep = 0;
+
+        function initWatch() {
+            selectWatchExample(0);
+        }
+
+        function selectWatchExample(idx) {
+            currentWatchExample = idx;
+            currentWatchStep = 0;
+
+            document.querySelectorAll('#watch .diff-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === idx);
+            });
+
+            const example = watchExamples[idx];
+            document.getElementById('watch-problem').innerHTML = example.problemHTML;
+
+            const dotsContainer = document.getElementById('watch-dots');
+            dotsContainer.innerHTML = example.steps.map((_, i) =>
+                `<div class="step-dot${i === 0 ? ' active' : ''}"></div>`
+            ).join('');
+
+            updateWatchStep();
+        }
+
+        function updateWatchStep() {
+            const example = watchExamples[currentWatchExample];
+            const step = example.steps[currentWatchStep];
+
+            document.getElementById('watch-step-title').textContent = step.title;
+            document.getElementById('watch-work').innerHTML = step.content;
+            document.getElementById('watch-indicator').textContent = `Step ${currentWatchStep + 1} of ${example.steps.length}`;
+
+            document.querySelectorAll('#watch .step-dot').forEach((dot, i) => {
+                dot.classList.remove('active', 'completed');
+                if (i < currentWatchStep) dot.classList.add('completed');
+                if (i === currentWatchStep) dot.classList.add('active');
+            });
+
+            document.getElementById('watch-prev').disabled = currentWatchStep === 0;
+            document.getElementById('watch-next').disabled = currentWatchStep === example.steps.length - 1;
+        }
+
+        function watchPrev() {
+            if (currentWatchStep > 0) {
+                currentWatchStep--;
+                updateWatchStep();
+            }
+        }
+
+        function watchNext() {
+            const example = watchExamples[currentWatchExample];
+            if (currentWatchStep < example.steps.length - 1) {
+                currentWatchStep++;
+                updateWatchStep();
+            }
+        }
+
+        // =====================
+        // PRACTICE SECTION
+        // =====================
+        const practiceProblems = [
+            {
+                expr: "x³ + 8",
+                exprHTML: "x<sup>3</sup> + 8",
+                type: "sum",
+                a: ["x"],
+                b: ["2"],
+                binomial: ["(x+2)", "x+2"],
+                trinomial: ["(x²-2x+4)", "(x^2-2x+4)", "x²-2x+4", "x^2-2x+4", "x2-2x+4"]
+            },
+            {
+                expr: "x³ - 27",
+                exprHTML: "x<sup>3</sup> - 27",
+                type: "diff",
+                a: ["x"],
+                b: ["3"],
+                binomial: ["(x-3)", "x-3"],
+                trinomial: ["(x²+3x+9)", "(x^2+3x+9)", "x²+3x+9", "x^2+3x+9", "x2+3x+9"]
+            },
+            {
+                expr: "8x³ + 1",
+                exprHTML: "8x<sup>3</sup> + 1",
+                type: "sum",
+                a: ["2x"],
+                b: ["1"],
+                binomial: ["(2x+1)", "2x+1"],
+                trinomial: ["(4x²-2x+1)", "(4x^2-2x+1)", "4x²-2x+1", "4x^2-2x+1", "4x2-2x+1"]
+            },
+            {
+                expr: "27x³ - 64",
+                exprHTML: "27x<sup>3</sup> - 64",
+                type: "diff",
+                a: ["3x"],
+                b: ["4"],
+                binomial: ["(3x-4)", "3x-4"],
+                trinomial: ["(9x²+12x+16)", "(9x^2+12x+16)", "9x²+12x+16", "9x^2+12x+16", "9x2+12x+16"]
+            },
+            {
+                expr: "x³ + 125",
+                exprHTML: "x<sup>3</sup> + 125",
+                type: "sum",
+                a: ["x"],
+                b: ["5"],
+                binomial: ["(x+5)", "x+5"],
+                trinomial: ["(x²-5x+25)", "(x^2-5x+25)", "x²-5x+25", "x^2-5x+25", "x2-5x+25"]
+            },
+            {
+                expr: "64x³ - 1",
+                exprHTML: "64x<sup>3</sup> - 1",
+                type: "diff",
+                a: ["4x"],
+                b: ["1"],
+                binomial: ["(4x-1)", "4x-1"],
+                trinomial: ["(16x²+4x+1)", "(16x^2+4x+1)", "16x²+4x+1", "16x^2+4x+1", "16x2+4x+1"]
+            }
+        ];
+
+        let currentPractice = null;
+        let practiceScore = 0;
+        let practiceTotal = 0;
+
+        function newPracticeProblem() {
+            currentPractice = practiceProblems[Math.floor(Math.random() * practiceProblems.length)];
+
+            document.getElementById('practice-problem').innerHTML = currentPractice.exprHTML;
+
+            // Reset all steps
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById(`practice-step${i}`).classList.remove('hidden');
+                document.getElementById(`practice-step${i}-num`).classList.remove('completed');
+                document.getElementById(`practice-step${i}-content`).classList.remove('hidden');
+                document.getElementById(`practice-step${i}-complete`).classList.add('hidden');
+
+                if (i >= 2) {
+                    document.getElementById(`practice-step${i}`).classList.add('hidden');
+                    const input = document.getElementById(`practice-step${i}-answer`);
+                    if (input) {
+                        input.value = '';
+                        input.classList.remove('correct', 'incorrect');
+                    }
+                }
+            }
+
+            // Reset radio options
+            document.querySelectorAll('#practice-step1 .radio-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            document.getElementById('practice-feedback').className = 'feedback';
+            document.getElementById('practice-feedback').style.display = 'none';
+        }
+
+        function selectType(type) {
+            const options = document.querySelectorAll('#practice-step1 .radio-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+
+            const selectedOpt = type === 'sum' ? options[0] : options[1];
+            selectedOpt.classList.add('selected');
+
+            const isCorrect = type === currentPractice.type;
+
+            if (isCorrect) {
+                selectedOpt.classList.add('correct');
+                document.getElementById('practice-step1-num').classList.add('completed');
+                document.getElementById('practice-step1-content').classList.add('hidden');
+                const typeText = type === 'sum' ? 'Sum of Cubes' : 'Difference of Cubes';
+                document.getElementById('practice-step1-complete').textContent = typeText;
+                document.getElementById('practice-step1-complete').classList.remove('hidden');
+
+                document.getElementById('practice-step2').classList.remove('hidden');
+            } else {
+                selectedOpt.classList.add('incorrect');
+                setTimeout(() => selectedOpt.classList.remove('incorrect', 'selected'), 500);
+            }
+        }
+
+        function checkPracticeStep2() {
+            const input = document.getElementById('practice-step2-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentPractice.a);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('practice-step2-num').classList.add('completed');
+                document.getElementById('practice-step2-content').classList.add('hidden');
+                document.getElementById('practice-step2-complete').textContent = `a = ${currentPractice.a[0]}`;
+                document.getElementById('practice-step2-complete').classList.remove('hidden');
+
+                document.getElementById('practice-step3').classList.remove('hidden');
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkPracticeStep3() {
+            const input = document.getElementById('practice-step3-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentPractice.b);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('practice-step3-num').classList.add('completed');
+                document.getElementById('practice-step3-content').classList.add('hidden');
+                document.getElementById('practice-step3-complete').textContent = `b = ${currentPractice.b[0]}`;
+                document.getElementById('practice-step3-complete').classList.remove('hidden');
+
+                document.getElementById('practice-step4').classList.remove('hidden');
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkPracticeStep4() {
+            const input = document.getElementById('practice-step4-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentPractice.binomial);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('practice-step4-num').classList.add('completed');
+                document.getElementById('practice-step4-content').classList.add('hidden');
+                document.getElementById('practice-step4-complete').textContent = `Binomial: ${currentPractice.binomial[0]}`;
+                document.getElementById('practice-step4-complete').classList.remove('hidden');
+
+                document.getElementById('practice-step5').classList.remove('hidden');
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkPracticeStep5() {
+            const input = document.getElementById('practice-step5-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentPractice.trinomial);
+
+            practiceTotal++;
+            const feedback = document.getElementById('practice-feedback');
+
+            if (isCorrect) {
+                practiceScore++;
+                input.classList.add('correct');
+                document.getElementById('practice-step5-num').classList.add('completed');
+                document.getElementById('practice-step5-content').classList.add('hidden');
+                document.getElementById('practice-step5-complete').textContent = `Trinomial: ${currentPractice.trinomial[0]}`;
+                document.getElementById('practice-step5-complete').classList.remove('hidden');
+
+                feedback.innerHTML = `<strong>Perfect!</strong> ${currentPractice.binomial[0]}${currentPractice.trinomial[0]}`;
+                feedback.className = 'feedback correct show';
+            } else {
+                input.classList.add('incorrect');
+                feedback.innerHTML = `<strong>Not quite.</strong> The trinomial is: ${currentPractice.trinomial[0]}`;
+                feedback.className = 'feedback incorrect show';
+            }
+
+            document.getElementById('practice-score').textContent = practiceScore;
+            document.getElementById('practice-total').textContent = practiceTotal;
+            document.getElementById('practice-progress').style.width = `${(practiceScore/Math.max(practiceTotal,1))*100}%`;
+        }
+
+        // =====================
+        // SOLO SECTION
+        // =====================
+        const soloProblems = {
+            easy: [
+                { expr: "x³ + 8", exprHTML: "x<sup>3</sup> + 8", answers: ["(x+2)(x²-2x+4)", "(x+2)(x^2-2x+4)"] },
+                { expr: "x³ - 27", exprHTML: "x<sup>3</sup> - 27", answers: ["(x-3)(x²+3x+9)", "(x-3)(x^2+3x+9)"] },
+                { expr: "x³ + 64", exprHTML: "x<sup>3</sup> + 64", answers: ["(x+4)(x²-4x+16)", "(x+4)(x^2-4x+16)"] },
+                { expr: "x³ - 125", exprHTML: "x<sup>3</sup> - 125", answers: ["(x-5)(x²+5x+25)", "(x-5)(x^2+5x+25)"] }
+            ],
+            medium: [
+                { expr: "8x³ + 1", exprHTML: "8x<sup>3</sup> + 1", answers: ["(2x+1)(4x²-2x+1)", "(2x+1)(4x^2-2x+1)"] },
+                { expr: "27x³ - 8", exprHTML: "27x<sup>3</sup> - 8", answers: ["(3x-2)(9x²+6x+4)", "(3x-2)(9x^2+6x+4)"] },
+                { expr: "8x³ + 27", exprHTML: "8x<sup>3</sup> + 27", answers: ["(2x+3)(4x²-6x+9)", "(2x+3)(4x^2-6x+9)"] },
+                { expr: "64x³ - 1", exprHTML: "64x<sup>3</sup> - 1", answers: ["(4x-1)(16x²+4x+1)", "(4x-1)(16x^2+4x+1)"] }
+            ],
+            hard: [
+                { expr: "27x³ - 64", exprHTML: "27x<sup>3</sup> - 64", answers: ["(3x-4)(9x²+12x+16)", "(3x-4)(9x^2+12x+16)"] },
+                { expr: "8x³ + 125", exprHTML: "8x<sup>3</sup> + 125", answers: ["(2x+5)(4x²-10x+25)", "(2x+5)(4x^2-10x+25)"] },
+                { expr: "125x³ - 8", exprHTML: "125x<sup>3</sup> - 8", answers: ["(5x-2)(25x²+10x+4)", "(5x-2)(25x^2+10x+4)"] },
+                { expr: "64x³ + 27", exprHTML: "64x<sup>3</sup> + 27", answers: ["(4x+3)(16x²-12x+9)", "(4x+3)(16x^2-12x+9)"] }
+            ]
+        };
+
+        let soloDifficulty = 'easy';
+        let currentSolo = null;
+        let soloScore = 0;
+        let soloTotal = 0;
+
+        function setSoloDifficulty(diff) {
+            soloDifficulty = diff;
+            document.querySelectorAll('#solo .diff-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            newSoloProblem();
+        }
+
+        function newSoloProblem() {
+            const problems = soloProblems[soloDifficulty];
+            currentSolo = problems[Math.floor(Math.random() * problems.length)];
+
+            document.getElementById('solo-problem').innerHTML = currentSolo.exprHTML;
+
+            // Clear scratch workspace
+            ['scratch-type', 'scratch-a', 'scratch-b', 'scratch-binomial',
+             'scratch-a2', 'scratch-ab', 'scratch-b2', 'scratch-trinomial'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+
+            document.getElementById('solo-answer').value = '';
+            document.getElementById('solo-answer').classList.remove('correct', 'incorrect');
+
+            document.getElementById('solo-feedback').className = 'feedback';
+            document.getElementById('solo-feedback').style.display = 'none';
+        }
+
+        function checkSoloAnswer() {
+            const input = document.getElementById('solo-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentSolo.answers);
+
+            soloTotal++;
+            const feedback = document.getElementById('solo-feedback');
+
+            if (isCorrect) {
+                soloScore++;
+                input.classList.add('correct');
+                feedback.innerHTML = '<strong>Correct!</strong> Great use of SOAP!';
+                feedback.className = 'feedback correct show';
+            } else {
+                input.classList.add('incorrect');
+                feedback.innerHTML = `<strong>Not quite.</strong> The correct answer is: ${currentSolo.answers[0]}`;
+                feedback.className = 'feedback incorrect show';
+            }
+
+            document.getElementById('solo-score').textContent = soloScore;
+            document.getElementById('solo-total').textContent = soloTotal;
+            document.getElementById('solo-progress').style.width = `${(soloScore/Math.max(soloTotal,1))*100}%`;
+        }
+
+        // Enter key support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const target = e.target;
+                if (target.id === 'practice-step2-answer') checkPracticeStep2();
+                else if (target.id === 'practice-step3-answer') checkPracticeStep3();
+                else if (target.id === 'practice-step4-answer') checkPracticeStep4();
+                else if (target.id === 'practice-step5-answer') checkPracticeStep5();
+                else if (target.id === 'solo-answer') checkSoloAnswer();
+            }
+        });
+    </script>
+</body>
+</html>

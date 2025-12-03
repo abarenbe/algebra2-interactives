@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GCF Factoring | 4.4 Factoring Polynomials</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .site-nav {
+            background: rgba(0,0,0,0.2);
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.15);
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .nav-link:hover { background: rgba(255,255,255,0.25); }
+        .nav-title { color: white; font-weight: 600; font-size: 1em; }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p { font-size: 1.1em; opacity: 0.9; }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .tab-btn:hover { background: rgba(255,255,255,0.3); }
+        .tab-btn.active { background: white; color: #667eea; font-weight: bold; }
+
+        .section {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .section.active { display: block; }
+
+        h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        h3 { color: #764ba2; margin-top: 25px; }
+
+        .info-box {
+            background: linear-gradient(135deg, #e8f4fd 0%, #e0e7ff 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #667eea;
+        }
+
+        .why-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .formula-box {
+            background: #fff3cd;
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid #ffc107;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .example-card {
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .example-card h4 {
+            color: #667eea;
+            margin: 0 0 15px 0;
+        }
+
+        .polynomial-display {
+            font-size: 1.4em;
+            text-align: center;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            margin: 15px 0;
+            border: 2px solid #667eea;
+            font-family: 'Times New Roman', serif;
+        }
+
+        /* Step navigation for Watch section */
+        .step-navigator {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .step-nav-btn {
+            padding: 10px 20px;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .step-nav-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102,126,234,0.4);
+        }
+
+        .step-nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .step-indicator {
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .step-dots {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 10px 0;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #ddd;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active { background: #667eea; transform: scale(1.2); }
+        .step-dot.completed { background: #28a745; }
+
+        .watch-step {
+            background: #f0f4ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 150px;
+        }
+
+        .watch-step-title {
+            font-weight: 600;
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+        }
+
+        .watch-work {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.2em;
+            line-height: 2;
+        }
+
+        .highlight { background: #fff3cd; padding: 2px 6px; border-radius: 4px; }
+        .highlight-green { background: #d4edda; padding: 2px 6px; border-radius: 4px; }
+
+        /* Practice Section */
+        .problem-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .step-container {
+            background: #f0f4ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .step-number.completed { background: linear-gradient(135deg, #28a745 0%, #20c997 100%); }
+
+        .step-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .step-content { margin-left: 47px; }
+
+        .step-completed-text {
+            color: #28a745;
+            font-weight: 500;
+            margin-left: 47px;
+            padding: 8px 12px;
+            background: #d4edda;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        input[type="text"] {
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1em;
+            flex: 1;
+            min-width: 150px;
+        }
+
+        input[type="text"]:focus {
+            border-color: #667eea;
+            outline: none;
+        }
+
+        input[type="text"].correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        input[type="text"].incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-success { background: #28a745; color: white; }
+        .btn-success:hover { background: #218838; }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+
+        .score-display {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Solo Scratch Workspace */
+        .scratch-workspace {
+            background: #fffbeb;
+            border: 2px dashed #f59e0b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .scratch-workspace h4 {
+            margin: 0 0 15px 0;
+            color: #92400e;
+        }
+
+        .scratch-area {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .scratch-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .scratch-label {
+            min-width: 100px;
+            font-weight: 500;
+            color: #78716c;
+        }
+
+        .scratch-input {
+            width: 200px;
+            padding: 10px 12px;
+            border: 1px dashed #d4d4d4;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            background: rgba(255,255,255,0.8);
+        }
+
+        .scratch-input:focus {
+            border-color: #667eea;
+            border-style: solid;
+            outline: none;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .diff-btn {
+            padding: 8px 20px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .diff-btn:hover { border-color: #667eea; }
+        .diff-btn.active { background: #667eea; color: white; border-color: #667eea; }
+
+        .final-answer-section {
+            background: #e0e7ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .final-answer-section h4 {
+            margin: 0 0 15px 0;
+            color: #4338ca;
+        }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.6em; }
+            .tab-btn { padding: 10px 16px; font-size: 0.9em; }
+            .polynomial-display { font-size: 1.2em; }
+            .step-content { margin-left: 0; margin-top: 10px; }
+            .step-completed-text { margin-left: 0; }
+            .scratch-input { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="site-nav">
+        <a href="./" class="nav-link">&larr; 4.4 Factoring</a>
+        <span class="nav-title">GCF Factoring</span>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>GCF Factoring</h1>
+            <p>Factor out the Greatest Common Factor</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showSection('learn')">Learn</button>
+            <button class="tab-btn" onclick="showSection('watch')">See Examples</button>
+            <button class="tab-btn" onclick="showSection('practice')">Guided Practice</button>
+            <button class="tab-btn" onclick="showSection('solo')">Solo Practice</button>
+        </div>
+
+        <!-- LEARN SECTION -->
+        <div id="learn" class="section active">
+            <h2>Understanding GCF Factoring</h2>
+
+            <div class="info-box">
+                <h3 style="margin-top:0;">What is GCF Factoring?</h3>
+                <p>The <strong>Greatest Common Factor (GCF)</strong> of a polynomial is the largest expression that divides evenly into every term. Factoring out the GCF is the first step in factoring any polynomial.</p>
+            </div>
+
+            <div class="why-box">
+                <h3 style="margin-top:0;">Why Does GCF Factoring Work?</h3>
+                <p>GCF factoring is based on the <strong>Distributive Property</strong> in reverse:</p>
+                <p style="text-align:center; font-size:1.2em;">
+                    a(b + c) = ab + ac &nbsp;&nbsp;&rarr;&nbsp;&nbsp; ab + ac = a(b + c)
+                </p>
+                <p>When we "factor out" the GCF, we're essentially un-distributing it. This works because:</p>
+                <ul>
+                    <li><strong>Every term shares the GCF</strong> - if each term contains a factor, we can pull it out front</li>
+                    <li><strong>Division reverses multiplication</strong> - dividing each term by the GCF gives what remains inside the parentheses</li>
+                    <li><strong>The product is unchanged</strong> - if you re-distribute the GCF, you get back the original expression</li>
+                </ul>
+            </div>
+
+            <h3>How to Find the GCF</h3>
+            <div class="example-card">
+                <h4>Finding the GCF of Polynomial Terms</h4>
+                <p><strong>Step 1:</strong> Find the GCF of the coefficients (numbers)</p>
+                <p><strong>Step 2:</strong> For each variable, take the lowest power that appears in ALL terms</p>
+                <p><strong>Step 3:</strong> Multiply them together</p>
+
+                <div style="margin-top:15px; padding:15px; background:#e0e7ff; border-radius:8px;">
+                    <strong>Example:</strong> Find the GCF of 6x<sup>3</sup>, 18x<sup>2</sup>, and 12x<sup>4</sup>
+                    <ul>
+                        <li>GCF of 6, 18, 12 = <strong>6</strong></li>
+                        <li>Lowest power of x: x<sup>1</sup>, x<sup>2</sup>, x<sup>4</sup> → <strong>x</strong> (or x<sup>1</sup>)</li>
+                        <li>GCF = <strong>6x</strong></li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>Complete Factoring Process</h3>
+            <div class="formula-box">
+                1. Factor out the GCF<br>
+                2. Check if the remaining polynomial can be factored further<br>
+                3. Continue until fully factored
+            </div>
+
+            <div class="example-card">
+                <h4>Example: Factor x<sup>3</sup> - 4x<sup>2</sup> - 5x completely</h4>
+                <div style="font-family:'Courier New', monospace; line-height:2.2; padding:15px; background:white; border-radius:8px;">
+                    <div>x<sup>3</sup> - 4x<sup>2</sup> - 5x <span class="highlight">GCF is x</span></div>
+                    <div>= x(x<sup>2</sup> - 4x - 5) <span class="highlight">Factor out x</span></div>
+                    <div>= x(x - 5)(x + 1) <span class="highlight-green">Factor the trinomial</span></div>
+                </div>
+                <p style="margin-top:10px;"><strong>Check:</strong> x(x - 5)(x + 1) = x(x<sup>2</sup> + x - 5x - 5) = x(x<sup>2</sup> - 4x - 5) = x<sup>3</sup> - 4x<sup>2</sup> - 5x ✓</p>
+            </div>
+
+            <div class="why-box">
+                <h3 style="margin-top:0;">Why Factor Completely?</h3>
+                <p>Finding all factors helps us:</p>
+                <ul>
+                    <li><strong>Find zeros/roots</strong> - Each linear factor (x - a) tells us x = a is a solution</li>
+                    <li><strong>Simplify expressions</strong> - Factored form makes division and simplification easier</li>
+                    <li><strong>Solve equations</strong> - Setting each factor = 0 solves the equation</li>
+                    <li><strong>Graph functions</strong> - Factors reveal x-intercepts of the graph</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- WATCH SECTION -->
+        <div id="watch" class="section">
+            <h2>See Examples Step by Step</h2>
+
+            <div class="difficulty-selector">
+                <button class="diff-btn active" onclick="selectWatchExample(0)">Example 1</button>
+                <button class="diff-btn" onclick="selectWatchExample(1)">Example 2</button>
+                <button class="diff-btn" onclick="selectWatchExample(2)">Example 3</button>
+            </div>
+
+            <div class="polynomial-display" id="watch-problem">2x<sup>3</sup> - 18x</div>
+
+            <div class="step-dots" id="watch-dots"></div>
+
+            <div class="watch-step" id="watch-step-content">
+                <div class="watch-step-title" id="watch-step-title">Step 1</div>
+                <div class="watch-work" id="watch-work"></div>
+            </div>
+
+            <div class="step-navigator">
+                <button class="step-nav-btn" id="watch-prev" onclick="watchPrev()">← Previous</button>
+                <span class="step-indicator" id="watch-indicator">Step 1 of 4</span>
+                <button class="step-nav-btn" id="watch-next" onclick="watchNext()">Next →</button>
+            </div>
+        </div>
+
+        <!-- PRACTICE SECTION -->
+        <div id="practice" class="section">
+            <h2>Guided Practice</h2>
+            <p>Factor each polynomial step by step. Get feedback after each step!</p>
+
+            <div class="score-display">
+                Score: <span id="practice-score">0</span> / <span id="practice-total">0</span>
+                <div class="progress-bar"><div class="progress-fill" id="practice-progress" style="width:0%"></div></div>
+            </div>
+
+            <div class="problem-card">
+                <h3>Factor completely:</h3>
+                <div class="polynomial-display" id="practice-problem"></div>
+
+                <!-- Step 1: Identify GCF -->
+                <div class="step-container" id="practice-step1">
+                    <div class="step-header">
+                        <div class="step-number" id="practice-step1-num">1</div>
+                        <div class="step-title">What is the GCF of all terms?</div>
+                    </div>
+                    <div class="step-content" id="practice-step1-content">
+                        <div class="input-group">
+                            <input type="text" id="practice-step1-answer" placeholder="e.g., 2x">
+                            <button class="btn btn-primary" onclick="checkPracticeStep1()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="practice-step1-complete"></div>
+                </div>
+
+                <!-- Step 2: Write remaining polynomial -->
+                <div class="step-container hidden" id="practice-step2">
+                    <div class="step-header">
+                        <div class="step-number" id="practice-step2-num">2</div>
+                        <div class="step-title">After factoring out the GCF, what's left in parentheses?</div>
+                    </div>
+                    <div class="step-content" id="practice-step2-content">
+                        <div class="input-group">
+                            <span style="font-size:1.2em;" id="practice-partial"></span>
+                            <input type="text" id="practice-step2-answer" placeholder="e.g., x²-9">
+                            <span style="font-size:1.2em;">)</span>
+                            <button class="btn btn-primary" onclick="checkPracticeStep2()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="practice-step2-complete"></div>
+                </div>
+
+                <!-- Step 3: Final factored form -->
+                <div class="step-container hidden" id="practice-step3">
+                    <div class="step-header">
+                        <div class="step-number" id="practice-step3-num">3</div>
+                        <div class="step-title">Write the completely factored form</div>
+                    </div>
+                    <div class="step-content" id="practice-step3-content">
+                        <div class="input-group">
+                            <input type="text" id="practice-step3-answer" placeholder="e.g., 2x(x-3)(x+3)">
+                            <button class="btn btn-primary" onclick="checkPracticeStep3()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="practice-step3-complete"></div>
+                </div>
+
+                <div class="feedback" id="practice-feedback"></div>
+                <button class="btn btn-success" onclick="newPracticeProblem()" style="margin-top:15px;">New Problem</button>
+            </div>
+        </div>
+
+        <!-- SOLO SECTION -->
+        <div id="solo" class="section">
+            <h2>Solo Practice</h2>
+            <p>Work through problems independently using the scratch workspace.</p>
+
+            <div class="difficulty-selector">
+                <button class="diff-btn active" onclick="setSoloDifficulty('easy')">Easy</button>
+                <button class="diff-btn" onclick="setSoloDifficulty('medium')">Medium</button>
+                <button class="diff-btn" onclick="setSoloDifficulty('hard')">Hard</button>
+            </div>
+
+            <div class="score-display">
+                Score: <span id="solo-score">0</span> / <span id="solo-total">0</span>
+                <div class="progress-bar"><div class="progress-fill" id="solo-progress" style="width:0%"></div></div>
+            </div>
+
+            <div class="problem-card">
+                <h3>Factor completely:</h3>
+                <div class="polynomial-display" id="solo-problem"></div>
+
+                <div class="scratch-workspace">
+                    <h4>Scratch Workspace</h4>
+                    <div class="scratch-area" id="solo-scratch">
+                        <div class="scratch-row">
+                            <span class="scratch-label">GCF:</span>
+                            <input type="text" class="scratch-input" id="scratch-gcf" placeholder="Find the GCF...">
+                        </div>
+                        <div class="scratch-row">
+                            <span class="scratch-label">After GCF:</span>
+                            <input type="text" class="scratch-input" id="scratch-after-gcf" placeholder="What's left inside ( )...">
+                        </div>
+                        <div class="scratch-row">
+                            <span class="scratch-label">Factor more?</span>
+                            <input type="text" class="scratch-input" id="scratch-factor-more" placeholder="Can you factor further?">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="final-answer-section">
+                    <h4>Final Answer</h4>
+                    <div class="input-group">
+                        <input type="text" id="solo-answer" placeholder="Enter completely factored form">
+                        <button class="btn btn-primary" onclick="checkSoloAnswer()">Submit</button>
+                    </div>
+                </div>
+
+                <div class="feedback" id="solo-feedback"></div>
+                <button class="btn btn-success" onclick="newSoloProblem()" style="margin-top:15px;">New Problem</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab navigation
+        function showSection(id) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+
+            if (id === 'watch') initWatch();
+            if (id === 'practice' && !currentPractice) newPracticeProblem();
+            if (id === 'solo' && !currentSolo) newSoloProblem();
+        }
+
+        // Normalize answer for comparison
+        function normalizeAnswer(str) {
+            return str.replace(/\s+/g, '').replace(/\*/g, '').replace(/\^/g, '').replace(/\u00B2/g, '2').replace(/\u00B3/g, '3').replace(/\u2074/g, '4').replace(/\u2075/g, '5').toLowerCase();
+        }
+
+        function checkAnswerMatch(userAnswer, correctAnswers) {
+            const normalized = normalizeAnswer(userAnswer);
+            return correctAnswers.some(ans => normalizeAnswer(ans) === normalized);
+        }
+
+        // =====================
+        // WATCH SECTION
+        // =====================
+        const watchExamples = [
+            {
+                problem: "2x³ - 18x",
+                problemHTML: "2x<sup>3</sup> - 18x",
+                steps: [
+                    { title: "Step 1: Identify the GCF", content: "Look at each term: <span class='highlight'>2x³</span> and <span class='highlight'>18x</span><br><br>GCF of coefficients (2, 18) = <strong>2</strong><br>Lowest power of x (x³, x¹) = <strong>x</strong><br><br>GCF = <strong>2x</strong>" },
+                    { title: "Step 2: Factor out the GCF", content: "2x³ - 18x<br>= <span class='highlight'>2x</span>(x² - 9) <span style='color:#666;'>&larr; Divide each term by 2x</span>" },
+                    { title: "Step 3: Check if remaining factors", content: "x² - 9 is a <span class='highlight'>difference of squares</span>!<br><br>x² - 9 = x² - 3² = (x - 3)(x + 3)" },
+                    { title: "Step 4: Write final answer", content: "2x³ - 18x<br>= 2x(x² - 9)<br>= <span class='highlight-green'>2x(x - 3)(x + 3)</span><br><br><strong>Check:</strong> 2x · (x-3) · (x+3) = 2x(x² - 9) = 2x³ - 18x ✓" }
+                ]
+            },
+            {
+                problem: "3y⁵ - 48y³",
+                problemHTML: "3y<sup>5</sup> - 48y<sup>3</sup>",
+                steps: [
+                    { title: "Step 1: Identify the GCF", content: "Terms: <span class='highlight'>3y⁵</span> and <span class='highlight'>48y³</span><br><br>GCF of (3, 48) = <strong>3</strong><br>Lowest power of y (y⁵, y³) = <strong>y³</strong><br><br>GCF = <strong>3y³</strong>" },
+                    { title: "Step 2: Factor out the GCF", content: "3y⁵ - 48y³<br>= <span class='highlight'>3y³</span>(y² - 16) <span style='color:#666;'>&larr; 3y⁵÷3y³=y², 48y³÷3y³=16</span>" },
+                    { title: "Step 3: Check if remaining factors", content: "y² - 16 is a <span class='highlight'>difference of squares</span>!<br><br>y² - 16 = y² - 4² = (y - 4)(y + 4)" },
+                    { title: "Step 4: Write final answer", content: "3y⁵ - 48y³<br>= 3y³(y² - 16)<br>= <span class='highlight-green'>3y³(y - 4)(y + 4)</span>" }
+                ]
+            },
+            {
+                problem: "x³ - 7x² + 10x",
+                problemHTML: "x<sup>3</sup> - 7x<sup>2</sup> + 10x",
+                steps: [
+                    { title: "Step 1: Identify the GCF", content: "Terms: <span class='highlight'>x³</span>, <span class='highlight'>-7x²</span>, and <span class='highlight'>10x</span><br><br>GCF of (1, 7, 10) = <strong>1</strong><br>Lowest power of x (x³, x², x¹) = <strong>x</strong><br><br>GCF = <strong>x</strong>" },
+                    { title: "Step 2: Factor out the GCF", content: "x³ - 7x² + 10x<br>= <span class='highlight'>x</span>(x² - 7x + 10)" },
+                    { title: "Step 3: Factor the trinomial", content: "x² - 7x + 10: Find two numbers that<br>• Multiply to +10<br>• Add to -7<br><br>-2 × -5 = 10 ✓<br>-2 + -5 = -7 ✓<br><br>x² - 7x + 10 = (x - 2)(x - 5)" },
+                    { title: "Step 4: Write final answer", content: "x³ - 7x² + 10x<br>= x(x² - 7x + 10)<br>= <span class='highlight-green'>x(x - 2)(x - 5)</span>" }
+                ]
+            }
+        ];
+
+        let currentWatchExample = 0;
+        let currentWatchStep = 0;
+
+        function initWatch() {
+            selectWatchExample(0);
+        }
+
+        function selectWatchExample(idx) {
+            currentWatchExample = idx;
+            currentWatchStep = 0;
+
+            document.querySelectorAll('#watch .diff-btn').forEach((b, i) => {
+                b.classList.toggle('active', i === idx);
+            });
+
+            const example = watchExamples[idx];
+            document.getElementById('watch-problem').innerHTML = example.problemHTML;
+
+            // Build dots
+            const dotsContainer = document.getElementById('watch-dots');
+            dotsContainer.innerHTML = example.steps.map((_, i) =>
+                `<div class="step-dot${i === 0 ? ' active' : ''}"></div>`
+            ).join('');
+
+            updateWatchStep();
+        }
+
+        function updateWatchStep() {
+            const example = watchExamples[currentWatchExample];
+            const step = example.steps[currentWatchStep];
+
+            document.getElementById('watch-step-title').textContent = step.title;
+            document.getElementById('watch-work').innerHTML = step.content;
+            document.getElementById('watch-indicator').textContent = `Step ${currentWatchStep + 1} of ${example.steps.length}`;
+
+            // Update dots
+            document.querySelectorAll('#watch .step-dot').forEach((dot, i) => {
+                dot.classList.remove('active', 'completed');
+                if (i < currentWatchStep) dot.classList.add('completed');
+                if (i === currentWatchStep) dot.classList.add('active');
+            });
+
+            // Update buttons
+            document.getElementById('watch-prev').disabled = currentWatchStep === 0;
+            document.getElementById('watch-next').disabled = currentWatchStep === example.steps.length - 1;
+        }
+
+        function watchPrev() {
+            if (currentWatchStep > 0) {
+                currentWatchStep--;
+                updateWatchStep();
+            }
+        }
+
+        function watchNext() {
+            const example = watchExamples[currentWatchExample];
+            if (currentWatchStep < example.steps.length - 1) {
+                currentWatchStep++;
+                updateWatchStep();
+            }
+        }
+
+        // =====================
+        // PRACTICE SECTION
+        // =====================
+        const practiceProblems = [
+            {
+                expr: "x³ - 4x² - 5x",
+                exprHTML: "x<sup>3</sup> - 4x<sup>2</sup> - 5x",
+                gcf: ["x"],
+                remaining: ["x²-4x-5", "x^2-4x-5", "x2-4x-5"],
+                final: ["x(x-5)(x+1)", "x(x+1)(x-5)"]
+            },
+            {
+                expr: "2x³ - 18x",
+                exprHTML: "2x<sup>3</sup> - 18x",
+                gcf: ["2x"],
+                remaining: ["x²-9", "x^2-9", "x2-9"],
+                final: ["2x(x-3)(x+3)", "2x(x+3)(x-3)"]
+            },
+            {
+                expr: "3y⁵ - 48y³",
+                exprHTML: "3y<sup>5</sup> - 48y<sup>3</sup>",
+                gcf: ["3y³", "3y^3", "3y3"],
+                remaining: ["y²-16", "y^2-16", "y2-16"],
+                final: ["3y³(y-4)(y+4)", "3y^3(y-4)(y+4)", "3y³(y+4)(y-4)", "3y^3(y+4)(y-4)", "3y3(y-4)(y+4)", "3y3(y+4)(y-4)"]
+            },
+            {
+                expr: "x⁴ - 16x²",
+                exprHTML: "x<sup>4</sup> - 16x<sup>2</sup>",
+                gcf: ["x²", "x^2", "x2"],
+                remaining: ["x²-16", "x^2-16", "x2-16"],
+                final: ["x²(x-4)(x+4)", "x^2(x-4)(x+4)", "x²(x+4)(x-4)", "x^2(x+4)(x-4)", "x2(x-4)(x+4)", "x2(x+4)(x-4)"]
+            },
+            {
+                expr: "4x³ - 36x",
+                exprHTML: "4x<sup>3</sup> - 36x",
+                gcf: ["4x"],
+                remaining: ["x²-9", "x^2-9", "x2-9"],
+                final: ["4x(x-3)(x+3)", "4x(x+3)(x-3)"]
+            },
+            {
+                expr: "x³ - 7x² + 10x",
+                exprHTML: "x<sup>3</sup> - 7x<sup>2</sup> + 10x",
+                gcf: ["x"],
+                remaining: ["x²-7x+10", "x^2-7x+10", "x2-7x+10"],
+                final: ["x(x-2)(x-5)", "x(x-5)(x-2)"]
+            }
+        ];
+
+        let currentPractice = null;
+        let practiceScore = 0;
+        let practiceTotal = 0;
+
+        function newPracticeProblem() {
+            currentPractice = practiceProblems[Math.floor(Math.random() * practiceProblems.length)];
+
+            document.getElementById('practice-problem').innerHTML = currentPractice.exprHTML;
+
+            // Reset all steps
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`practice-step${i}`).classList.remove('hidden');
+                document.getElementById(`practice-step${i}-num`).classList.remove('completed');
+                document.getElementById(`practice-step${i}-content`).classList.remove('hidden');
+                document.getElementById(`practice-step${i}-complete`).classList.add('hidden');
+                const input = document.getElementById(`practice-step${i}-answer`);
+                if (input) {
+                    input.value = '';
+                    input.classList.remove('correct', 'incorrect');
+                }
+            }
+
+            document.getElementById('practice-step2').classList.add('hidden');
+            document.getElementById('practice-step3').classList.add('hidden');
+
+            document.getElementById('practice-feedback').className = 'feedback';
+            document.getElementById('practice-feedback').style.display = 'none';
+        }
+
+        function checkPracticeStep1() {
+            const input = document.getElementById('practice-step1-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentPractice.gcf);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('practice-step1-num').classList.add('completed');
+                document.getElementById('practice-step1-content').classList.add('hidden');
+                document.getElementById('practice-step1-complete').textContent = `GCF: ${currentPractice.gcf[0]}`;
+                document.getElementById('practice-step1-complete').classList.remove('hidden');
+
+                document.getElementById('practice-step2').classList.remove('hidden');
+                document.getElementById('practice-partial').textContent = `${currentPractice.gcf[0]}(`;
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkPracticeStep2() {
+            const input = document.getElementById('practice-step2-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentPractice.remaining);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('practice-step2-num').classList.add('completed');
+                document.getElementById('practice-step2-content').classList.add('hidden');
+                document.getElementById('practice-step2-complete').textContent = `${currentPractice.gcf[0]}(${currentPractice.remaining[0]})`;
+                document.getElementById('practice-step2-complete').classList.remove('hidden');
+
+                document.getElementById('practice-step3').classList.remove('hidden');
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkPracticeStep3() {
+            const input = document.getElementById('practice-step3-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentPractice.final);
+
+            practiceTotal++;
+            const feedback = document.getElementById('practice-feedback');
+
+            if (isCorrect) {
+                practiceScore++;
+                input.classList.add('correct');
+                document.getElementById('practice-step3-num').classList.add('completed');
+                document.getElementById('practice-step3-content').classList.add('hidden');
+                document.getElementById('practice-step3-complete').textContent = `Final: ${currentPractice.final[0]}`;
+                document.getElementById('practice-step3-complete').classList.remove('hidden');
+
+                feedback.innerHTML = '<strong>Excellent!</strong> You factored completely!';
+                feedback.className = 'feedback correct show';
+            } else {
+                input.classList.add('incorrect');
+                feedback.innerHTML = `<strong>Not quite.</strong> The correct answer is: ${currentPractice.final[0]}`;
+                feedback.className = 'feedback incorrect show';
+            }
+
+            document.getElementById('practice-score').textContent = practiceScore;
+            document.getElementById('practice-total').textContent = practiceTotal;
+            document.getElementById('practice-progress').style.width = `${(practiceScore/Math.max(practiceTotal,1))*100}%`;
+        }
+
+        // =====================
+        // SOLO SECTION
+        // =====================
+        const soloProblems = {
+            easy: [
+                { expr: "2x² - 8", exprHTML: "2x<sup>2</sup> - 8", answers: ["2(x-2)(x+2)", "2(x+2)(x-2)"] },
+                { expr: "3x² - 12", exprHTML: "3x<sup>2</sup> - 12", answers: ["3(x-2)(x+2)", "3(x+2)(x-2)"] },
+                { expr: "x³ - x", exprHTML: "x<sup>3</sup> - x", answers: ["x(x-1)(x+1)", "x(x+1)(x-1)"] },
+                { expr: "5x² - 20", exprHTML: "5x<sup>2</sup> - 20", answers: ["5(x-2)(x+2)", "5(x+2)(x-2)"] }
+            ],
+            medium: [
+                { expr: "2x³ - 18x", exprHTML: "2x<sup>3</sup> - 18x", answers: ["2x(x-3)(x+3)", "2x(x+3)(x-3)"] },
+                { expr: "x³ - 4x² - 5x", exprHTML: "x<sup>3</sup> - 4x<sup>2</sup> - 5x", answers: ["x(x-5)(x+1)", "x(x+1)(x-5)"] },
+                { expr: "3x³ - 27x", exprHTML: "3x<sup>3</sup> - 27x", answers: ["3x(x-3)(x+3)", "3x(x+3)(x-3)"] },
+                { expr: "x³ + 2x² - 3x", exprHTML: "x<sup>3</sup> + 2x<sup>2</sup> - 3x", answers: ["x(x+3)(x-1)", "x(x-1)(x+3)"] }
+            ],
+            hard: [
+                { expr: "3y⁵ - 48y³", exprHTML: "3y<sup>5</sup> - 48y<sup>3</sup>", answers: ["3y³(y-4)(y+4)", "3y^3(y-4)(y+4)", "3y³(y+4)(y-4)", "3y^3(y+4)(y-4)"] },
+                { expr: "x⁴ - 16x²", exprHTML: "x<sup>4</sup> - 16x<sup>2</sup>", answers: ["x²(x-4)(x+4)", "x^2(x-4)(x+4)", "x²(x+4)(x-4)", "x^2(x+4)(x-4)"] },
+                { expr: "2x⁴ - 32x²", exprHTML: "2x<sup>4</sup> - 32x<sup>2</sup>", answers: ["2x²(x-4)(x+4)", "2x^2(x-4)(x+4)", "2x²(x+4)(x-4)", "2x^2(x+4)(x-4)"] },
+                { expr: "4x³ - 16x² - 20x", exprHTML: "4x<sup>3</sup> - 16x<sup>2</sup> - 20x", answers: ["4x(x-5)(x+1)", "4x(x+1)(x-5)"] }
+            ]
+        };
+
+        let soloDifficulty = 'easy';
+        let currentSolo = null;
+        let soloScore = 0;
+        let soloTotal = 0;
+
+        function setSoloDifficulty(diff) {
+            soloDifficulty = diff;
+            document.querySelectorAll('#solo .diff-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            newSoloProblem();
+        }
+
+        function newSoloProblem() {
+            const problems = soloProblems[soloDifficulty];
+            currentSolo = problems[Math.floor(Math.random() * problems.length)];
+
+            document.getElementById('solo-problem').innerHTML = currentSolo.exprHTML;
+
+            // Clear scratch workspace
+            document.getElementById('scratch-gcf').value = '';
+            document.getElementById('scratch-after-gcf').value = '';
+            document.getElementById('scratch-factor-more').value = '';
+
+            // Clear answer
+            document.getElementById('solo-answer').value = '';
+            document.getElementById('solo-answer').classList.remove('correct', 'incorrect');
+
+            document.getElementById('solo-feedback').className = 'feedback';
+            document.getElementById('solo-feedback').style.display = 'none';
+        }
+
+        function checkSoloAnswer() {
+            const input = document.getElementById('solo-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentSolo.answers);
+
+            soloTotal++;
+            const feedback = document.getElementById('solo-feedback');
+
+            if (isCorrect) {
+                soloScore++;
+                input.classList.add('correct');
+                feedback.innerHTML = '<strong>Correct!</strong> Great job!';
+                feedback.className = 'feedback correct show';
+            } else {
+                input.classList.add('incorrect');
+                feedback.innerHTML = `<strong>Not quite.</strong> The correct answer is: ${currentSolo.answers[0]}`;
+                feedback.className = 'feedback incorrect show';
+            }
+
+            document.getElementById('solo-score').textContent = soloScore;
+            document.getElementById('solo-total').textContent = soloTotal;
+            document.getElementById('solo-progress').style.width = `${(soloScore/Math.max(soloTotal,1))*100}%`;
+        }
+
+        // Enter key support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                const target = e.target;
+                if (target.id === 'practice-step1-answer') checkPracticeStep1();
+                else if (target.id === 'practice-step2-answer') checkPracticeStep2();
+                else if (target.id === 'practice-step3-answer') checkPracticeStep3();
+                else if (target.id === 'solo-answer') checkSoloAnswer();
+            }
+        });
+    </script>
+</body>
+</html>

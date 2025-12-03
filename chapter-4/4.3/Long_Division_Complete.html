@@ -12,14 +12,18 @@
 
         body {
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
         }
-
+        .site-nav { background: rgba(0,0,0,0.2); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .nav-link { color: white; text-decoration: none; padding: 8px 16px; border-radius: 20px; background: rgba(255,255,255,0.15); transition: all 0.3s ease; font-size: 0.95em; }
+        .nav-link:hover { background: rgba(255,255,255,0.25); }
+        .nav-title { color: white; font-weight: 600; font-size: 1em; }
         .container {
             max-width: 1000px;
             margin: 0 auto;
+            padding: 20px;
         }
 
         header {
@@ -842,6 +846,10 @@
     </style>
 </head>
 <body>
+    <nav class="site-nav">
+        <a href="./" class="nav-link">&larr; Section 4.3</a>
+        <span class="nav-title">Long Division Complete</span>
+    </nav>
     <div class="container">
         <header>
             <h1>Polynomial Long Division</h1>
@@ -2061,11 +2069,58 @@ x² - 1 ) x⁴ - 3x³ + 2x² - x + 5
             document.getElementById('solo-problem').innerHTML =
                 `(${dividendStr}) ÷ (${divisorStr})`;
 
+            // Build scratch workspace
+            buildSoloScratchGrid(soloCurrentProblem.dividend, soloCurrentProblem.divisor);
+
             document.getElementById('solo-quotient-input').value = '';
             document.getElementById('solo-remainder-input').value = '';
             document.getElementById('solo-quotient-input').className = '';
             document.getElementById('solo-remainder-input').className = '';
             document.getElementById('solo-feedback').className = 'feedback';
+        }
+
+        function buildSoloScratchGrid(dividend, divisor) {
+            const dividendDeg = dividend.length - 1;
+            const divisorDeg = divisor.length - 1;
+            const quotientLen = dividendDeg - divisorDeg + 1;
+
+            let html = '';
+
+            // Quotient area
+            html += '<div class="scratch-quotient-area">';
+            for (let i = 0; i < quotientLen; i++) {
+                html += `<input type="text" class="scratch-input" placeholder="">`;
+            }
+            html += '</div>';
+
+            // Division setup row
+            html += '<div class="scratch-row">';
+            html += `<div class="scratch-divisor">${formatPoly(divisor)}</div>`;
+            html += '<div class="scratch-dividend-area">';
+            for (let i = 0; i < dividend.length; i++) {
+                const power = dividendDeg - i;
+                html += `<span class="term-cell term-fixed">${formatTerm(dividend[i], power, i === 0)}</span>`;
+            }
+            html += '</div>';
+            html += '</div>';
+
+            // Work rows
+            html += '<div class="scratch-work-area">';
+            for (let q = 0; q < quotientLen; q++) {
+                // Multiply row
+                html += '<div class="scratch-work-row">';
+                for (let s = 0; s < q; s++) html += `<span style="width:60px;display:inline-block;"></span>`;
+                for (let i = 0; i < divisor.length; i++) html += `<input type="text" class="scratch-input" placeholder="">`;
+                html += '</div>';
+                // Subtract row
+                html += '<div class="scratch-work-row" style="border-top:1px solid #999; padding-top:3px;">';
+                for (let s = 0; s < q; s++) html += `<span style="width:60px;display:inline-block;"></span>`;
+                for (let i = 0; i < divisor.length + 1 && (q + i) < dividend.length; i++) html += `<input type="text" class="scratch-input" placeholder="">`;
+                html += '</div>';
+            }
+            html += '</div>';
+
+            document.getElementById('solo-scratch-grid').innerHTML = html;
         }
 
         function checkSoloAnswer() {
