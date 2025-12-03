@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finite Differences - Polynomial Modeling</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #56ab2f;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            background: #e9ecef;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #495057;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: #dee2e6;
+        }
+
+        .tab.active {
+            background: white;
+            color: #56ab2f;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            color: #56ab2f;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        h3 {
+            color: #56ab2f;
+            margin: 25px 0 15px 0;
+            font-size: 1.4em;
+        }
+
+        p {
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .concept-box {
+            background: #e8f5e9;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+            border-left: 5px solid #56ab2f;
+        }
+
+        .concept-box strong {
+            color: #56ab2f;
+            font-size: 1.1em;
+        }
+
+        .example {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .data-table {
+            width: 100%;
+            max-width: 800px;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .data-table th {
+            background: #56ab2f;
+            color: white;
+            font-weight: 600;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .highlight {
+            background: #fff3cd;
+            font-weight: bold;
+        }
+
+        .example-nav {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: #56ab2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            background: #a8e063;
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .step-indicator {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .step-dot {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .step-dot.active {
+            background: #56ab2f;
+            color: white;
+            transform: scale(1.2);
+        }
+
+        .step-dot.completed {
+            background: #a8e063;
+            color: white;
+        }
+
+        .practice-problem {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .input-group {
+            margin: 15px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #495057;
+            font-weight: 600;
+        }
+
+        input[type="number"],
+        input[type="text"] {
+            width: 100%;
+            max-width: 300px;
+            padding: 12px;
+            border: 2px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #56ab2f;
+        }
+
+        .submit-button {
+            padding: 12px 30px;
+            background: #56ab2f;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+
+        .submit-button:hover {
+            background: #a8e063;
+            transform: translateY(-2px);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+            display: block;
+        }
+
+        .hint {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
+            display: none;
+        }
+
+        .hint.show {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-button {
+            padding: 10px 20px;
+            border: 2px solid #56ab2f;
+            background: white;
+            color: #56ab2f;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .difficulty-button.active {
+            background: #56ab2f;
+            color: white;
+        }
+
+        .workspace {
+            background: white;
+            border: 2px solid #56ab2f;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+
+        .workspace-title {
+            color: #56ab2f;
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-display h3 {
+            color: white;
+            margin: 0 0 10px 0;
+        }
+
+        .graph-container {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+
+            .tab {
+                font-size: 0.9em;
+                padding: 15px 10px;
+            }
+
+            .data-table {
+                font-size: 0.9em;
+            }
+
+            .data-table th,
+            .data-table td {
+                padding: 10px 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="index.html" class="back-button">← Back to Section 4.9</a>
+            <h1>Finite Differences</h1>
+            <p>Determine polynomial degree from data patterns</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">Learn</button>
+            <button class="tab" onclick="showTab('see')">See</button>
+            <button class="tab" onclick="showTab('practice')">Practice</button>
+            <button class="tab" onclick="showTab('do')">Do</button>
+        </div>
+
+        <div class="content">
+            <!-- LEARN TAB -->
+            <div id="learn" class="tab-content active">
+                <h2>Understanding Finite Differences</h2>
+
+                <p>
+                    When you have a set of data points with equally-spaced x-values, finite differences can reveal
+                    the degree of the polynomial that fits the data. This powerful technique helps you determine
+                    what type of polynomial best models your data without actually finding the equation.
+                </p>
+
+                <div class="concept-box">
+                    <strong>The Finite Differences Method:</strong>
+                    <p style="margin-top: 10px;">
+                        For data with equally-spaced x-values:
+                    </p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li><strong>First differences:</strong> Subtract consecutive y-values</li>
+                        <li><strong>Second differences:</strong> Subtract consecutive first differences</li>
+                        <li><strong>Continue</strong> until differences become constant</li>
+                        <li><strong>The level</strong> at which differences become constant indicates the polynomial degree</li>
+                    </ul>
+                </div>
+
+                <h3>How It Works</h3>
+                <p>
+                    If your data comes from a polynomial function:
+                </p>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li><strong>Linear function (degree 1):</strong> First differences are constant</li>
+                    <li><strong>Quadratic function (degree 2):</strong> Second differences are constant</li>
+                    <li><strong>Cubic function (degree 3):</strong> Third differences are constant</li>
+                    <li><strong>And so on...</strong> nth differences constant → degree n polynomial</li>
+                </ul>
+
+                <h3>Why This Works</h3>
+                <p>
+                    Think about the nature of polynomials: when you take the derivative of a polynomial,
+                    you reduce its degree by 1. Finite differences are like discrete derivatives - each level
+                    of differencing reduces the effective degree by 1. When you've differenced enough times
+                    to reduce the polynomial to a constant (degree 0), the differences become constant.
+                </p>
+
+                <div class="concept-box">
+                    <strong>Important Requirement:</strong>
+                    <p style="margin-top: 10px;">
+                        The x-values must be equally spaced! If x-values are 1, 2, 3, 4... or 0, 5, 10, 15...
+                        this method works. If x-values are 1, 3, 7, 10... the spacing is unequal and this method
+                        won't work reliably.
+                    </p>
+                </div>
+
+                <h3>Example Pattern</h3>
+                <table class="data-table">
+                    <tr>
+                        <th>x</th>
+                        <th>y</th>
+                        <th>First Diff</th>
+                        <th>Second Diff</th>
+                    </tr>
+                    <tr>
+                        <td>0</td>
+                        <td>3</td>
+                        <td rowspan="2">5</td>
+                        <td rowspan="3">2</td>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td>8</td>
+                        <td rowspan="2">7</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>15</td>
+                        <td rowspan="2">9</td>
+                        <td rowspan="3">2</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>24</td>
+                        <td rowspan="2">11</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>35</td>
+                    </tr>
+                </table>
+                <p>
+                    In this example, the second differences are constant (both equal 2), so the data fits a
+                    <strong>quadratic (degree 2)</strong> polynomial. Indeed, y = x² + 4x + 3!
+                </p>
+            </div>
+
+            <!-- SEE TAB -->
+            <div id="see" class="tab-content">
+                <h2>Worked Examples</h2>
+
+                <div class="step-indicator">
+                    <div class="step-dot active" id="see-dot-1">1</div>
+                    <div class="step-dot" id="see-dot-2">2</div>
+                    <div class="step-dot" id="see-dot-3">3</div>
+                </div>
+
+                <div id="see-example-1" class="example">
+                    <h3>Example 1: Linear Data</h3>
+                    <p><strong>Given data:</strong></p>
+                    <table class="data-table">
+                        <tr>
+                            <th>x</th>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <th>y</th>
+                            <td>5</td>
+                            <td>8</td>
+                            <td>11</td>
+                            <td>14</td>
+                            <td>17</td>
+                        </tr>
+                    </table>
+                    <p><strong>Step 1:</strong> Calculate first differences by subtracting consecutive y-values:</p>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li>8 - 5 = 3</li>
+                        <li>11 - 8 = 3</li>
+                        <li>14 - 11 = 3</li>
+                        <li>17 - 14 = 3</li>
+                    </ul>
+                    <p><strong>Step 2:</strong> Check if differences are constant: Yes! All first differences equal 3.</p>
+                    <p><strong>Conclusion:</strong> Since first differences are constant, this is a <span style="color: #56ab2f; font-weight: bold;">linear (degree 1)</span> function.</p>
+                    <p style="margin-top: 15px;"><em>The actual function is y = 3x + 5</em></p>
+                </div>
+
+                <div id="see-example-2" class="example" style="display: none;">
+                    <h3>Example 2: Quadratic Data</h3>
+                    <p><strong>Given data:</strong></p>
+                    <table class="data-table">
+                        <tr>
+                            <th>x</th>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <th>y</th>
+                            <td>2</td>
+                            <td>7</td>
+                            <td>14</td>
+                            <td>23</td>
+                            <td>34</td>
+                        </tr>
+                    </table>
+                    <p><strong>Step 1:</strong> Calculate first differences:</p>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li>7 - 2 = 5</li>
+                        <li>14 - 7 = 7</li>
+                        <li>23 - 14 = 9</li>
+                        <li>34 - 23 = 11</li>
+                    </ul>
+                    <p><strong>Step 2:</strong> First differences are NOT constant (5, 7, 9, 11). Calculate second differences:</p>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li>7 - 5 = 2</li>
+                        <li>9 - 7 = 2</li>
+                        <li>11 - 9 = 2</li>
+                    </ul>
+                    <p><strong>Step 3:</strong> Second differences are constant: All equal 2.</p>
+                    <p><strong>Conclusion:</strong> Since second differences are constant, this is a <span style="color: #56ab2f; font-weight: bold;">quadratic (degree 2)</span> function.</p>
+                    <p style="margin-top: 15px;"><em>The actual function is y = x² + x</em></p>
+                </div>
+
+                <div id="see-example-3" class="example" style="display: none;">
+                    <h3>Example 3: Cubic Data</h3>
+                    <p><strong>Given data:</strong></p>
+                    <table class="data-table">
+                        <tr>
+                            <th>x</th>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>2</td>
+                            <td>3</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <th>y</th>
+                            <td>0</td>
+                            <td>1</td>
+                            <td>8</td>
+                            <td>27</td>
+                            <td>64</td>
+                        </tr>
+                    </table>
+                    <p><strong>Step 1:</strong> Calculate first differences:</p>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li>1 - 0 = 1</li>
+                        <li>8 - 1 = 7</li>
+                        <li>27 - 8 = 19</li>
+                        <li>64 - 27 = 37</li>
+                    </ul>
+                    <p><strong>Step 2:</strong> First differences are NOT constant. Calculate second differences:</p>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li>7 - 1 = 6</li>
+                        <li>19 - 7 = 12</li>
+                        <li>37 - 19 = 18</li>
+                    </ul>
+                    <p><strong>Step 3:</strong> Second differences are NOT constant. Calculate third differences:</p>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li>12 - 6 = 6</li>
+                        <li>18 - 12 = 6</li>
+                    </ul>
+                    <p><strong>Step 4:</strong> Third differences are constant: Both equal 6.</p>
+                    <p><strong>Conclusion:</strong> Since third differences are constant, this is a <span style="color: #56ab2f; font-weight: bold;">cubic (degree 3)</span> function.</p>
+                    <p style="margin-top: 15px;"><em>The actual function is y = x³</em></p>
+                </div>
+
+                <div class="example-nav">
+                    <button class="nav-button" onclick="previousExample()" id="see-prev">Previous</button>
+                    <button class="nav-button" onclick="nextExample()" id="see-next">Next Example</button>
+                </div>
+            </div>
+
+            <!-- PRACTICE TAB -->
+            <div id="practice" class="tab-content">
+                <h2>Practice Problems</h2>
+                <p>Work through these problems step by step. Calculate the differences and determine the polynomial degree.</p>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="practice-progress" style="width: 0%">0%</div>
+                </div>
+
+                <div id="practice-problem-container"></div>
+
+                <div class="score-display" id="practice-score-display" style="display: none;">
+                    <h3>Practice Complete!</h3>
+                    <p id="practice-final-score"></p>
+                    <button class="nav-button" onclick="resetPractice()">Try Again</button>
+                </div>
+            </div>
+
+            <!-- DO TAB -->
+            <div id="do" class="tab-content">
+                <h2>Independent Practice</h2>
+                <p>Apply what you've learned! Choose a difficulty level and solve problems on your own.</p>
+
+                <div class="difficulty-selector">
+                    <button class="difficulty-button active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="difficulty-button" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="difficulty-button" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+
+                <div class="score-display">
+                    <h3>Your Score</h3>
+                    <p id="do-score">0 / 0 (0%)</p>
+                </div>
+
+                <div id="do-problem-container"></div>
+
+                <div class="workspace">
+                    <div class="workspace-title">Scratch Workspace</div>
+                    <p style="color: #666; margin-bottom: 15px;">Use this space to calculate differences:</p>
+                    <table class="data-table" id="workspace-table">
+                        <tr>
+                            <th>x</th>
+                            <th>y</th>
+                            <th>1st Diff</th>
+                            <th>2nd Diff</th>
+                            <th>3rd Diff</th>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="input-group">
+                    <label for="do-answer">What is the degree of the polynomial? (Enter 1, 2, 3, or 4)</label>
+                    <input type="number" id="do-answer" min="1" max="4" placeholder="Enter degree">
+                </div>
+
+                <button class="submit-button" onclick="checkDoAnswer()">Submit Answer</button>
+                <button class="nav-button" onclick="newDoProblem()" style="margin-left: 10px;">New Problem</button>
+
+                <div id="do-feedback" class="feedback"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // See tab navigation
+        let currentExample = 1;
+        const totalExamples = 3;
+
+        function nextExample() {
+            if (currentExample < totalExamples) {
+                document.getElementById(`see-example-${currentExample}`).style.display = 'none';
+                document.getElementById(`see-dot-${currentExample}`).classList.remove('active');
+                document.getElementById(`see-dot-${currentExample}`).classList.add('completed');
+
+                currentExample++;
+
+                document.getElementById(`see-example-${currentExample}`).style.display = 'block';
+                document.getElementById(`see-dot-${currentExample}`).classList.add('active');
+
+                updateSeeButtons();
+            }
+        }
+
+        function previousExample() {
+            if (currentExample > 1) {
+                document.getElementById(`see-example-${currentExample}`).style.display = 'none';
+                document.getElementById(`see-dot-${currentExample}`).classList.remove('active');
+
+                currentExample--;
+
+                document.getElementById(`see-example-${currentExample}`).style.display = 'block';
+                document.getElementById(`see-dot-${currentExample}`).classList.remove('completed');
+                document.getElementById(`see-dot-${currentExample}`).classList.add('active');
+
+                updateSeeButtons();
+            }
+        }
+
+        function updateSeeButtons() {
+            document.getElementById('see-prev').disabled = currentExample === 1;
+            document.getElementById('see-next').disabled = currentExample === totalExamples;
+        }
+
+        updateSeeButtons();
+
+        // Practice tab
+        const practiceProblems = [
+            {
+                data: [[0, 2], [1, 5], [2, 8], [3, 11], [4, 14]],
+                answer: 1,
+                hint: "Calculate the first differences. Are they constant?"
+            },
+            {
+                data: [[0, 1], [1, 4], [2, 9], [3, 16], [4, 25]],
+                answer: 2,
+                hint: "First differences aren't constant. Try second differences."
+            },
+            {
+                data: [[1, 0], [2, 1], [3, 8], [4, 27], [5, 64]],
+                answer: 3,
+                hint: "You'll need to go to third differences for this one."
+            },
+            {
+                data: [[0, 3], [1, 8], [2, 15], [3, 24], [4, 35]],
+                answer: 2,
+                hint: "Look for constant second differences."
+            }
+        ];
+
+        let currentPractice = 0;
+        let practiceScore = 0;
+
+        function loadPracticeProblems() {
+            if (currentPractice < practiceProblems.length) {
+                const problem = practiceProblems[currentPractice];
+                const container = document.getElementById('practice-problem-container');
+
+                let tableHTML = '<div class="practice-problem">';
+                tableHTML += `<h3>Problem ${currentPractice + 1} of ${practiceProblems.length}</h3>`;
+                tableHTML += '<table class="data-table"><tr><th>x</th>';
+                problem.data.forEach(point => {
+                    tableHTML += `<td>${point[0]}</td>`;
+                });
+                tableHTML += '</tr><tr><th>y</th>';
+                problem.data.forEach(point => {
+                    tableHTML += `<td>${point[1]}</td>`;
+                });
+                tableHTML += '</tr></table>';
+                tableHTML += '<div class="input-group">';
+                tableHTML += '<label>What is the degree of the polynomial that fits this data?</label>';
+                tableHTML += '<input type="number" id="practice-answer" min="1" max="4" placeholder="Enter degree">';
+                tableHTML += '</div>';
+                tableHTML += '<button class="submit-button" onclick="checkPracticeAnswer()">Submit</button>';
+                tableHTML += '<button class="nav-button" onclick="showPracticeHint()" style="margin-left: 10px;">Show Hint</button>';
+                tableHTML += `<div class="hint" id="practice-hint">${problem.hint}</div>`;
+                tableHTML += '<div id="practice-feedback" class="feedback"></div>';
+                tableHTML += '</div>';
+
+                container.innerHTML = tableHTML;
+
+                // Add enter key support
+                document.getElementById('practice-answer').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkPracticeAnswer();
+                    }
+                });
+            } else {
+                showPracticeComplete();
+            }
+        }
+
+        function showPracticeHint() {
+            document.getElementById('practice-hint').classList.add('show');
+        }
+
+        function checkPracticeAnswer() {
+            const answer = parseInt(document.getElementById('practice-answer').value);
+            const feedback = document.getElementById('practice-feedback');
+            const correct = practiceProblems[currentPractice].answer;
+
+            if (answer === correct) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Correct! The polynomial has degree ' + correct + '.';
+                practiceScore++;
+
+                setTimeout(() => {
+                    currentPractice++;
+                    updatePracticeProgress();
+                    loadPracticeProblems();
+                }, 1500);
+            } else if (answer) {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Not quite. Try calculating the differences step by step. Use the hint if needed!';
+            }
+        }
+
+        function updatePracticeProgress() {
+            const percent = (currentPractice / practiceProblems.length) * 100;
+            const progressBar = document.getElementById('practice-progress');
+            progressBar.style.width = percent + '%';
+            progressBar.textContent = Math.round(percent) + '%';
+        }
+
+        function showPracticeComplete() {
+            document.getElementById('practice-problem-container').style.display = 'none';
+            document.getElementById('practice-score-display').style.display = 'block';
+            const percentage = Math.round((practiceScore / practiceProblems.length) * 100);
+            document.getElementById('practice-final-score').textContent =
+                `You got ${practiceScore} out of ${practiceProblems.length} correct (${percentage}%)`;
+        }
+
+        function resetPractice() {
+            currentPractice = 0;
+            practiceScore = 0;
+            document.getElementById('practice-problem-container').style.display = 'block';
+            document.getElementById('practice-score-display').style.display = 'none';
+            updatePracticeProgress();
+            loadPracticeProblems();
+        }
+
+        loadPracticeProblems();
+
+        // Do tab
+        let doScore = 0;
+        let doAttempts = 0;
+        let currentDifficulty = 'easy';
+        let currentDoProblem = null;
+
+        function setDifficulty(level) {
+            currentDifficulty = level;
+            document.querySelectorAll('.difficulty-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            newDoProblem();
+        }
+
+        function generateDoProblem() {
+            let data = [];
+            let degree;
+
+            if (currentDifficulty === 'easy') {
+                degree = Math.random() < 0.5 ? 1 : 2;
+            } else if (currentDifficulty === 'medium') {
+                degree = Math.floor(Math.random() * 2) + 2; // 2 or 3
+            } else {
+                degree = Math.floor(Math.random() * 3) + 2; // 2, 3, or 4
+            }
+
+            const startX = Math.floor(Math.random() * 3);
+
+            for (let i = 0; i < 5; i++) {
+                const x = startX + i;
+                let y;
+
+                if (degree === 1) {
+                    const m = Math.floor(Math.random() * 5) + 1;
+                    const b = Math.floor(Math.random() * 10);
+                    y = m * x + b;
+                } else if (degree === 2) {
+                    const a = Math.floor(Math.random() * 3) + 1;
+                    const b = Math.floor(Math.random() * 5);
+                    const c = Math.floor(Math.random() * 5);
+                    y = a * x * x + b * x + c;
+                } else if (degree === 3) {
+                    const a = Math.floor(Math.random() * 2) + 1;
+                    y = a * x * x * x;
+                } else {
+                    y = x * x * x * x;
+                }
+
+                data.push([x, y]);
+            }
+
+            return { data, degree };
+        }
+
+        function newDoProblem() {
+            currentDoProblem = generateDoProblem();
+            displayDoProblem();
+            document.getElementById('do-answer').value = '';
+            document.getElementById('do-feedback').style.display = 'none';
+        }
+
+        function displayDoProblem() {
+            const container = document.getElementById('do-problem-container');
+            let html = '<div class="practice-problem">';
+            html += '<h3>Determine the Polynomial Degree</h3>';
+            html += '<table class="data-table"><tr><th>x</th>';
+            currentDoProblem.data.forEach(point => {
+                html += `<td>${point[0]}</td>`;
+            });
+            html += '</tr><tr><th>y</th>';
+            currentDoProblem.data.forEach(point => {
+                html += `<td>${point[1]}</td>`;
+            });
+            html += '</tr></table></div>';
+            container.innerHTML = html;
+
+            updateWorkspaceTable();
+        }
+
+        function updateWorkspaceTable() {
+            const tbody = document.querySelector('#workspace-table tbody');
+            if (tbody) tbody.remove();
+
+            const table = document.getElementById('workspace-table');
+            const newTbody = document.createElement('tbody');
+
+            currentDoProblem.data.forEach(point => {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td>${point[0]}</td><td>${point[1]}</td><td></td><td></td><td></td>`;
+                newTbody.appendChild(row);
+            });
+
+            table.appendChild(newTbody);
+        }
+
+        function checkDoAnswer() {
+            const answer = parseInt(document.getElementById('do-answer').value);
+            const feedback = document.getElementById('do-feedback');
+
+            if (!answer) {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Please enter an answer.';
+                return;
+            }
+
+            doAttempts++;
+
+            if (answer === currentDoProblem.degree) {
+                doScore++;
+                feedback.className = 'feedback correct';
+                feedback.textContent = `Correct! This data fits a degree ${currentDoProblem.degree} polynomial.`;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = `Not quite. The correct degree is ${currentDoProblem.degree}. Try using the workspace to calculate differences!`;
+            }
+
+            updateDoScore();
+        }
+
+        function updateDoScore() {
+            const percentage = doAttempts > 0 ? Math.round((doScore / doAttempts) * 100) : 0;
+            document.getElementById('do-score').textContent =
+                `${doScore} / ${doAttempts} (${percentage}%)`;
+        }
+
+        // Add enter key support for do answer
+        document.addEventListener('DOMContentLoaded', function() {
+            const doAnswer = document.getElementById('do-answer');
+            if (doAnswer) {
+                doAnswer.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        checkDoAnswer();
+                    }
+                });
+            }
+
+            newDoProblem();
+        });
+    </script>
+</body>
+</html>

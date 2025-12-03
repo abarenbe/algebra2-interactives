@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GCF Factoring | 4.4 Factoring Polynomials</title>
+    <title>Factor Theorem | 4.4 Factoring Polynomials</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
     <style>
         * {
             box-sizing: border-box;
@@ -119,7 +120,7 @@
 
         .formula-box {
             background: #fff3cd;
-            padding: 15px 20px;
+            padding: 20px;
             border-radius: 10px;
             margin: 15px 0;
             border: 2px solid #ffc107;
@@ -151,7 +152,6 @@
             font-family: 'Times New Roman', serif;
         }
 
-        /* Step navigation for Watch section */
         .step-navigator {
             display: flex;
             justify-content: center;
@@ -224,14 +224,14 @@
             padding: 15px;
             border-radius: 8px;
             font-family: 'Courier New', monospace;
-            font-size: 1.2em;
+            font-size: 1.1em;
             line-height: 2;
         }
 
         .highlight { background: #fff3cd; padding: 2px 6px; border-radius: 4px; }
         .highlight-green { background: #d4edda; padding: 2px 6px; border-radius: 4px; }
+        .highlight-red { background: #f8d7da; padding: 2px 6px; border-radius: 4px; }
 
-        /* Practice Section */
         .problem-card {
             background: #f8f9fa;
             padding: 20px;
@@ -271,7 +271,7 @@
         .step-title {
             font-weight: 600;
             color: #333;
-            font-size: 1.1em;
+            font-size: 1.05em;
         }
 
         .step-content { margin-left: 47px; }
@@ -317,6 +317,26 @@
             border-color: #dc3545;
             background: #f8d7da;
         }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .radio-option {
+            padding: 12px 24px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1em;
+        }
+
+        .radio-option:hover { border-color: #667eea; background: #f0f0ff; }
+        .radio-option.selected { border-color: #667eea; background: #e0e7ff; }
+        .radio-option.correct { border-color: #28a745; background: #d4edda; }
+        .radio-option.incorrect { border-color: #dc3545; background: #f8d7da; }
 
         .btn {
             padding: 12px 24px;
@@ -378,7 +398,6 @@
 
         .hidden { display: none !important; }
 
-        /* Solo Scratch Workspace */
         .scratch-workspace {
             background: #fffbeb;
             border: 2px dashed #f59e0b;
@@ -392,36 +411,53 @@
             color: #92400e;
         }
 
-        .scratch-area {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .synth-div-grid {
+            display: grid;
+            gap: 5px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+            margin: 15px 0;
+            overflow-x: auto;
         }
 
-        .scratch-row {
+        .synth-row {
             display: flex;
-            gap: 10px;
+            gap: 5px;
             align-items: center;
-            flex-wrap: wrap;
         }
 
-        .scratch-label {
-            min-width: 100px;
-            font-weight: 500;
-            color: #78716c;
+        .synth-cell {
+            width: 50px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
         }
 
-        .scratch-input {
-            width: 200px;
-            padding: 10px 12px;
-            border: 1px dashed #d4d4d4;
-            border-radius: 6px;
+        .synth-cell.k-value {
+            background: #e0e7ff;
+            font-weight: bold;
+        }
+
+        .synth-cell.divider {
+            border-bottom: 3px solid #667eea;
+        }
+
+        .synth-input {
+            width: 50px;
+            height: 40px;
+            text-align: center;
+            border: 1px dashed #aaa;
+            border-radius: 4px;
             font-family: 'Courier New', monospace;
             font-size: 1em;
-            background: rgba(255,255,255,0.8);
+            background: rgba(255,255,255,0.9);
         }
 
-        .scratch-input:focus {
+        .synth-input:focus {
             border-color: #667eea;
             border-style: solid;
             outline: none;
@@ -458,26 +494,46 @@
             color: #4338ca;
         }
 
+        .graph-container {
+            margin: 20px 0;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .binomial-highlight {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+
+        .connection-box {
+            background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #10b981;
+        }
+
         @media (max-width: 768px) {
             header h1 { font-size: 1.6em; }
             .tab-btn { padding: 10px 16px; font-size: 0.9em; }
             .polynomial-display { font-size: 1.2em; }
             .step-content { margin-left: 0; margin-top: 10px; }
             .step-completed-text { margin-left: 0; }
-            .scratch-input { width: 100%; }
+            .synth-cell, .synth-input { width: 40px; height: 35px; font-size: 0.9em; }
         }
     </style>
 </head>
 <body>
     <nav class="site-nav">
         <a href="./" class="nav-link">&larr; 4.4 Factoring</a>
-        <span class="nav-title">GCF Factoring</span>
+        <span class="nav-title">Factor Theorem</span>
     </nav>
 
     <div class="container">
         <header>
-            <h1>GCF Factoring</h1>
-            <p>Factor out the Greatest Common Factor</p>
+            <h1>The Factor Theorem</h1>
+            <p>Connect factors, zeros, and polynomial evaluation</p>
         </header>
 
         <div class="tabs">
@@ -489,70 +545,75 @@
 
         <!-- LEARN SECTION -->
         <div id="learn" class="section active">
-            <h2>Understanding GCF Factoring</h2>
+            <h2>Understanding the Factor Theorem</h2>
+
+            <div class="formula-box">
+                <strong>The Factor Theorem:</strong><br><br>
+                (x - k) is a factor of f(x) <strong>if and only if</strong> f(k) = 0
+            </div>
+
+            <div class="why-box">
+                <h3 style="margin-top:0;">Why Does This Work?</h3>
+                <p>The Factor Theorem connects three big ideas:</p>
+                <ol>
+                    <li><strong>Factors:</strong> If (x - k) is a factor, then f(x) = (x - k) · q(x) for some polynomial q(x)</li>
+                    <li><strong>Zeros:</strong> When we substitute x = k: f(k) = (k - k) · q(k) = 0 · q(k) = 0</li>
+                    <li><strong>Division:</strong> If f(k) = 0, then dividing f(x) by (x - k) leaves no remainder</li>
+                </ol>
+                <p>So finding where f(k) = 0 tells us (x - k) divides evenly into f(x)!</p>
+            </div>
+
+            <div class="connection-box">
+                <h3 style="margin-top:0;">The Big Connection</h3>
+                <p>These three statements are all saying the same thing:</p>
+                <ul>
+                    <li><strong>k is a zero of f(x)</strong> - the function equals zero at x = k</li>
+                    <li><strong>(x - k) is a factor of f(x)</strong> - it divides evenly with no remainder</li>
+                    <li><strong>The graph of f(x) crosses the x-axis at x = k</strong> - it's an x-intercept</li>
+                </ul>
+            </div>
+
+            <h3>How to Use the Factor Theorem</h3>
+            <div class="example-card">
+                <h4>To test if (x - k) is a factor:</h4>
+                <ol>
+                    <li><strong>Identify k</strong> from the binomial (x - k). Remember: if you have (x + 2), then k = -2!</li>
+                    <li><strong>Evaluate f(k)</strong> by substituting k into the polynomial</li>
+                    <li><strong>Check the result:</strong>
+                        <ul>
+                            <li>If f(k) = 0, then YES, (x - k) is a factor</li>
+                            <li>If f(k) ≠ 0, then NO, (x - k) is not a factor</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="example-card">
+                <h4>Example: Is (x - 2) a factor of f(x) = x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6?</h4>
+                <div style="font-family:'Courier New', monospace; line-height:2; padding:15px; background:white; border-radius:8px;">
+                    <div>Test k = 2:</div>
+                    <div>f(2) = (2)³ - 6(2)² + 11(2) - 6</div>
+                    <div>f(2) = 8 - 24 + 22 - 6</div>
+                    <div>f(2) = <span class="highlight-green">0</span></div>
+                    <div><br><strong>Since f(2) = 0, (x - 2) IS a factor!</strong></div>
+                </div>
+            </div>
 
             <div class="info-box">
-                <h3 style="margin-top:0;">What is GCF Factoring?</h3>
-                <p>The <strong>Greatest Common Factor (GCF)</strong> of a polynomial is the largest expression that divides evenly into every term. Factoring out the GCF is the first step in factoring any polynomial.</p>
-            </div>
-
-            <div class="why-box">
-                <h3 style="margin-top:0;">Why Does GCF Factoring Work?</h3>
-                <p>GCF factoring is based on the <strong>Distributive Property</strong> in reverse:</p>
-                <p style="text-align:center; font-size:1.2em;">
-                    a(b + c) = ab + ac &nbsp;&nbsp;&rarr;&nbsp;&nbsp; ab + ac = a(b + c)
-                </p>
-                <p>When we "factor out" the GCF, we're essentially un-distributing it. This works because:</p>
+                <h3 style="margin-top:0;">Using Synthetic Division</h3>
+                <p>You can also use <strong>synthetic division</strong> to test if (x - k) is a factor:</p>
                 <ul>
-                    <li><strong>Every term shares the GCF</strong> - if each term contains a factor, we can pull it out front</li>
-                    <li><strong>Division reverses multiplication</strong> - dividing each term by the GCF gives what remains inside the parentheses</li>
-                    <li><strong>The product is unchanged</strong> - if you re-distribute the GCF, you get back the original expression</li>
+                    <li>If the remainder is 0, then (x - k) is a factor</li>
+                    <li>The quotient gives you the other factor</li>
                 </ul>
+                <p>This is often faster than substituting, especially for higher-degree polynomials!</p>
             </div>
 
-            <h3>How to Find the GCF</h3>
+            <h3>Finding Zeros from Factors</h3>
             <div class="example-card">
-                <h4>Finding the GCF of Polynomial Terms</h4>
-                <p><strong>Step 1:</strong> Find the GCF of the coefficients (numbers)</p>
-                <p><strong>Step 2:</strong> For each variable, take the lowest power that appears in ALL terms</p>
-                <p><strong>Step 3:</strong> Multiply them together</p>
-
-                <div style="margin-top:15px; padding:15px; background:#e0e7ff; border-radius:8px;">
-                    <strong>Example:</strong> Find the GCF of 6x<sup>3</sup>, 18x<sup>2</sup>, and 12x<sup>4</sup>
-                    <ul>
-                        <li>GCF of 6, 18, 12 = <strong>6</strong></li>
-                        <li>Lowest power of x: x<sup>1</sup>, x<sup>2</sup>, x<sup>4</sup> → <strong>x</strong> (or x<sup>1</sup>)</li>
-                        <li>GCF = <strong>6x</strong></li>
-                    </ul>
-                </div>
-            </div>
-
-            <h3>Complete Factoring Process</h3>
-            <div class="formula-box">
-                1. Factor out the GCF<br>
-                2. Check if the remaining polynomial can be factored further<br>
-                3. Continue until fully factored
-            </div>
-
-            <div class="example-card">
-                <h4>Example: Factor x<sup>3</sup> - 4x<sup>2</sup> - 5x completely</h4>
-                <div style="font-family:'Courier New', monospace; line-height:2.2; padding:15px; background:white; border-radius:8px;">
-                    <div>x<sup>3</sup> - 4x<sup>2</sup> - 5x <span class="highlight">GCF is x</span></div>
-                    <div>= x(x<sup>2</sup> - 4x - 5) <span class="highlight">Factor out x</span></div>
-                    <div>= x(x - 5)(x + 1) <span class="highlight-green">Factor the trinomial</span></div>
-                </div>
-                <p style="margin-top:10px;"><strong>Check:</strong> x(x - 5)(x + 1) = x(x<sup>2</sup> + x - 5x - 5) = x(x<sup>2</sup> - 4x - 5) = x<sup>3</sup> - 4x<sup>2</sup> - 5x ✓</p>
-            </div>
-
-            <div class="why-box">
-                <h3 style="margin-top:0;">Why Factor Completely?</h3>
-                <p>Finding all factors helps us:</p>
-                <ul>
-                    <li><strong>Find zeros/roots</strong> - Each linear factor (x - a) tells us x = a is a solution</li>
-                    <li><strong>Simplify expressions</strong> - Factored form makes division and simplification easier</li>
-                    <li><strong>Solve equations</strong> - Setting each factor = 0 solves the equation</li>
-                    <li><strong>Graph functions</strong> - Factors reveal x-intercepts of the graph</li>
-                </ul>
+                <h4>If you know f(x) = (x - 1)(x - 2)(x - 3):</h4>
+                <p>The zeros are x = 1, x = 2, and x = 3</p>
+                <p>The graph crosses the x-axis at these three points.</p>
             </div>
         </div>
 
@@ -566,7 +627,7 @@
                 <button class="diff-btn" onclick="selectWatchExample(2)">Example 3</button>
             </div>
 
-            <div class="polynomial-display" id="watch-problem">2x<sup>3</sup> - 18x</div>
+            <div class="polynomial-display" id="watch-problem">Is (x - 2) a factor of x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6?</div>
 
             <div class="step-dots" id="watch-dots"></div>
 
@@ -580,12 +641,14 @@
                 <span class="step-indicator" id="watch-indicator">Step 1 of 4</span>
                 <button class="step-nav-btn" id="watch-next" onclick="watchNext()">Next →</button>
             </div>
+
+            <div class="graph-container" id="watch-graph"></div>
         </div>
 
         <!-- PRACTICE SECTION -->
         <div id="practice" class="section">
             <h2>Practice</h2>
-            <p>Factor each polynomial step by step. Get feedback after each step!</p>
+            <p>Use the Factor Theorem to determine if a binomial is a factor.</p>
 
             <div class="score-display">
                 Score: <span id="practice-score">0</span> / <span id="practice-total">0</span>
@@ -593,51 +656,51 @@
             </div>
 
             <div class="problem-card">
-                <h3>Factor completely:</h3>
+                <h3>Is <span id="practice-binomial" class="binomial-highlight"></span> a factor of:</h3>
                 <div class="polynomial-display" id="practice-problem"></div>
 
-                <!-- Step 1: Identify GCF -->
+                <!-- Step 1: Identify k -->
                 <div class="step-container" id="practice-step1">
                     <div class="step-header">
                         <div class="step-number" id="practice-step1-num">1</div>
-                        <div class="step-title">What is the GCF of all terms?</div>
+                        <div class="step-title">What value of k should you test? (from the binomial x - k)</div>
                     </div>
                     <div class="step-content" id="practice-step1-content">
                         <div class="input-group">
-                            <input type="text" id="practice-step1-answer" placeholder="e.g., 2x">
+                            <span>k = </span>
+                            <input type="text" id="practice-step1-answer" placeholder="e.g., 2 or -3" style="max-width:100px;">
                             <button class="btn btn-primary" onclick="checkPracticeStep1()">Check</button>
                         </div>
                     </div>
                     <div class="step-completed-text hidden" id="practice-step1-complete"></div>
                 </div>
 
-                <!-- Step 2: Write remaining polynomial -->
+                <!-- Step 2: Evaluate f(k) -->
                 <div class="step-container hidden" id="practice-step2">
                     <div class="step-header">
                         <div class="step-number" id="practice-step2-num">2</div>
-                        <div class="step-title">After factoring out the GCF, what's left in parentheses?</div>
+                        <div class="step-title">Calculate f(<span id="practice-k-display"></span>)</div>
                     </div>
                     <div class="step-content" id="practice-step2-content">
                         <div class="input-group">
-                            <span style="font-size:1.2em;" id="practice-partial"></span>
-                            <input type="text" id="practice-step2-answer" placeholder="e.g., x²-9">
-                            <span style="font-size:1.2em;">)</span>
+                            <span>f(<span id="practice-k-display2"></span>) = </span>
+                            <input type="text" id="practice-step2-answer" placeholder="e.g., 0" style="max-width:100px;">
                             <button class="btn btn-primary" onclick="checkPracticeStep2()">Check</button>
                         </div>
                     </div>
                     <div class="step-completed-text hidden" id="practice-step2-complete"></div>
                 </div>
 
-                <!-- Step 3: Final factored form -->
+                <!-- Step 3: Conclusion -->
                 <div class="step-container hidden" id="practice-step3">
                     <div class="step-header">
                         <div class="step-number" id="practice-step3-num">3</div>
-                        <div class="step-title">Write the completely factored form</div>
+                        <div class="step-title">Is the binomial a factor?</div>
                     </div>
                     <div class="step-content" id="practice-step3-content">
-                        <div class="input-group">
-                            <input type="text" id="practice-step3-answer" placeholder="e.g., 2x(x-3)(x+3)">
-                            <button class="btn btn-primary" onclick="checkPracticeStep3()">Check</button>
+                        <div class="radio-group">
+                            <div class="radio-option" onclick="selectConclusion(true)">Yes, it's a factor</div>
+                            <div class="radio-option" onclick="selectConclusion(false)">No, it's not a factor</div>
                         </div>
                     </div>
                     <div class="step-completed-text hidden" id="practice-step3-complete"></div>
@@ -646,12 +709,14 @@
                 <div class="feedback" id="practice-feedback"></div>
                 <button class="btn btn-success" onclick="newPracticeProblem()" style="margin-top:15px;">New Problem</button>
             </div>
+
+            <div class="graph-container" id="practice-graph"></div>
         </div>
 
         <!-- SOLO SECTION -->
         <div id="solo" class="section">
             <h2>Do</h2>
-            <p>Work through problems independently using the scratch workspace.</p>
+            <p>Work through problems independently using synthetic division.</p>
 
             <div class="difficulty-selector">
                 <button class="diff-btn active" onclick="setSoloDifficulty('easy')">Easy</button>
@@ -665,38 +730,29 @@
             </div>
 
             <div class="problem-card">
-                <h3>Factor completely:</h3>
+                <h3>Is <span id="solo-binomial" class="binomial-highlight"></span> a factor of:</h3>
                 <div class="polynomial-display" id="solo-problem"></div>
 
                 <div class="scratch-workspace">
-                    <h4>Scratch Workspace</h4>
-                    <div class="scratch-area" id="solo-scratch">
-                        <div class="scratch-row">
-                            <span class="scratch-label">GCF:</span>
-                            <input type="text" class="scratch-input" id="scratch-gcf" placeholder="Find the GCF...">
-                        </div>
-                        <div class="scratch-row">
-                            <span class="scratch-label">After GCF:</span>
-                            <input type="text" class="scratch-input" id="scratch-after-gcf" placeholder="What's left inside ( )...">
-                        </div>
-                        <div class="scratch-row">
-                            <span class="scratch-label">Factor more?</span>
-                            <input type="text" class="scratch-input" id="scratch-factor-more" placeholder="Can you factor further?">
-                        </div>
-                    </div>
+                    <h4>Scratch Workspace - Synthetic Division</h4>
+                    <p style="margin-bottom:15px; color:#78716c;">Use synthetic division to find the remainder. If remainder = 0, it's a factor!</p>
+                    <div id="solo-synth-grid"></div>
                 </div>
 
                 <div class="final-answer-section">
-                    <h4>Final Answer</h4>
-                    <div class="input-group">
-                        <input type="text" id="solo-answer" placeholder="Enter completely factored form">
-                        <button class="btn btn-primary" onclick="checkSoloAnswer()">Submit</button>
+                    <h4>Is the binomial a factor?</h4>
+                    <div class="radio-group" style="margin-bottom:15px;">
+                        <div class="radio-option" id="solo-yes" onclick="selectSoloAnswer(true)">Yes, it's a factor</div>
+                        <div class="radio-option" id="solo-no" onclick="selectSoloAnswer(false)">No, it's not a factor</div>
                     </div>
+                    <button class="btn btn-primary" onclick="checkSoloAnswer()">Submit Answer</button>
                 </div>
 
                 <div class="feedback" id="solo-feedback"></div>
                 <button class="btn btn-success" onclick="newSoloProblem()" style="margin-top:15px;">New Problem</button>
             </div>
+
+            <div class="graph-container" id="solo-graph"></div>
         </div>
     </div>
 
@@ -713,48 +769,50 @@
             if (id === 'solo' && !currentSolo) newSoloProblem();
         }
 
-        // Normalize answer for comparison
-        function normalizeAnswer(str) {
-            return str.replace(/\s+/g, '').replace(/\*/g, '').replace(/\^/g, '').replace(/\u00B2/g, '2').replace(/\u00B3/g, '3').replace(/\u2074/g, '4').replace(/\u2075/g, '5').toLowerCase();
-        }
-
-        function checkAnswerMatch(userAnswer, correctAnswers) {
-            const normalized = normalizeAnswer(userAnswer);
-            return correctAnswers.some(ans => normalizeAnswer(ans) === normalized);
-        }
-
         // =====================
         // WATCH SECTION
         // =====================
         const watchExamples = [
             {
-                problem: "2x³ - 18x",
-                problemHTML: "2x<sup>3</sup> - 18x",
+                question: "Is (x - 2) a factor of x³ - 6x² + 11x - 6?",
+                questionHTML: "Is (x - 2) a factor of x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6?",
+                poly: "x³ - 6x² + 11x - 6",
+                coeffs: [1, -6, 11, -6],
+                k: 2,
+                isFactor: true,
                 steps: [
-                    { title: "Step 1: Identify the GCF", content: "Look at each term: <span class='highlight'>2x³</span> and <span class='highlight'>18x</span><br><br>GCF of coefficients (2, 18) = <strong>2</strong><br>Lowest power of x (x³, x¹) = <strong>x</strong><br><br>GCF = <strong>2x</strong>" },
-                    { title: "Step 2: Factor out the GCF", content: "2x³ - 18x<br>= <span class='highlight'>2x</span>(x² - 9) <span style='color:#666;'>&larr; Divide each term by 2x</span>" },
-                    { title: "Step 3: Check if remaining factors", content: "x² - 9 is a <span class='highlight'>difference of squares</span>!<br><br>x² - 9 = x² - 3² = (x - 3)(x + 3)" },
-                    { title: "Step 4: Write final answer", content: "2x³ - 18x<br>= 2x(x² - 9)<br>= <span class='highlight-green'>2x(x - 3)(x + 3)</span><br><br><strong>Check:</strong> 2x · (x-3) · (x+3) = 2x(x² - 9) = 2x³ - 18x ✓" }
+                    { title: "Step 1: Identify k", content: "From the binomial (x - 2), we have:<br><br>k = <span class='highlight'>2</span><br><br>We need to test if f(2) = 0" },
+                    { title: "Step 2: Set up the calculation", content: "f(x) = x³ - 6x² + 11x - 6<br><br>f(2) = (2)³ - 6(2)² + 11(2) - 6" },
+                    { title: "Step 3: Calculate", content: "f(2) = (2)³ - 6(2)² + 11(2) - 6<br>f(2) = 8 - 6(4) + 22 - 6<br>f(2) = 8 - 24 + 22 - 6<br>f(2) = <span class='highlight'>0</span>" },
+                    { title: "Step 4: Conclusion", content: "Since f(2) = <span class='highlight-green'>0</span>:<br><br><strong>(x - 2) IS a factor of x³ - 6x² + 11x - 6</strong><br><br>This means x = 2 is a zero, and the graph crosses the x-axis at x = 2" }
                 ]
             },
             {
-                problem: "3y⁵ - 48y³",
-                problemHTML: "3y<sup>5</sup> - 48y<sup>3</sup>",
+                question: "Is (x + 1) a factor of x³ + 2x² - 5x - 6?",
+                questionHTML: "Is (x + 1) a factor of x<sup>3</sup> + 2x<sup>2</sup> - 5x - 6?",
+                poly: "x³ + 2x² - 5x - 6",
+                coeffs: [1, 2, -5, -6],
+                k: -1,
+                isFactor: true,
                 steps: [
-                    { title: "Step 1: Identify the GCF", content: "Terms: <span class='highlight'>3y⁵</span> and <span class='highlight'>48y³</span><br><br>GCF of (3, 48) = <strong>3</strong><br>Lowest power of y (y⁵, y³) = <strong>y³</strong><br><br>GCF = <strong>3y³</strong>" },
-                    { title: "Step 2: Factor out the GCF", content: "3y⁵ - 48y³<br>= <span class='highlight'>3y³</span>(y² - 16) <span style='color:#666;'>&larr; 3y⁵÷3y³=y², 48y³÷3y³=16</span>" },
-                    { title: "Step 3: Check if remaining factors", content: "y² - 16 is a <span class='highlight'>difference of squares</span>!<br><br>y² - 16 = y² - 4² = (y - 4)(y + 4)" },
-                    { title: "Step 4: Write final answer", content: "3y⁵ - 48y³<br>= 3y³(y² - 16)<br>= <span class='highlight-green'>3y³(y - 4)(y + 4)</span>" }
+                    { title: "Step 1: Identify k", content: "From (x + 1), rewrite as (x - (-1)):<br><br>k = <span class='highlight'>-1</span><br><br>Remember: (x + 1) means k is negative!" },
+                    { title: "Step 2: Set up the calculation", content: "f(x) = x³ + 2x² - 5x - 6<br><br>f(-1) = (-1)³ + 2(-1)² - 5(-1) - 6" },
+                    { title: "Step 3: Calculate", content: "f(-1) = (-1)³ + 2(-1)² - 5(-1) - 6<br>f(-1) = -1 + 2(1) + 5 - 6<br>f(-1) = -1 + 2 + 5 - 6<br>f(-1) = <span class='highlight'>0</span>" },
+                    { title: "Step 4: Conclusion", content: "Since f(-1) = <span class='highlight-green'>0</span>:<br><br><strong>(x + 1) IS a factor of x³ + 2x² - 5x - 6</strong><br><br>The graph crosses the x-axis at x = -1" }
                 ]
             },
             {
-                problem: "x³ - 7x² + 10x",
-                problemHTML: "x<sup>3</sup> - 7x<sup>2</sup> + 10x",
+                question: "Is (x - 4) a factor of x³ - 6x² + 11x - 6?",
+                questionHTML: "Is (x - 4) a factor of x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6?",
+                poly: "x³ - 6x² + 11x - 6",
+                coeffs: [1, -6, 11, -6],
+                k: 4,
+                isFactor: false,
                 steps: [
-                    { title: "Step 1: Identify the GCF", content: "Terms: <span class='highlight'>x³</span>, <span class='highlight'>-7x²</span>, and <span class='highlight'>10x</span><br><br>GCF of (1, 7, 10) = <strong>1</strong><br>Lowest power of x (x³, x², x¹) = <strong>x</strong><br><br>GCF = <strong>x</strong>" },
-                    { title: "Step 2: Factor out the GCF", content: "x³ - 7x² + 10x<br>= <span class='highlight'>x</span>(x² - 7x + 10)" },
-                    { title: "Step 3: Factor the trinomial", content: "x² - 7x + 10: Find two numbers that<br>• Multiply to +10<br>• Add to -7<br><br>-2 × -5 = 10 ✓<br>-2 + -5 = -7 ✓<br><br>x² - 7x + 10 = (x - 2)(x - 5)" },
-                    { title: "Step 4: Write final answer", content: "x³ - 7x² + 10x<br>= x(x² - 7x + 10)<br>= <span class='highlight-green'>x(x - 2)(x - 5)</span>" }
+                    { title: "Step 1: Identify k", content: "From the binomial (x - 4):<br><br>k = <span class='highlight'>4</span>" },
+                    { title: "Step 2: Set up the calculation", content: "f(x) = x³ - 6x² + 11x - 6<br><br>f(4) = (4)³ - 6(4)² + 11(4) - 6" },
+                    { title: "Step 3: Calculate", content: "f(4) = (4)³ - 6(4)² + 11(4) - 6<br>f(4) = 64 - 6(16) + 44 - 6<br>f(4) = 64 - 96 + 44 - 6<br>f(4) = <span class='highlight-red'>6</span> (not zero!)" },
+                    { title: "Step 4: Conclusion", content: "Since f(4) = <span class='highlight-red'>6 ≠ 0</span>:<br><br><strong>(x - 4) is NOT a factor of x³ - 6x² + 11x - 6</strong><br><br>The graph does NOT cross the x-axis at x = 4" }
                 ]
             }
         ];
@@ -775,15 +833,15 @@
             });
 
             const example = watchExamples[idx];
-            document.getElementById('watch-problem').innerHTML = example.problemHTML;
+            document.getElementById('watch-problem').innerHTML = example.questionHTML;
 
-            // Build dots
             const dotsContainer = document.getElementById('watch-dots');
             dotsContainer.innerHTML = example.steps.map((_, i) =>
                 `<div class="step-dot${i === 0 ? ' active' : ''}"></div>`
             ).join('');
 
             updateWatchStep();
+            drawGraph('watch-graph', example.coeffs, example.k);
         }
 
         function updateWatchStep() {
@@ -794,14 +852,12 @@
             document.getElementById('watch-work').innerHTML = step.content;
             document.getElementById('watch-indicator').textContent = `Step ${currentWatchStep + 1} of ${example.steps.length}`;
 
-            // Update dots
             document.querySelectorAll('#watch .step-dot').forEach((dot, i) => {
                 dot.classList.remove('active', 'completed');
                 if (i < currentWatchStep) dot.classList.add('completed');
                 if (i === currentWatchStep) dot.classList.add('active');
             });
 
-            // Update buttons
             document.getElementById('watch-prev').disabled = currentWatchStep === 0;
             document.getElementById('watch-next').disabled = currentWatchStep === example.steps.length - 1;
         }
@@ -825,48 +881,13 @@
         // PRACTICE SECTION
         // =====================
         const practiceProblems = [
-            {
-                expr: "x³ - 4x² - 5x",
-                exprHTML: "x<sup>3</sup> - 4x<sup>2</sup> - 5x",
-                gcf: ["x"],
-                remaining: ["x²-4x-5", "x^2-4x-5", "x2-4x-5"],
-                final: ["x(x-5)(x+1)", "x(x+1)(x-5)"]
-            },
-            {
-                expr: "2x³ - 18x",
-                exprHTML: "2x<sup>3</sup> - 18x",
-                gcf: ["2x"],
-                remaining: ["x²-9", "x^2-9", "x2-9"],
-                final: ["2x(x-3)(x+3)", "2x(x+3)(x-3)"]
-            },
-            {
-                expr: "3y⁵ - 48y³",
-                exprHTML: "3y<sup>5</sup> - 48y<sup>3</sup>",
-                gcf: ["3y³", "3y^3", "3y3"],
-                remaining: ["y²-16", "y^2-16", "y2-16"],
-                final: ["3y³(y-4)(y+4)", "3y^3(y-4)(y+4)", "3y³(y+4)(y-4)", "3y^3(y+4)(y-4)", "3y3(y-4)(y+4)", "3y3(y+4)(y-4)"]
-            },
-            {
-                expr: "x⁴ - 16x²",
-                exprHTML: "x<sup>4</sup> - 16x<sup>2</sup>",
-                gcf: ["x²", "x^2", "x2"],
-                remaining: ["x²-16", "x^2-16", "x2-16"],
-                final: ["x²(x-4)(x+4)", "x^2(x-4)(x+4)", "x²(x+4)(x-4)", "x^2(x+4)(x-4)", "x2(x-4)(x+4)", "x2(x+4)(x-4)"]
-            },
-            {
-                expr: "4x³ - 36x",
-                exprHTML: "4x<sup>3</sup> - 36x",
-                gcf: ["4x"],
-                remaining: ["x²-9", "x^2-9", "x2-9"],
-                final: ["4x(x-3)(x+3)", "4x(x+3)(x-3)"]
-            },
-            {
-                expr: "x³ - 7x² + 10x",
-                exprHTML: "x<sup>3</sup> - 7x<sup>2</sup> + 10x",
-                gcf: ["x"],
-                remaining: ["x²-7x+10", "x^2-7x+10", "x2-7x+10"],
-                final: ["x(x-2)(x-5)", "x(x-5)(x-2)"]
-            }
+            { poly: "x³ - 6x² + 11x - 6", polyHTML: "f(x) = x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6", coeffs: [1, -6, 11, -6], k: 2, binomial: "(x - 2)", isFactor: true },
+            { poly: "x³ - 6x² + 11x - 6", polyHTML: "f(x) = x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6", coeffs: [1, -6, 11, -6], k: 1, binomial: "(x - 1)", isFactor: true },
+            { poly: "x³ - 6x² + 11x - 6", polyHTML: "f(x) = x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6", coeffs: [1, -6, 11, -6], k: 3, binomial: "(x - 3)", isFactor: true },
+            { poly: "x³ - 6x² + 11x - 6", polyHTML: "f(x) = x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6", coeffs: [1, -6, 11, -6], k: 4, binomial: "(x - 4)", isFactor: false },
+            { poly: "x³ + 2x² - 5x - 6", polyHTML: "f(x) = x<sup>3</sup> + 2x<sup>2</sup> - 5x - 6", coeffs: [1, 2, -5, -6], k: 2, binomial: "(x - 2)", isFactor: true },
+            { poly: "x³ + 2x² - 5x - 6", polyHTML: "f(x) = x<sup>3</sup> + 2x<sup>2</sup> - 5x - 6", coeffs: [1, 2, -5, -6], k: -1, binomial: "(x + 1)", isFactor: true },
+            { poly: "x³ + 2x² - 5x - 6", polyHTML: "f(x) = x<sup>3</sup> + 2x<sup>2</sup> - 5x - 6", coeffs: [1, 2, -5, -6], k: 4, binomial: "(x - 4)", isFactor: false }
         ];
 
         let currentPractice = null;
@@ -876,7 +897,8 @@
         function newPracticeProblem() {
             currentPractice = practiceProblems[Math.floor(Math.random() * practiceProblems.length)];
 
-            document.getElementById('practice-problem').innerHTML = currentPractice.exprHTML;
+            document.getElementById('practice-problem').innerHTML = currentPractice.polyHTML;
+            document.getElementById('practice-binomial').textContent = currentPractice.binomial;
 
             // Reset all steps
             for (let i = 1; i <= 3; i++) {
@@ -884,33 +906,41 @@
                 document.getElementById(`practice-step${i}-num`).classList.remove('completed');
                 document.getElementById(`practice-step${i}-content`).classList.remove('hidden');
                 document.getElementById(`practice-step${i}-complete`).classList.add('hidden');
-                const input = document.getElementById(`practice-step${i}-answer`);
-                if (input) {
-                    input.value = '';
-                    input.classList.remove('correct', 'incorrect');
-                }
             }
+
+            document.getElementById('practice-step1-answer').value = '';
+            document.getElementById('practice-step1-answer').classList.remove('correct', 'incorrect');
+            document.getElementById('practice-step2-answer').value = '';
+            document.getElementById('practice-step2-answer').classList.remove('correct', 'incorrect');
 
             document.getElementById('practice-step2').classList.add('hidden');
             document.getElementById('practice-step3').classList.add('hidden');
 
+            document.querySelectorAll('#practice-step3 .radio-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
             document.getElementById('practice-feedback').className = 'feedback';
             document.getElementById('practice-feedback').style.display = 'none';
+
+            drawGraph('practice-graph', currentPractice.coeffs, currentPractice.k);
         }
 
         function checkPracticeStep1() {
             const input = document.getElementById('practice-step1-answer');
-            const isCorrect = checkAnswerMatch(input.value, currentPractice.gcf);
+            const userK = parseFloat(input.value.trim());
+            const isCorrect = userK === currentPractice.k;
 
             if (isCorrect) {
                 input.classList.add('correct');
                 document.getElementById('practice-step1-num').classList.add('completed');
                 document.getElementById('practice-step1-content').classList.add('hidden');
-                document.getElementById('practice-step1-complete').textContent = `GCF: ${currentPractice.gcf[0]}`;
+                document.getElementById('practice-step1-complete').textContent = `k = ${currentPractice.k}`;
                 document.getElementById('practice-step1-complete').classList.remove('hidden');
 
                 document.getElementById('practice-step2').classList.remove('hidden');
-                document.getElementById('practice-partial').textContent = `${currentPractice.gcf[0]}(`;
+                document.getElementById('practice-k-display').textContent = currentPractice.k;
+                document.getElementById('practice-k-display2').textContent = currentPractice.k;
             } else {
                 input.classList.add('incorrect');
                 setTimeout(() => input.classList.remove('incorrect'), 500);
@@ -919,13 +949,15 @@
 
         function checkPracticeStep2() {
             const input = document.getElementById('practice-step2-answer');
-            const isCorrect = checkAnswerMatch(input.value, currentPractice.remaining);
+            const userResult = parseFloat(input.value.trim());
+            const correctResult = evaluatePoly(currentPractice.coeffs, currentPractice.k);
+            const isCorrect = userResult === correctResult;
 
             if (isCorrect) {
                 input.classList.add('correct');
                 document.getElementById('practice-step2-num').classList.add('completed');
                 document.getElementById('practice-step2-content').classList.add('hidden');
-                document.getElementById('practice-step2-complete').textContent = `${currentPractice.gcf[0]}(${currentPractice.remaining[0]})`;
+                document.getElementById('practice-step2-complete').textContent = `f(${currentPractice.k}) = ${correctResult}`;
                 document.getElementById('practice-step2-complete').classList.remove('hidden');
 
                 document.getElementById('practice-step3').classList.remove('hidden');
@@ -935,26 +967,35 @@
             }
         }
 
-        function checkPracticeStep3() {
-            const input = document.getElementById('practice-step3-answer');
-            const isCorrect = checkAnswerMatch(input.value, currentPractice.final);
+        function selectConclusion(userSaysYes) {
+            const options = document.querySelectorAll('#practice-step3 .radio-option');
+            options.forEach(opt => opt.classList.remove('selected'));
+
+            const selectedOpt = userSaysYes ? options[0] : options[1];
+            selectedOpt.classList.add('selected');
+
+            const isCorrect = userSaysYes === currentPractice.isFactor;
 
             practiceTotal++;
             const feedback = document.getElementById('practice-feedback');
 
             if (isCorrect) {
                 practiceScore++;
-                input.classList.add('correct');
+                selectedOpt.classList.add('correct');
                 document.getElementById('practice-step3-num').classList.add('completed');
                 document.getElementById('practice-step3-content').classList.add('hidden');
-                document.getElementById('practice-step3-complete').textContent = `Final: ${currentPractice.final[0]}`;
+                const resultText = currentPractice.isFactor ? 'Yes, it IS a factor!' : 'No, it is NOT a factor';
+                document.getElementById('practice-step3-complete').textContent = resultText;
                 document.getElementById('practice-step3-complete').classList.remove('hidden');
 
-                feedback.innerHTML = '<strong>Excellent!</strong> You factored completely!';
+                feedback.innerHTML = '<strong>Correct!</strong> You used the Factor Theorem perfectly!';
                 feedback.className = 'feedback correct show';
             } else {
-                input.classList.add('incorrect');
-                feedback.innerHTML = `<strong>Not quite.</strong> The correct answer is: ${currentPractice.final[0]}`;
+                selectedOpt.classList.add('incorrect');
+                const correctText = currentPractice.isFactor ?
+                    'Since f(k) = 0, the binomial IS a factor.' :
+                    'Since f(k) ≠ 0, the binomial is NOT a factor.';
+                feedback.innerHTML = `<strong>Not quite.</strong> ${correctText}`;
                 feedback.className = 'feedback incorrect show';
             }
 
@@ -968,22 +1009,22 @@
         // =====================
         const soloProblems = {
             easy: [
-                { expr: "2x² - 8", exprHTML: "2x<sup>2</sup> - 8", answers: ["2(x-2)(x+2)", "2(x+2)(x-2)"] },
-                { expr: "3x² - 12", exprHTML: "3x<sup>2</sup> - 12", answers: ["3(x-2)(x+2)", "3(x+2)(x-2)"] },
-                { expr: "x³ - x", exprHTML: "x<sup>3</sup> - x", answers: ["x(x-1)(x+1)", "x(x+1)(x-1)"] },
-                { expr: "5x² - 20", exprHTML: "5x<sup>2</sup> - 20", answers: ["5(x-2)(x+2)", "5(x+2)(x-2)"] }
+                { poly: "x³ - 6x² + 11x - 6", polyHTML: "f(x) = x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6", coeffs: [1, -6, 11, -6], k: 2, binomial: "(x - 2)", isFactor: true },
+                { poly: "x³ - 6x² + 11x - 6", polyHTML: "f(x) = x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6", coeffs: [1, -6, 11, -6], k: 1, binomial: "(x - 1)", isFactor: true },
+                { poly: "x³ + 2x² - 5x - 6", polyHTML: "f(x) = x<sup>3</sup> + 2x<sup>2</sup> - 5x - 6", coeffs: [1, 2, -5, -6], k: 2, binomial: "(x - 2)", isFactor: true },
+                { poly: "x³ - 4x² + x + 6", polyHTML: "f(x) = x<sup>3</sup> - 4x<sup>2</sup> + x + 6", coeffs: [1, -4, 1, 6], k: 3, binomial: "(x - 3)", isFactor: true }
             ],
             medium: [
-                { expr: "2x³ - 18x", exprHTML: "2x<sup>3</sup> - 18x", answers: ["2x(x-3)(x+3)", "2x(x+3)(x-3)"] },
-                { expr: "x³ - 4x² - 5x", exprHTML: "x<sup>3</sup> - 4x<sup>2</sup> - 5x", answers: ["x(x-5)(x+1)", "x(x+1)(x-5)"] },
-                { expr: "3x³ - 27x", exprHTML: "3x<sup>3</sup> - 27x", answers: ["3x(x-3)(x+3)", "3x(x+3)(x-3)"] },
-                { expr: "x³ + 2x² - 3x", exprHTML: "x<sup>3</sup> + 2x<sup>2</sup> - 3x", answers: ["x(x+3)(x-1)", "x(x-1)(x+3)"] }
+                { poly: "x³ + 2x² - 5x - 6", polyHTML: "f(x) = x<sup>3</sup> + 2x<sup>2</sup> - 5x - 6", coeffs: [1, 2, -5, -6], k: -1, binomial: "(x + 1)", isFactor: true },
+                { poly: "x³ - 6x² + 11x - 6", polyHTML: "f(x) = x<sup>3</sup> - 6x<sup>2</sup> + 11x - 6", coeffs: [1, -6, 11, -6], k: 4, binomial: "(x - 4)", isFactor: false },
+                { poly: "2x³ - 3x² - 11x + 6", polyHTML: "f(x) = 2x<sup>3</sup> - 3x<sup>2</sup> - 11x + 6", coeffs: [2, -3, -11, 6], k: 3, binomial: "(x - 3)", isFactor: true },
+                { poly: "x³ + 4x² + x - 6", polyHTML: "f(x) = x<sup>3</sup> + 4x<sup>2</sup> + x - 6", coeffs: [1, 4, 1, -6], k: -2, binomial: "(x + 2)", isFactor: true }
             ],
             hard: [
-                { expr: "3y⁵ - 48y³", exprHTML: "3y<sup>5</sup> - 48y<sup>3</sup>", answers: ["3y³(y-4)(y+4)", "3y^3(y-4)(y+4)", "3y³(y+4)(y-4)", "3y^3(y+4)(y-4)"] },
-                { expr: "x⁴ - 16x²", exprHTML: "x<sup>4</sup> - 16x<sup>2</sup>", answers: ["x²(x-4)(x+4)", "x^2(x-4)(x+4)", "x²(x+4)(x-4)", "x^2(x+4)(x-4)"] },
-                { expr: "2x⁴ - 32x²", exprHTML: "2x<sup>4</sup> - 32x<sup>2</sup>", answers: ["2x²(x-4)(x+4)", "2x^2(x-4)(x+4)", "2x²(x+4)(x-4)", "2x^2(x+4)(x-4)"] },
-                { expr: "4x³ - 16x² - 20x", exprHTML: "4x<sup>3</sup> - 16x<sup>2</sup> - 20x", answers: ["4x(x-5)(x+1)", "4x(x+1)(x-5)"] }
+                { poly: "2x³ - 3x² - 11x + 6", polyHTML: "f(x) = 2x<sup>3</sup> - 3x<sup>2</sup> - 11x + 6", coeffs: [2, -3, -11, 6], k: 2, binomial: "(x - 2)", isFactor: false },
+                { poly: "x⁴ - 5x³ + 5x² + 5x - 6", polyHTML: "f(x) = x<sup>4</sup> - 5x<sup>3</sup> + 5x<sup>2</sup> + 5x - 6", coeffs: [1, -5, 5, 5, -6], k: 1, binomial: "(x - 1)", isFactor: true },
+                { poly: "x⁴ - 5x³ + 5x² + 5x - 6", polyHTML: "f(x) = x<sup>4</sup> - 5x<sup>3</sup> + 5x<sup>2</sup> + 5x - 6", coeffs: [1, -5, 5, 5, -6], k: -1, binomial: "(x + 1)", isFactor: true },
+                { poly: "3x³ - 7x² - 8x + 4", polyHTML: "f(x) = 3x<sup>3</sup> - 7x<sup>2</sup> - 8x + 4", coeffs: [3, -7, -8, 4], k: -1, binomial: "(x + 1)", isFactor: false }
             ]
         };
 
@@ -991,6 +1032,7 @@
         let currentSolo = null;
         let soloScore = 0;
         let soloTotal = 0;
+        let soloAnswer = null;
 
         function setSoloDifficulty(diff) {
             soloDifficulty = diff;
@@ -1002,37 +1044,96 @@
         function newSoloProblem() {
             const problems = soloProblems[soloDifficulty];
             currentSolo = problems[Math.floor(Math.random() * problems.length)];
+            soloAnswer = null;
 
-            document.getElementById('solo-problem').innerHTML = currentSolo.exprHTML;
+            document.getElementById('solo-problem').innerHTML = currentSolo.polyHTML;
+            document.getElementById('solo-binomial').textContent = currentSolo.binomial;
 
-            // Clear scratch workspace
-            document.getElementById('scratch-gcf').value = '';
-            document.getElementById('scratch-after-gcf').value = '';
-            document.getElementById('scratch-factor-more').value = '';
+            // Build synthetic division grid
+            buildSoloSynthGrid(currentSolo.coeffs, currentSolo.k);
 
-            // Clear answer
-            document.getElementById('solo-answer').value = '';
-            document.getElementById('solo-answer').classList.remove('correct', 'incorrect');
+            // Reset answer selection
+            document.getElementById('solo-yes').classList.remove('selected', 'correct', 'incorrect');
+            document.getElementById('solo-no').classList.remove('selected', 'correct', 'incorrect');
 
             document.getElementById('solo-feedback').className = 'feedback';
             document.getElementById('solo-feedback').style.display = 'none';
+
+            drawGraph('solo-graph', currentSolo.coeffs, currentSolo.k);
+        }
+
+        function buildSoloSynthGrid(coeffs, k) {
+            const n = coeffs.length;
+            let html = '<div class="synth-div-grid">';
+
+            // Row 1: k value and coefficients
+            html += '<div class="synth-row">';
+            html += `<div class="synth-cell k-value">${k}</div>`;
+            html += '<div class="synth-cell" style="border:none;">|</div>';
+            for (let i = 0; i < n; i++) {
+                html += `<div class="synth-cell divider">${coeffs[i]}</div>`;
+            }
+            html += '</div>';
+
+            // Row 2: carry values (editable, first is empty)
+            html += '<div class="synth-row">';
+            html += '<div class="synth-cell" style="border:none;"></div>';
+            html += '<div class="synth-cell" style="border:none;">|</div>';
+            html += '<div class="synth-cell" style="border:none;"></div>'; // empty under first coeff
+            for (let i = 1; i < n; i++) {
+                html += `<input type="text" class="synth-input" id="solo-carry-${i}">`;
+            }
+            html += '</div>';
+
+            // Row 3: results (editable)
+            html += '<div class="synth-row" style="border-top:2px solid #667eea; padding-top:5px;">';
+            html += '<div class="synth-cell" style="border:none;"></div>';
+            html += '<div class="synth-cell" style="border:none;">|</div>';
+            for (let i = 0; i < n; i++) {
+                html += `<input type="text" class="synth-input" id="solo-result-${i}" placeholder="${i === n-1 ? 'R' : ''}">`;
+            }
+            html += '</div>';
+
+            html += '</div>';
+            document.getElementById('solo-synth-grid').innerHTML = html;
+        }
+
+        function selectSoloAnswer(answer) {
+            soloAnswer = answer;
+            document.getElementById('solo-yes').classList.remove('selected');
+            document.getElementById('solo-no').classList.remove('selected');
+            if (answer) {
+                document.getElementById('solo-yes').classList.add('selected');
+            } else {
+                document.getElementById('solo-no').classList.add('selected');
+            }
         }
 
         function checkSoloAnswer() {
-            const input = document.getElementById('solo-answer');
-            const isCorrect = checkAnswerMatch(input.value, currentSolo.answers);
+            if (soloAnswer === null) {
+                alert('Please select Yes or No');
+                return;
+            }
 
+            const isCorrect = soloAnswer === currentSolo.isFactor;
             soloTotal++;
             const feedback = document.getElementById('solo-feedback');
 
+            const selectedEl = soloAnswer ? document.getElementById('solo-yes') : document.getElementById('solo-no');
+
             if (isCorrect) {
                 soloScore++;
-                input.classList.add('correct');
-                feedback.innerHTML = '<strong>Correct!</strong> Great job!';
+                selectedEl.classList.add('correct');
+                const remainder = evaluatePoly(currentSolo.coeffs, currentSolo.k);
+                feedback.innerHTML = `<strong>Correct!</strong> f(${currentSolo.k}) = ${remainder}${currentSolo.isFactor ? ' = 0, so it IS a factor!' : ' ≠ 0, so it is NOT a factor.'}`;
                 feedback.className = 'feedback correct show';
             } else {
-                input.classList.add('incorrect');
-                feedback.innerHTML = `<strong>Not quite.</strong> The correct answer is: ${currentSolo.answers[0]}`;
+                selectedEl.classList.add('incorrect');
+                const remainder = evaluatePoly(currentSolo.coeffs, currentSolo.k);
+                const correctText = currentSolo.isFactor ?
+                    `f(${currentSolo.k}) = 0, so the binomial IS a factor.` :
+                    `f(${currentSolo.k}) = ${remainder} ≠ 0, so the binomial is NOT a factor.`;
+                feedback.innerHTML = `<strong>Not quite.</strong> ${correctText}`;
                 feedback.className = 'feedback incorrect show';
             }
 
@@ -1041,14 +1142,83 @@
             document.getElementById('solo-progress').style.width = `${(soloScore/Math.max(soloTotal,1))*100}%`;
         }
 
+        // =====================
+        // UTILITY FUNCTIONS
+        // =====================
+        function evaluatePoly(coeffs, k) {
+            let result = 0;
+            for (let i = 0; i < coeffs.length; i++) {
+                result = result * k + coeffs[i];
+            }
+            return result;
+        }
+
+        function drawGraph(containerId, coeffs, k) {
+            const xVals = [], yVals = [];
+            const degree = coeffs.length - 1;
+
+            // Determine x range based on polynomial
+            let minX = -5, maxX = 7;
+
+            for (let x = minX; x <= maxX; x += 0.1) {
+                xVals.push(x);
+                let y = 0;
+                for (let i = 0; i < coeffs.length; i++) {
+                    y += coeffs[i] * Math.pow(x, coeffs.length - 1 - i);
+                }
+                yVals.push(y);
+            }
+
+            const fk = evaluatePoly(coeffs, k);
+
+            Plotly.newPlot(containerId, [
+                {
+                    x: xVals,
+                    y: yVals,
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: {color: '#667eea', width: 3},
+                    name: 'f(x)'
+                },
+                {
+                    x: [k],
+                    y: [fk],
+                    type: 'scatter',
+                    mode: 'markers',
+                    marker: {
+                        color: fk === 0 ? '#28a745' : '#dc3545',
+                        size: 14,
+                        symbol: 'circle'
+                    },
+                    name: `f(${k}) = ${fk}`
+                }
+            ], {
+                title: `Graph of f(x)`,
+                xaxis: {
+                    title: 'x',
+                    zeroline: true,
+                    zerolinecolor: '#999',
+                    zerolinewidth: 2,
+                    range: [minX, maxX]
+                },
+                yaxis: {
+                    title: 'f(x)',
+                    zeroline: true,
+                    zerolinecolor: '#999',
+                    zerolinewidth: 2
+                },
+                margin: {t: 50, b: 50, l: 50, r: 30},
+                showlegend: true,
+                legend: {x: 0.02, y: 0.98}
+            }, {responsive: true});
+        }
+
         // Enter key support
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Enter') {
                 const target = e.target;
                 if (target.id === 'practice-step1-answer') checkPracticeStep1();
                 else if (target.id === 'practice-step2-answer') checkPracticeStep2();
-                else if (target.id === 'practice-step3-answer') checkPracticeStep3();
-                else if (target.id === 'solo-answer') checkSoloAnswer();
             }
         });
     </script>

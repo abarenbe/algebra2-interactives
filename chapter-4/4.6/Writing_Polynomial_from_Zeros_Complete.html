@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Writing Polynomials from Zeros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: white;
+            color: #0083b0;
+            transform: translateY(-2px);
+        }
+
+        .tabs {
+            display: flex;
+            background: #f0f0f0;
+            border-bottom: 3px solid #00b4db;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: #f0f0f0;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .tab:hover {
+            background: #e0e0e0;
+        }
+
+        .tab.active {
+            background: white;
+            color: #00b4db;
+            border-bottom: 4px solid #00b4db;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #e0f7ff 0%, #b3e5fc 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #00b4db;
+        }
+
+        .concept-box h3 {
+            color: #0083b0;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .concept-box p, .concept-box ul {
+            color: #333;
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        .concept-box ul {
+            margin-left: 20px;
+        }
+
+        .concept-box li {
+            margin: 8px 0;
+        }
+
+        .formula-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.3em;
+            border: 2px solid #00b4db;
+        }
+
+        .example-box {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #00b4db;
+        }
+
+        .example-box h4 {
+            color: #0083b0;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .step {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #00b4db;
+        }
+
+        .step-label {
+            font-weight: bold;
+            color: #00b4db;
+            margin-bottom: 8px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 180, 219, 0.4);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .problem-box {
+            background: #f0f8ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #00b4db;
+        }
+
+        .problem-statement {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .zeros-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+            justify-content: center;
+        }
+
+        .zero-item {
+            background: #e0f7ff;
+            padding: 10px 20px;
+            border-radius: 10px;
+            border: 2px solid #00b4db;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .input-group input, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: all 0.3s;
+            font-family: 'Courier New', monospace;
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .input-group input:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #00b4db;
+            box-shadow: 0 0 10px rgba(0, 180, 219, 0.3);
+        }
+
+        .submit-button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 180, 219, 0.4);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+            display: block;
+        }
+
+        .hint-button {
+            padding: 10px 20px;
+            background: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .hint-button:hover {
+            background: #ffb300;
+            transform: translateY(-2px);
+        }
+
+        .hint-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00b4db 0%, #0083b0 100%);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.3em;
+            color: #333;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 12px 24px;
+            border: 2px solid #00b4db;
+            background: white;
+            color: #00b4db;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .difficulty-btn:hover, .difficulty-btn.active {
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .workspace {
+            background: #fff;
+            border: 2px solid #00b4db;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+
+        .workspace h4 {
+            color: #0083b0;
+            margin-bottom: 15px;
+        }
+
+        .workspace-area {
+            background: #f9f9f9;
+            border: 1px dashed #00b4db;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        .info-note {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .tab {
+                padding: 15px 10px;
+                font-size: 0.9em;
+            }
+
+            .concept-box, .example-box, .problem-box {
+                padding: 15px;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+
+            .nav-button {
+                width: 100%;
+            }
+
+            .difficulty-selector {
+                flex-direction: column;
+            }
+
+            .difficulty-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Writing Polynomials from Zeros</h1>
+            <p>Build polynomial equations from their roots</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">Back to Section 4.6</a>
+                <a href="../index.html" class="nav-btn">Chapter 4 Home</a>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">Learn</button>
+            <button class="tab" onclick="showTab('see')">See</button>
+            <button class="tab" onclick="showTab('practice')">Practice</button>
+            <button class="tab" onclick="showTab('do')">Do</button>
+        </div>
+
+        <div class="content">
+            <!-- LEARN TAB -->
+            <div id="learn" class="tab-content active">
+                <h2 style="color: #0083b0; margin-bottom: 20px;">How to Write a Polynomial from Its Zeros</h2>
+
+                <div class="concept-box">
+                    <h3>The Key Principle</h3>
+                    <p>If <strong>r</strong> is a zero of a polynomial, then <strong>(x - r)</strong> is a factor of that polynomial.</p>
+                    <div class="formula-box">
+                        If zeros are r₁, r₂, r₃, ..., rₙ<br>
+                        Then f(x) = a(x - r₁)(x - r₂)(x - r₃)...(x - rₙ)
+                    </div>
+                    <p>where <strong>a</strong> is the leading coefficient (usually 1 unless specified)</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Step-by-Step Process</h3>
+                    <p><strong>Step 1:</strong> List all the zeros</p>
+                    <p><strong>Step 2:</strong> Write a factor for each zero using (x - zero)</p>
+                    <p><strong>Step 3:</strong> Multiply all factors together</p>
+                    <p><strong>Step 4:</strong> Expand to standard form (if required)</p>
+                    <p><strong>Step 5:</strong> Apply any given leading coefficient</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Important Rules</h3>
+                    <ul>
+                        <li><strong>Repeated zeros:</strong> If a zero has multiplicity m, use the factor (x - r)ᵐ</li>
+                        <li><strong>Complex zeros:</strong> Always come in conjugate pairs (a + bi and a - bi)</li>
+                        <li><strong>Sign awareness:</strong> Zero is 3 → factor is (x - 3), not (x + 3)</li>
+                        <li><strong>Leading coefficient:</strong> Multiply the entire polynomial by a if a ≠ 1</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4>Example: Simple Case</h4>
+                    <div class="step">
+                        <div class="step-label">Given:</div>
+                        Zeros are x = 2, x = -1, and x = 5
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Step 1: Write factors</div>
+                        (x - 2), (x - (-1)) = (x + 1), (x - 5)
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Step 2: Multiply factors</div>
+                        f(x) = (x - 2)(x + 1)(x - 5)
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Step 3: Expand (optional)</div>
+                        f(x) = (x - 2)(x + 1)(x - 5)<br>
+                        = (x² - x - 2)(x - 5)<br>
+                        = x³ - 5x² - x² + 5x - 2x + 10<br>
+                        = x³ - 6x² + 3x + 10
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>Example: With Complex Zeros</h4>
+                    <div class="step">
+                        <div class="step-label">Given:</div>
+                        Zeros are x = 3, x = 2i, and x = -2i
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Step 1: Write factors</div>
+                        (x - 3), (x - 2i), (x + 2i)
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Step 2: Multiply complex conjugates first</div>
+                        (x - 2i)(x + 2i) = x² - (2i)² = x² - (-4) = x² + 4
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Step 3: Multiply by remaining factor</div>
+                        f(x) = (x - 3)(x² + 4)<br>
+                        = x³ + 4x - 3x² - 12<br>
+                        = x³ - 3x² + 4x - 12
+                    </div>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Special Cases</h3>
+                    <p><strong>Multiplicity:</strong> If x = 2 has multiplicity 3:</p>
+                    <div class="formula-box">
+                        Use (x - 2)³
+                    </div>
+                    <p><strong>Leading coefficient:</strong> If you need f(x) with leading coefficient 5:</p>
+                    <div class="formula-box">
+                        f(x) = 5(x - r₁)(x - r₂)...
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEE TAB -->
+            <div id="see" class="tab-content">
+                <h2 style="color: #0083b0; margin-bottom: 20px;">Step-by-Step Examples</h2>
+
+                <div class="example-box" id="example-container">
+                    <!-- Example content will be loaded here -->
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-button" id="prevBtn" onclick="changeExample(-1)">Previous Example</button>
+                    <span style="align-self: center; font-weight: bold; color: #0083b0;">
+                        Example <span id="exampleNum">1</span> of <span id="totalExamples">3</span>
+                    </span>
+                    <button class="nav-button" id="nextBtn" onclick="changeExample(1)">Next Example</button>
+                </div>
+            </div>
+
+            <!-- PRACTICE TAB -->
+            <div id="practice" class="tab-content">
+                <h2 style="color: #0083b0; margin-bottom: 20px;">Practice Problems</h2>
+
+                <div class="score-display">
+                    Score: <span id="practiceScore">0</span> / <span id="practiceTotal">0</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="practiceProgress" style="width: 0%">0%</div>
+                </div>
+
+                <div class="problem-box" id="practice-problem">
+                    <!-- Problem will be loaded here -->
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-button" onclick="newPracticeProblem()">New Problem</button>
+                </div>
+            </div>
+
+            <!-- DO TAB -->
+            <div id="do" class="tab-content">
+                <h2 style="color: #0083b0; margin-bottom: 20px;">Independent Practice</h2>
+
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="difficulty-btn" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="difficulty-btn" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+
+                <div class="score-display">
+                    Score: <span id="doScore">0</span> / <span id="doTotal">0</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="doProgress" style="width: 0%">0%</div>
+                </div>
+
+                <div class="workspace">
+                    <h4>Scratch Workspace</h4>
+                    <div class="workspace-area" contenteditable="true" id="workspace">
+                        Step 1: Write factors for each zero...
+                        Step 2: Multiply factors together...
+                        Step 3: Expand if needed...
+                    </div>
+                </div>
+
+                <div class="problem-box" id="do-problem">
+                    <!-- Problem will be loaded here -->
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-button" onclick="newDoProblem()">New Problem</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Example Navigation
+        let currentExample = 0;
+        const examples = [
+            {
+                title: "Example 1: Three Real Zeros",
+                problem: "Write a polynomial with zeros at x = 1, x = -3, and x = 4",
+                steps: [
+                    { label: "Step 1: List the zeros", content: "x = 1, x = -3, x = 4" },
+                    { label: "Step 2: Write a factor for each zero", content: "Zero x = 1 → factor (x - 1)<br>Zero x = -3 → factor (x - (-3)) = (x + 3)<br>Zero x = 4 → factor (x - 4)" },
+                    { label: "Step 3: Write the polynomial in factored form", content: "f(x) = (x - 1)(x + 3)(x - 4)" },
+                    { label: "Step 4: Expand (multiply first two factors)", content: "(x - 1)(x + 3) = x² + 3x - x - 3 = x² + 2x - 3" },
+                    { label: "Step 5: Multiply by the third factor", content: "(x² + 2x - 3)(x - 4)<br>= x³ - 4x² + 2x² - 8x - 3x + 12<br>= x³ - 2x² - 11x + 12" },
+                    { label: "Final Answer", content: "f(x) = x³ - 2x² - 11x + 12<br>or f(x) = (x - 1)(x + 3)(x - 4)" }
+                ]
+            },
+            {
+                title: "Example 2: Zeros with Multiplicity",
+                problem: "Write a polynomial with zeros at x = 2 (multiplicity 2) and x = -1",
+                steps: [
+                    { label: "Step 1: Identify zeros and multiplicity", content: "x = 2 with multiplicity 2 (appears twice)<br>x = -1 with multiplicity 1" },
+                    { label: "Step 2: Write factors", content: "x = 2 with multiplicity 2 → (x - 2)²<br>x = -1 → (x + 1)" },
+                    { label: "Step 3: Write the polynomial", content: "f(x) = (x - 2)²(x + 1)" },
+                    { label: "Step 4: Expand (x - 2)²", content: "(x - 2)² = x² - 4x + 4" },
+                    { label: "Step 5: Multiply by (x + 1)", content: "(x² - 4x + 4)(x + 1)<br>= x³ + x² - 4x² - 4x + 4x + 4<br>= x³ - 3x² + 4" },
+                    { label: "Final Answer", content: "f(x) = x³ - 3x² + 4<br>or f(x) = (x - 2)²(x + 1)" }
+                ]
+            },
+            {
+                title: "Example 3: Complex Zeros",
+                problem: "Write a polynomial with zeros at x = 1, x = 2 + i, and x = 2 - i",
+                steps: [
+                    { label: "Step 1: Identify zeros", content: "x = 1 (real)<br>x = 2 + i (complex)<br>x = 2 - i (complex conjugate)" },
+                    { label: "Step 2: Write factors", content: "(x - 1), (x - (2 + i)), (x - (2 - i))" },
+                    { label: "Step 3: Multiply complex conjugate factors", content: "[x - (2 + i)][x - (2 - i)]<br>= [(x - 2) - i][(x - 2) + i]<br>= (x - 2)² - i²<br>= x² - 4x + 4 - (-1)<br>= x² - 4x + 5" },
+                    { label: "Step 4: Include the real factor", content: "f(x) = (x - 1)(x² - 4x + 5)" },
+                    { label: "Step 5: Expand", content: "(x - 1)(x² - 4x + 5)<br>= x³ - 4x² + 5x - x² + 4x - 5<br>= x³ - 5x² + 9x - 5" },
+                    { label: "Final Answer", content: "f(x) = x³ - 5x² + 9x - 5" }
+                ]
+            }
+        ];
+
+        function loadExample(index) {
+            const example = examples[index];
+            const container = document.getElementById('example-container');
+
+            let html = `<h4>${example.title}</h4>`;
+            html += `<div class="problem-statement">${example.problem}</div>`;
+
+            example.steps.forEach(step => {
+                html += `
+                    <div class="step">
+                        <div class="step-label">${step.label}</div>
+                        <div>${step.content}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('exampleNum').textContent = index + 1;
+            document.getElementById('totalExamples').textContent = examples.length;
+
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === examples.length - 1;
+        }
+
+        function changeExample(direction) {
+            currentExample += direction;
+            if (currentExample < 0) currentExample = 0;
+            if (currentExample >= examples.length) currentExample = examples.length - 1;
+            loadExample(currentExample);
+        }
+
+        // Practice Problems
+        let practiceScore = 0;
+        let practiceTotal = 0;
+        let currentPracticeStep = 0;
+        let currentPracticeProblem = null;
+
+        const practiceProblems = [
+            {
+                zeros: [2, -1],
+                factored: "(x-2)(x+1)",
+                expanded: "x^2-x-2",
+                steps: [
+                    { question: "Write the factor for zero x = 2", answer: "(x-2)", hint: "If the zero is r, the factor is (x - r)" },
+                    { question: "Write the factor for zero x = -1", answer: "(x+1)", hint: "x - (-1) = x + 1" },
+                    { question: "Write the polynomial in factored form (no spaces)", answer: "(x-2)(x+1)", hint: "Multiply all the factors together" }
+                ]
+            },
+            {
+                zeros: [3, 0, -2],
+                factored: "x(x-3)(x+2)",
+                expanded: "x^3-x^2-6x",
+                steps: [
+                    { question: "Write the factor for zero x = 3", answer: "(x-3)", hint: "Factor is (x - 3)" },
+                    { question: "Write the factor for zero x = 0", answer: "x", hint: "x - 0 = x" },
+                    { question: "Write the factor for zero x = -2", answer: "(x+2)", hint: "x - (-2) = x + 2" },
+                    { question: "Write the polynomial in factored form (no spaces)", answer: "x(x-3)(x+2)", hint: "Multiply all three factors" }
+                ]
+            },
+            {
+                zeros: [1, 1, -3],
+                factored: "(x-1)^2(x+3)",
+                expanded: "x^3+x^2-5x+3",
+                steps: [
+                    { question: "What is the multiplicity of zero x = 1?", answer: "2", hint: "It appears twice in the list" },
+                    { question: "Write the factor for x = 1 with its multiplicity (use ^)", answer: "(x-1)^2", hint: "Multiplicity 2 means squared" },
+                    { question: "Write the factor for zero x = -3", answer: "(x+3)", hint: "x - (-3) = x + 3" },
+                    { question: "Write the complete factored form (no spaces, use ^)", answer: "(x-1)^2(x+3)", hint: "Combine all factors" }
+                ]
+            }
+        ];
+
+        function loadPracticeProblem() {
+            currentPracticeProblem = practiceProblems[Math.floor(Math.random() * practiceProblems.length)];
+            currentPracticeStep = 0;
+            displayPracticeStep();
+        }
+
+        function displayPracticeStep() {
+            const problem = currentPracticeProblem;
+            const step = problem.steps[currentPracticeStep];
+            const container = document.getElementById('practice-problem');
+
+            let html = `
+                <div class="problem-statement">Zeros: ${problem.zeros.join(', ')}</div>
+                <div class="zeros-display">
+                    ${problem.zeros.map(z => `<div class="zero-item">x = ${z}</div>`).join('')}
+                </div>
+                <div class="input-group">
+                    <label>Step ${currentPracticeStep + 1} of ${problem.steps.length}: ${step.question}</label>
+                    <input type="text" id="practiceInput" placeholder="Enter your answer (no spaces)">
+                </div>
+                <button class="submit-button" onclick="checkPracticeAnswer()">Submit Answer</button>
+                <button class="hint-button" onclick="togglePracticeHint()">Show Hint</button>
+                <div class="hint-box" id="practiceHint">${step.hint}</div>
+                <div class="feedback" id="practiceFeedback"></div>
+            `;
+
+            container.innerHTML = html;
+
+            // Add enter key support
+            document.getElementById('practiceInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPracticeAnswer();
+                }
+            });
+        }
+
+        function checkPracticeAnswer() {
+            const step = currentPracticeProblem.steps[currentPracticeStep];
+            const input = document.getElementById('practiceInput').value.trim().replace(/\s/g, '');
+            const feedback = document.getElementById('practiceFeedback');
+
+            if (input === step.answer) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Correct! ✓';
+                practiceScore++;
+                practiceTotal++;
+
+                setTimeout(() => {
+                    currentPracticeStep++;
+                    if (currentPracticeStep < currentPracticeProblem.steps.length) {
+                        displayPracticeStep();
+                    } else {
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = 'Problem Complete! Great work! Click "New Problem" to continue.';
+                    }
+                }, 1500);
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Not quite. Check your answer and try again.';
+                practiceTotal++;
+            }
+
+            updatePracticeScore();
+        }
+
+        function togglePracticeHint() {
+            const hint = document.getElementById('practiceHint');
+            hint.style.display = hint.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function updatePracticeScore() {
+            document.getElementById('practiceScore').textContent = practiceScore;
+            document.getElementById('practiceTotal').textContent = practiceTotal;
+            const percentage = practiceTotal > 0 ? (practiceScore / practiceTotal * 100) : 0;
+            document.getElementById('practiceProgress').style.width = percentage + '%';
+            document.getElementById('practiceProgress').textContent = Math.round(percentage) + '%';
+        }
+
+        function newPracticeProblem() {
+            loadPracticeProblem();
+            document.getElementById('practiceFeedback').style.display = 'none';
+        }
+
+        // Do Section
+        let difficulty = 'easy';
+        let doScore = 0;
+        let doTotal = 0;
+
+        function setDifficulty(level) {
+            difficulty = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            newDoProblem();
+        }
+
+        function generateDoProblem() {
+            if (difficulty === 'easy') {
+                // Two zeros, simple integers
+                const zeros = [
+                    Math.floor(Math.random() * 6) - 2,
+                    Math.floor(Math.random() * 6) + 1
+                ];
+                const factored = `(x${zeros[0] >= 0 ? '-' : '+'}${Math.abs(zeros[0])})(x${zeros[1] >= 0 ? '-' : '+'}${Math.abs(zeros[1])})`;
+                return { zeros, factored };
+            } else if (difficulty === 'medium') {
+                // Three zeros or zeros with multiplicity
+                const useMultiplicity = Math.random() < 0.5;
+                if (useMultiplicity) {
+                    const z1 = Math.floor(Math.random() * 5) - 2;
+                    const z2 = Math.floor(Math.random() * 6) + 1;
+                    const zeros = [z1, z1, z2];
+                    const factored = `(x${z1 >= 0 ? '-' : '+'}${Math.abs(z1)})^2(x${z2 >= 0 ? '-' : '+'}${Math.abs(z2)})`;
+                    return { zeros, factored };
+                } else {
+                    const zeros = [
+                        Math.floor(Math.random() * 5) - 2,
+                        Math.floor(Math.random() * 5) + 1,
+                        Math.floor(Math.random() * 4) - 2
+                    ];
+                    const factored = zeros.map(z => `(x${z >= 0 ? '-' : '+'}${Math.abs(z)})`).join('');
+                    return { zeros, factored };
+                }
+            } else {
+                // Complex zeros
+                const realZero = Math.floor(Math.random() * 5) - 2;
+                const complexReal = Math.floor(Math.random() * 4) + 1;
+                const complexImag = Math.floor(Math.random() * 3) + 1;
+                const zeros = [realZero, `${complexReal}+${complexImag}i`, `${complexReal}-${complexImag}i`];
+                const factored = `(x${realZero >= 0 ? '-' : '+'}${Math.abs(realZero)})(x^2${-2*complexReal >= 0 ? '+' : ''}${-2*complexReal}x+${complexReal*complexReal + complexImag*complexImag})`;
+                return { zeros, factored };
+            }
+        }
+
+        function newDoProblem() {
+            const problem = generateDoProblem();
+            const container = document.getElementById('do-problem');
+
+            let zerosDisplay = problem.zeros.map(z => `<div class="zero-item">x = ${z}</div>`).join('');
+
+            let html = `
+                <div class="problem-statement">Write a polynomial with these zeros:</div>
+                <div class="zeros-display">
+                    ${zerosDisplay}
+                </div>
+
+                <div class="info-note">
+                    <strong>Note:</strong> Write your answer in factored form.<br>
+                    Use ^ for exponents. Remove all spaces.<br>
+                    Example: (x-2)^2(x+3)
+                </div>
+
+                <div class="input-group">
+                    <label>Your polynomial (factored form, no spaces):</label>
+                    <textarea id="doInput" placeholder="Example: (x-1)(x+2)"></textarea>
+                </div>
+
+                <button class="submit-button" onclick="checkDoAnswer('${problem.factored}')">Submit Answer</button>
+                <div class="feedback" id="doFeedback"></div>
+            `;
+
+            container.innerHTML = html;
+
+            // Add enter key support
+            document.getElementById('doInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    checkDoAnswer(problem.factored);
+                }
+            });
+        }
+
+        function normalizePolynomial(str) {
+            // Remove all spaces and convert to lowercase
+            return str.replace(/\s/g, '').toLowerCase();
+        }
+
+        function checkDoAnswer(correctFactored) {
+            const input = document.getElementById('doInput').value;
+            const feedback = document.getElementById('doFeedback');
+
+            const normalizedInput = normalizePolynomial(input);
+            const normalizedCorrect = normalizePolynomial(correctFactored);
+
+            // Check if answers match (allowing for different orderings of factors)
+            if (normalizedInput === normalizedCorrect ||
+                checkFactorEquivalence(normalizedInput, normalizedCorrect)) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Correct! Well done! ✓';
+                doScore++;
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = `Not quite. Expected: ${correctFactored}\nMake sure factors are in the form (x±a) and check your signs.`;
+            }
+
+            doTotal++;
+            updateDoScore();
+        }
+
+        function checkFactorEquivalence(input, correct) {
+            // Simple check for factor reordering
+            // Extract all factors from both strings
+            const factorPattern = /\([^)]+\)(\^\d+)?/g;
+            const inputFactors = input.match(factorPattern) || [];
+            const correctFactors = correct.match(factorPattern) || [];
+
+            if (inputFactors.length !== correctFactors.length) return false;
+
+            const sortedInput = inputFactors.sort().join('');
+            const sortedCorrect = correctFactors.sort().join('');
+
+            return sortedInput === sortedCorrect;
+        }
+
+        function updateDoScore() {
+            document.getElementById('doScore').textContent = doScore;
+            document.getElementById('doTotal').textContent = doTotal;
+            const percentage = doTotal > 0 ? (doScore / doTotal * 100) : 0;
+            document.getElementById('doProgress').style.width = percentage + '%';
+            document.getElementById('doProgress').textContent = Math.round(percentage) + '%';
+        }
+
+        // Initialize
+        window.onload = function() {
+            loadExample(0);
+            loadPracticeProblem();
+            newDoProblem();
+        };
+    </script>
+</body>
+</html>

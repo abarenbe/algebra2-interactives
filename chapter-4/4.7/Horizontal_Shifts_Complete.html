@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizontal Shifts - Section 4.7</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            border: 2px solid white;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover {
+            background: white;
+            color: #f12711;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 3px solid #f12711;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: #e9ecef;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .tab:hover {
+            background: #dee2e6;
+        }
+
+        .tab.active {
+            background: white;
+            color: #f12711;
+            border-bottom: 4px solid #f12711;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .concept-box {
+            background: #fff3e0;
+            border-left: 5px solid #f5af19;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .concept-box h3 {
+            color: #f12711;
+            margin-bottom: 10px;
+        }
+
+        .warning-box {
+            background: #ffe6e6;
+            border-left: 5px solid #dc3545;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box h3 {
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+
+        .formula {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 1.3em;
+            text-align: center;
+            margin: 20px 0;
+            border: 2px solid #f5af19;
+            font-family: 'Courier New', monospace;
+        }
+
+        .example-box {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .graph-container {
+            width: 100%;
+            height: 500px;
+            margin: 20px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .step-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .step-btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+
+        .step-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .step-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #f5af19;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: scale(1.02);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+            display: block;
+        }
+
+        .hint {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: #f12711;
+            font-weight: bold;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 10px 25px;
+            border: 2px solid #f5af19;
+            background: white;
+            color: #f12711;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .difficulty-btn:hover {
+            background: #fff3e0;
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #f12711 0%, #f5af19 100%);
+            color: white;
+        }
+
+        .workspace {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+
+        .workspace h3 {
+            color: #f12711;
+            margin-bottom: 15px;
+        }
+
+        .workspace-content {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            min-height: 150px;
+            border: 2px dashed #ddd;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .tab {
+                padding: 15px 10px;
+                font-size: 0.9em;
+            }
+
+            .graph-container {
+                height: 350px;
+            }
+
+            .step-navigation {
+                flex-direction: column;
+            }
+
+            .step-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Horizontal Shifts</h1>
+            <p>Understanding f(x - h) Transformations</p>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="window.location.href='index.html'">Back to Section 4.7</button>
+                <button class="nav-btn" onclick="window.location.href='../index.html'">Chapter 4 Home</button>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('learn')">Learn</button>
+            <button class="tab" onclick="switchTab('see')">See</button>
+            <button class="tab" onclick="switchTab('practice')">Practice</button>
+            <button class="tab" onclick="switchTab('do')">Do</button>
+        </div>
+
+        <div class="content">
+            <!-- Learn Tab -->
+            <div id="learn" class="tab-content active">
+                <h2>Understanding Horizontal Shifts</h2>
+
+                <div class="concept-box">
+                    <h3>What is a Horizontal Shift?</h3>
+                    <p>A horizontal shift moves the entire graph of a function left or right without changing its shape. When we replace x with (x - h) in a function, every point on the graph moves horizontally by h units.</p>
+                </div>
+
+                <div class="formula">
+                    g(x) = f(x - h)
+                </div>
+
+                <div class="warning-box">
+                    <h3>Common Misconception - The "Opposite Direction" Rule</h3>
+                    <p><strong>IMPORTANT:</strong> Horizontal shifts work OPPOSITE to what you might expect!</p>
+                    <ul style="line-height: 2; margin-top: 10px;">
+                        <li><strong>f(x - 3):</strong> Shifts RIGHT by 3 units (minus means right!)</li>
+                        <li><strong>f(x + 3):</strong> Shifts LEFT by 3 units (plus means left!)</li>
+                    </ul>
+                    <p style="margin-top: 10px;">Think about it: f(x - 3) means "what was at x now happens at x + 3"</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>How It Works</h3>
+                    <ul style="line-height: 2;">
+                        <li><strong>h > 0 in f(x - h):</strong> The graph shifts RIGHT by h units</li>
+                        <li><strong>h > 0 in f(x + h):</strong> The graph shifts LEFT by h units</li>
+                        <li><strong>h = 0:</strong> No shift (original function)</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Why It Works</h3>
+                    <p>When we write g(x) = f(x - h), we're asking "what value did f have h units to the left?" To get the same output as f(a), we need to input x = a + h into g.</p>
+                    <p><strong>Example:</strong> If f(x) = x² and g(x) = f(x - 2) = (x - 2)²</p>
+                    <p>• f(0) = 0, but to get 0 from g, we need g(2) = (2 - 2)² = 0</p>
+                    <p>• f(3) = 9, but to get 9 from g, we need g(5) = (5 - 2)² = 9</p>
+                    <p>Every point shifts 2 units to the RIGHT!</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Key Properties</h3>
+                    <ul style="line-height: 2;">
+                        <li>The shape of the graph stays exactly the same</li>
+                        <li>All y-intercepts move horizontally (x-coordinate changes)</li>
+                        <li>The range remains unchanged</li>
+                        <li>The domain shifts by h units</li>
+                        <li>Vertical asymptotes shift horizontally</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h3>Real-World Application</h3>
+                    <p>Imagine a temperature pattern throughout the day follows f(t) where t is hours after midnight. If the same pattern happens but starts 2 hours later (perhaps due to daylight saving time), the new function would be g(t) = f(t - 2). The same temperatures occur, just 2 hours later in the day.</p>
+                </div>
+            </div>
+
+            <!-- See Tab -->
+            <div id="see" class="tab-content">
+                <h2>Example: Horizontal Shift Visualization</h2>
+                <div class="example-box">
+                    <h3 id="see-example-title">Example 1: Shifting Right</h3>
+                    <p id="see-example-problem">Given f(x) = x², find and graph g(x) = f(x - 3)</p>
+
+                    <div id="see-step-content">
+                        <p><strong>Step 1:</strong> Identify the parent function and determine the shift.</p>
+                    </div>
+
+                    <div class="graph-container" id="see-graph"></div>
+
+                    <div class="step-navigation">
+                        <button class="step-btn" id="see-prev-btn" onclick="seeChangeStep(-1)" disabled>Previous Step</button>
+                        <span id="see-step-indicator" style="align-self: center; font-weight: bold;">Step 1 of 5</span>
+                        <button class="step-btn" id="see-next-btn" onclick="seeChangeStep(1)">Next Step</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice Tab -->
+            <div id="practice" class="tab-content">
+                <h2>Practice: Step-by-Step</h2>
+
+                <div class="score-display">
+                    Score: <span id="practice-score">0</span> / <span id="practice-total">0</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="practice-progress" style="width: 0%">0%</div>
+                </div>
+
+                <div class="example-box">
+                    <h3 id="practice-problem">Problem: Given f(x) = x³, find g(x) = f(x + 2)</h3>
+
+                    <div class="graph-container" id="practice-graph"></div>
+
+                    <div id="practice-step-content">
+                        <!-- Dynamic content based on step -->
+                    </div>
+
+                    <div class="feedback" id="practice-feedback"></div>
+
+                    <div class="hint" id="practice-hint" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Do Tab -->
+            <div id="do" class="tab-content">
+                <h2>Independent Practice</h2>
+
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="difficulty-btn" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="difficulty-btn" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+
+                <div class="score-display">
+                    Score: <span id="do-score">0</span> / <span id="do-total">0</span>
+                    <span style="font-size: 0.7em; margin-left: 20px;">Difficulty: <span id="do-difficulty">Easy</span></span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="do-progress" style="width: 0%">0%</div>
+                </div>
+
+                <div class="workspace">
+                    <h3>Scratch Workspace</h3>
+                    <div class="workspace-content">
+                        <p><strong>Remember:</strong> f(x - h) shifts RIGHT, f(x + h) shifts LEFT</p>
+                        <div class="graph-container" id="do-workspace-graph" style="height: 300px; border: none; margin-top: 10px;"></div>
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h3 id="do-problem">Loading problem...</h3>
+
+                    <div class="graph-container" id="do-graph"></div>
+
+                    <div class="input-group">
+                        <label id="do-input-label">Enter the transformed function:</label>
+                        <input type="text" id="do-answer" placeholder="e.g., (x-3)²">
+                    </div>
+
+                    <button class="submit-btn" onclick="checkDoAnswer()">Submit Answer</button>
+
+                    <div class="feedback" id="do-feedback"></div>
+
+                    <button class="submit-btn" onclick="generateDoProblem()" style="margin-top: 15px; background: #6c757d;">Next Problem</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+
+            // Initialize tab if needed
+            if (tabName === 'see') initializeSeeTab();
+            if (tabName === 'practice') initializePracticeTab();
+            if (tabName === 'do') generateDoProblem();
+        }
+
+        // SEE TAB
+        let seeCurrentStep = 0;
+        const seeExamples = [
+            {
+                title: "Example 1: Shifting Right",
+                problem: "Given f(x) = x², find and graph g(x) = f(x - 3) = (x - 3)²",
+                parentFunc: x => x * x,
+                transformedFunc: x => (x - 3) * (x - 3),
+                h: 3,
+                steps: [
+                    {
+                        text: "<strong>Step 1:</strong> Identify the parent function and the shift.<br><br>Parent function: f(x) = x²<br>Transformation: g(x) = f(x - 3)<br><br>The form is f(x - h) where h = 3 (positive).",
+                        showParent: true,
+                        showTransformed: false
+                    },
+                    {
+                        text: "<strong>Step 2:</strong> Remember the opposite direction rule!<br><br>f(x - 3) means subtract 3 from x<br><br><strong>This shifts RIGHT by 3 units</strong> (opposite of the minus sign!)<br><br>Think: 'What was at x now happens at x + 3'",
+                        showParent: true,
+                        showTransformed: false
+                    },
+                    {
+                        text: "<strong>Step 3:</strong> Write the transformed function.<br><br>g(x) = f(x - 3) = (x - 3)²<br><br>Replace every x in the parent function with (x - 3).",
+                        showParent: true,
+                        showTransformed: false
+                    },
+                    {
+                        text: "<strong>Step 4:</strong> Graph the transformed function.<br><br>The parabola maintains its shape but shifts 3 units to the right.<br><br>Vertex moves from (0,0) to (3,0).",
+                        showParent: true,
+                        showTransformed: true
+                    },
+                    {
+                        text: "<strong>Step 5:</strong> Verify with specific points.<br><br>f(0) = 0, and g(3) = (3-3)² = 0 ✓<br>f(2) = 4, and g(5) = (5-3)² = 4 ✓<br>f(-1) = 1, and g(2) = (2-3)² = 1 ✓<br><br>Every point shifted RIGHT by 3!",
+                        showParent: true,
+                        showTransformed: true
+                    }
+                ]
+            },
+            {
+                title: "Example 2: Shifting Left",
+                problem: "Given f(x) = x³, find and graph g(x) = f(x + 2) = (x + 2)³",
+                parentFunc: x => x * x * x,
+                transformedFunc: x => (x + 2) * (x + 2) * (x + 2),
+                h: -2,
+                steps: [
+                    {
+                        text: "<strong>Step 1:</strong> Identify the parent function and the shift.<br><br>Parent function: f(x) = x³<br>Transformation: g(x) = f(x + 2)<br><br>The form is f(x + h) where we're adding 2.",
+                        showParent: true,
+                        showTransformed: false
+                    },
+                    {
+                        text: "<strong>Step 2:</strong> Apply the opposite direction rule.<br><br>f(x + 2) means add 2 to x<br><br><strong>This shifts LEFT by 2 units</strong> (opposite of the plus sign!)<br><br>Adding shifts left, subtracting shifts right!",
+                        showParent: true,
+                        showTransformed: false
+                    },
+                    {
+                        text: "<strong>Step 3:</strong> Write the transformed function.<br><br>g(x) = f(x + 2) = (x + 2)³<br><br>Replace every x in the parent with (x + 2).",
+                        showParent: true,
+                        showTransformed: false
+                    },
+                    {
+                        text: "<strong>Step 4:</strong> Graph both functions.<br><br>The cubic curve shifts 2 units left, maintaining its S-shape.<br><br>Inflection point moves from (0,0) to (-2,0).",
+                        showParent: true,
+                        showTransformed: true
+                    },
+                    {
+                        text: "<strong>Step 5:</strong> Verify the shift.<br><br>f(0) = 0, and g(-2) = (-2+2)³ = 0 ✓<br>f(1) = 1, and g(-1) = (-1+2)³ = 1 ✓<br>f(2) = 8, and g(0) = (0+2)³ = 8 ✓<br><br>All points shifted LEFT by 2!",
+                        showParent: true,
+                        showTransformed: true
+                    }
+                ]
+            }
+        ];
+
+        let currentSeeExample = 0;
+
+        function initializeSeeTab() {
+            seeCurrentStep = 0;
+            currentSeeExample = 0;
+            displaySeeStep();
+        }
+
+        function displaySeeStep() {
+            const example = seeExamples[currentSeeExample];
+            const step = example.steps[seeCurrentStep];
+
+            document.getElementById('see-example-title').innerHTML = example.title;
+            document.getElementById('see-example-problem').innerHTML = example.problem;
+            document.getElementById('see-step-content').innerHTML = step.text;
+            document.getElementById('see-step-indicator').textContent =
+                `Step ${seeCurrentStep + 1} of ${example.steps.length}`;
+
+            document.getElementById('see-prev-btn').disabled = seeCurrentStep === 0;
+            document.getElementById('see-next-btn').disabled =
+                seeCurrentStep === example.steps.length - 1 && currentSeeExample === seeExamples.length - 1;
+
+            updateSeeGraph(example, step);
+        }
+
+        function updateSeeGraph(example, step) {
+            const x = [];
+            const yParent = [];
+            const yTransformed = [];
+
+            for (let i = -7; i <= 7; i += 0.1) {
+                x.push(i);
+                yParent.push(example.parentFunc(i));
+                yTransformed.push(example.transformedFunc(i));
+            }
+
+            const traces = [];
+
+            if (step.showParent) {
+                traces.push({
+                    x: x,
+                    y: yParent,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Parent f(x)',
+                    line: { color: '#2196F3', width: 3 }
+                });
+            }
+
+            if (step.showTransformed) {
+                traces.push({
+                    x: x,
+                    y: yTransformed,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Transformed g(x)',
+                    line: { color: '#f12711', width: 3, dash: 'dash' }
+                });
+            }
+
+            const layout = {
+                title: step.showTransformed ? 'Parent and Transformed Functions' : 'Parent Function',
+                xaxis: { title: 'x', zeroline: true, gridcolor: '#e0e0e0' },
+                yaxis: { title: 'y', zeroline: true, gridcolor: '#e0e0e0' },
+                plot_bgcolor: '#f8f9fa',
+                paper_bgcolor: 'white',
+                showlegend: true
+            };
+
+            Plotly.newPlot('see-graph', traces, layout, {responsive: true});
+        }
+
+        function seeChangeStep(direction) {
+            const example = seeExamples[currentSeeExample];
+            seeCurrentStep += direction;
+
+            if (seeCurrentStep < 0) seeCurrentStep = 0;
+            if (seeCurrentStep >= example.steps.length) {
+                if (currentSeeExample < seeExamples.length - 1) {
+                    currentSeeExample++;
+                    seeCurrentStep = 0;
+                } else {
+                    seeCurrentStep = example.steps.length - 1;
+                }
+            }
+
+            displaySeeStep();
+        }
+
+        // PRACTICE TAB
+        let practiceCurrentStep = 0;
+        let practiceScore = 0;
+        let practiceTotal = 0;
+        let practiceCurrentProblem = null;
+
+        const practiceProblems = [
+            {
+                problem: "Given f(x) = x², write g(x) = f(x - 4)",
+                parentFunc: x => x * x,
+                h: 4,
+                transformedFunc: x => (x - 4) * (x - 4),
+                steps: [
+                    {
+                        question: "What is the parent function?",
+                        answer: "x²",
+                        alternatives: ["x^2", "x2"],
+                        hint: "Look at f(x) = ?"
+                    },
+                    {
+                        question: "Does f(x - 4) shift left or right?",
+                        answer: "right",
+                        alternatives: ["Right", "RIGHT"],
+                        hint: "Remember: f(x - h) shifts RIGHT (opposite direction)!"
+                    },
+                    {
+                        question: "How many units does it shift?",
+                        answer: "4",
+                        alternatives: ["4 units", "4 right"],
+                        hint: "The shift amount is the absolute value of h."
+                    },
+                    {
+                        question: "Write the transformed function g(x):",
+                        answer: "(x-4)²",
+                        alternatives: ["(x - 4)^2", "(x-4)^2", "(x - 4)²", "(x-4)2"],
+                        hint: "Replace x with (x - 4) in the parent function."
+                    }
+                ]
+            },
+            {
+                problem: "Given f(x) = x³, write g(x) = f(x + 3)",
+                parentFunc: x => x * x * x,
+                h: -3,
+                transformedFunc: x => (x + 3) * (x + 3) * (x + 3),
+                steps: [
+                    {
+                        question: "What is the parent function?",
+                        answer: "x³",
+                        alternatives: ["x^3", "x3"],
+                        hint: "Look at f(x) = ?"
+                    },
+                    {
+                        question: "Does f(x + 3) shift left or right?",
+                        answer: "left",
+                        alternatives: ["Left", "LEFT"],
+                        hint: "Remember: f(x + h) shifts LEFT!"
+                    },
+                    {
+                        question: "How many units does it shift?",
+                        answer: "3",
+                        alternatives: ["3 units", "3 left"],
+                        hint: "The number being added/subtracted from x."
+                    },
+                    {
+                        question: "Write the transformed function g(x):",
+                        answer: "(x+3)³",
+                        alternatives: ["(x + 3)^3", "(x+3)^3", "(x + 3)³", "(x+3)3"],
+                        hint: "Replace x with (x + 3) in the parent function."
+                    }
+                ]
+            }
+        ];
+
+        function initializePracticeTab() {
+            practiceCurrentStep = 0;
+            practiceScore = 0;
+            practiceTotal = 0;
+            practiceCurrentProblem = practiceProblems[0];
+            updatePracticeDisplay();
+        }
+
+        function updatePracticeDisplay() {
+            document.getElementById('practice-score').textContent = practiceScore;
+            document.getElementById('practice-total').textContent = practiceTotal;
+
+            const percentage = practiceTotal > 0 ? (practiceScore / practiceTotal * 100) : 0;
+            document.getElementById('practice-progress').style.width = percentage + '%';
+            document.getElementById('practice-progress').textContent = Math.round(percentage) + '%';
+
+            const step = practiceCurrentProblem.steps[practiceCurrentStep];
+            document.getElementById('practice-problem').innerHTML = practiceCurrentProblem.problem;
+
+            const stepContent = `
+                <div class="input-group">
+                    <label><strong>Step ${practiceCurrentStep + 1} of ${practiceCurrentProblem.steps.length}:</strong> ${step.question}</label>
+                    <input type="text" id="practice-input" placeholder="Your answer">
+                </div>
+                <button class="submit-btn" onclick="checkPracticeAnswer()">Submit Answer</button>
+                <button class="submit-btn" onclick="showPracticeHint()" style="margin-top: 10px; background: #6c757d;">Show Hint</button>
+            `;
+
+            document.getElementById('practice-step-content').innerHTML = stepContent;
+            document.getElementById('practice-feedback').style.display = 'none';
+            document.getElementById('practice-hint').style.display = 'none';
+
+            document.getElementById('practice-input').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkPracticeAnswer();
+            });
+
+            updatePracticeGraph();
+        }
+
+        function updatePracticeGraph() {
+            const x = [];
+            const yParent = [];
+            const yTransformed = [];
+
+            for (let i = -8; i <= 8; i += 0.1) {
+                x.push(i);
+                yParent.push(practiceCurrentProblem.parentFunc(i));
+                yTransformed.push(practiceCurrentProblem.transformedFunc(i));
+            }
+
+            const showTransformed = practiceCurrentStep === practiceCurrentProblem.steps.length - 1;
+
+            const traces = [{
+                x: x,
+                y: yParent,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'f(x)',
+                line: { color: '#2196F3', width: 3 }
+            }];
+
+            if (showTransformed) {
+                traces.push({
+                    x: x,
+                    y: yTransformed,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'g(x)',
+                    line: { color: '#f12711', width: 3, dash: 'dash' }
+                });
+            }
+
+            const layout = {
+                xaxis: { title: 'x', zeroline: true, gridcolor: '#e0e0e0' },
+                yaxis: { title: 'y', zeroline: true, gridcolor: '#e0e0e0' },
+                plot_bgcolor: '#f8f9fa',
+                paper_bgcolor: 'white',
+                showlegend: true
+            };
+
+            Plotly.newPlot('practice-graph', traces, layout, {responsive: true});
+        }
+
+        function checkPracticeAnswer() {
+            const input = document.getElementById('practice-input').value.trim();
+            const step = practiceCurrentProblem.steps[practiceCurrentStep];
+            const feedback = document.getElementById('practice-feedback');
+
+            practiceTotal++;
+
+            const isCorrect = input.toLowerCase() === step.answer.toLowerCase() ||
+                            step.alternatives.some(alt => input.toLowerCase() === alt.toLowerCase());
+
+            if (isCorrect) {
+                practiceScore++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = '✓ Correct! Well done.';
+
+                setTimeout(() => {
+                    practiceCurrentStep++;
+                    if (practiceCurrentStep >= practiceCurrentProblem.steps.length) {
+                        const currentIndex = practiceProblems.indexOf(practiceCurrentProblem);
+                        if (currentIndex < practiceProblems.length - 1) {
+                            practiceCurrentProblem = practiceProblems[currentIndex + 1];
+                            practiceCurrentStep = 0;
+                        } else {
+                            feedback.innerHTML = '✓ Excellent! You completed all practice problems!';
+                            return;
+                        }
+                    }
+                    updatePracticeDisplay();
+                }, 1500);
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.innerHTML = '✗ Not quite. Try again or click "Show Hint".';
+            }
+
+            updatePracticeDisplay();
+        }
+
+        function showPracticeHint() {
+            const step = practiceCurrentProblem.steps[practiceCurrentStep];
+            const hint = document.getElementById('practice-hint');
+            hint.style.display = 'block';
+            hint.innerHTML = '<strong>Hint:</strong> ' + step.hint;
+        }
+
+        // DO TAB
+        let doScore = 0;
+        let doTotal = 0;
+        let doDifficulty = 'easy';
+        let doCurrentProblem = null;
+
+        function setDifficulty(level) {
+            doDifficulty = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('do-difficulty').textContent =
+                level.charAt(0).toUpperCase() + level.slice(1);
+            generateDoProblem();
+        }
+
+        function generateDoProblem() {
+            const parentFunctions = {
+                easy: [
+                    { name: 'x²', func: x => x * x, latex: 'x^2' },
+                    { name: 'x³', func: x => x * x * x, latex: 'x^3' }
+                ],
+                medium: [
+                    { name: 'x⁴', func: x => x ** 4, latex: 'x^4' },
+                    { name: '√x', func: x => Math.sqrt(Math.max(0, x)), latex: '√x' },
+                    { name: 'x² + 1', func: x => x * x + 1, latex: 'x^2 + 1' }
+                ],
+                hard: [
+                    { name: 'x³ - x', func: x => x * x * x - x, latex: 'x^3 - x' },
+                    { name: '1/x', func: x => x !== 0 ? 1/x : null, latex: '1/x' },
+                    { name: 'x⁴ - 2x²', func: x => x ** 4 - 2 * x * x, latex: 'x^4 - 2x^2' }
+                ]
+            };
+
+            const functions = parentFunctions[doDifficulty];
+            const parent = functions[Math.floor(Math.random() * functions.length)];
+
+            let h;
+            const isPlus = Math.random() < 0.5;
+
+            if (doDifficulty === 'easy') {
+                h = Math.floor(Math.random() * 5) + 1; // 1 to 5
+            } else if (doDifficulty === 'medium') {
+                h = Math.floor(Math.random() * 6) + 2; // 2 to 7
+            } else {
+                h = Math.floor(Math.random() * 8) + 2; // 2 to 9
+            }
+
+            if (!isPlus) h = -h;
+
+            const transformedFunc = isPlus
+                ? (x => parent.func(x + Math.abs(h)))
+                : (x => parent.func(x - Math.abs(h)));
+
+            doCurrentProblem = {
+                parent: parent,
+                h: h,
+                transformedFunc: transformedFunc,
+                answer: isPlus
+                    ? `(x+${Math.abs(h)})`.replace('x', parent.latex.replace(/x/g, '(x+' + Math.abs(h) + ')'))
+                    : `(x-${Math.abs(h)})`.replace('x', parent.latex.replace(/x/g, '(x-' + Math.abs(h) + ')'))
+            };
+
+            // Simplify answer for display
+            if (isPlus) {
+                doCurrentProblem.answer = parent.latex.replace(/x/g, '(x+' + Math.abs(h) + ')');
+            } else {
+                doCurrentProblem.answer = parent.latex.replace(/x/g, '(x-' + Math.abs(h) + ')');
+            }
+
+            const problemText = isPlus
+                ? `Given f(x) = ${parent.name}, write g(x) = f(x + ${Math.abs(h)})`
+                : `Given f(x) = ${parent.name}, write g(x) = f(x - ${Math.abs(h)})`;
+
+            document.getElementById('do-problem').innerHTML = problemText;
+            document.getElementById('do-answer').value = '';
+            document.getElementById('do-feedback').style.display = 'none';
+
+            updateDoGraph();
+            updateDoWorkspaceGraph();
+        }
+
+        function updateDoGraph() {
+            const x = [];
+            const yParent = [];
+
+            const start = doCurrentProblem.parent.name.includes('√') ? 0 : -7;
+            for (let i = start; i <= 7; i += 0.1) {
+                const yVal = doCurrentProblem.parent.func(i);
+                if (yVal !== null && !isNaN(yVal) && isFinite(yVal)) {
+                    x.push(i);
+                    yParent.push(yVal);
+                }
+            }
+
+            const traces = [{
+                x: x,
+                y: yParent,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'f(x)',
+                line: { color: '#2196F3', width: 3 }
+            }];
+
+            const layout = {
+                title: 'Parent Function',
+                xaxis: { title: 'x', zeroline: true, gridcolor: '#e0e0e0' },
+                yaxis: { title: 'y', zeroline: true, gridcolor: '#e0e0e0' },
+                plot_bgcolor: '#f8f9fa',
+                paper_bgcolor: 'white',
+                showlegend: true
+            };
+
+            Plotly.newPlot('do-graph', traces, layout, {responsive: true});
+        }
+
+        function updateDoWorkspaceGraph() {
+            const layout = {
+                title: 'Visualize the shift here',
+                xaxis: { title: 'x', zeroline: true, gridcolor: '#e0e0e0', range: [-8, 8] },
+                yaxis: { title: 'y', zeroline: true, gridcolor: '#e0e0e0' },
+                plot_bgcolor: 'white',
+                paper_bgcolor: 'white'
+            };
+
+            Plotly.newPlot('do-workspace-graph', [], layout, {responsive: true});
+        }
+
+        function checkDoAnswer() {
+            const input = document.getElementById('do-answer').value.trim()
+                .replace(/\s+/g, '')
+                .replace(/\^/g, '')
+                .replace(/\*\*/g, '');
+
+            const correctAnswer = doCurrentProblem.answer
+                .replace(/\s+/g, '')
+                .replace(/\^/g, '')
+                .replace(/\*\*/g, '');
+
+            doTotal++;
+            const feedback = document.getElementById('do-feedback');
+
+            // More flexible matching
+            const normalizedInput = input.toLowerCase().replace(/²/g, '2').replace(/³/g, '3').replace(/⁴/g, '4');
+            const normalizedAnswer = correctAnswer.toLowerCase().replace(/²/g, '2').replace(/³/g, '3').replace(/⁴/g, '4');
+
+            if (normalizedInput === normalizedAnswer || input.includes(correctAnswer) || correctAnswer.includes(input.slice(0, -1))) {
+                doScore++;
+                feedback.className = 'feedback correct';
+                feedback.innerHTML = `✓ Correct! g(x) = ${doCurrentProblem.answer}`;
+
+                // Show the answer
+                const x = [];
+                const yParent = [];
+                const yTransformed = [];
+
+                const start = doCurrentProblem.parent.name.includes('√') ? 0 : -7;
+                for (let i = start; i <= 7; i += 0.1) {
+                    const yP = doCurrentProblem.parent.func(i);
+                    const yT = doCurrentProblem.transformedFunc(i);
+                    if (yP !== null && !isNaN(yP) && isFinite(yP) && yT !== null && !isNaN(yT) && isFinite(yT)) {
+                        x.push(i);
+                        yParent.push(yP);
+                        yTransformed.push(yT);
+                    }
+                }
+
+                const traces = [
+                    {
+                        x: x,
+                        y: yParent,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'f(x)',
+                        line: { color: '#2196F3', width: 3 }
+                    },
+                    {
+                        x: x,
+                        y: yTransformed,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: 'g(x)',
+                        line: { color: '#f12711', width: 3, dash: 'dash' }
+                    }
+                ];
+
+                const layout = {
+                    title: 'Parent and Transformed Functions',
+                    xaxis: { title: 'x', zeroline: true, gridcolor: '#e0e0e0' },
+                    yaxis: { title: 'y', zeroline: true, gridcolor: '#e0e0e0' },
+                    plot_bgcolor: '#f8f9fa',
+                    paper_bgcolor: 'white',
+                    showlegend: true
+                };
+
+                Plotly.newPlot('do-graph', traces, layout, {responsive: true});
+            } else {
+                feedback.className = 'feedback incorrect';
+                const direction = doCurrentProblem.h < 0 ? 'left' : 'right';
+                feedback.innerHTML = `✗ Not quite. Remember: This shifts ${direction} by ${Math.abs(doCurrentProblem.h)} units. Replace x with the expression in parentheses.`;
+            }
+
+            updateDoScore();
+        }
+
+        function updateDoScore() {
+            document.getElementById('do-score').textContent = doScore;
+            document.getElementById('do-total').textContent = doTotal;
+
+            const percentage = doTotal > 0 ? (doScore / doTotal * 100) : 0;
+            document.getElementById('do-progress').style.width = percentage + '%';
+            document.getElementById('do-progress').textContent = Math.round(percentage) + '%';
+        }
+
+        // Enter key support
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && document.getElementById('do').classList.contains('active')) {
+                    const input = document.getElementById('do-answer');
+                    if (input && input === document.activeElement) {
+                        checkDoAnswer();
+                    }
+                }
+            });
+        });
+
+        // Initialize
+        initializeSeeTab();
+    </script>
+</body>
+</html>

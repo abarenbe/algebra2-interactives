@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 4.9: Modeling with Polynomial Functions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: background 0.3s;
+        }
+
+        .back-button:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .intro {
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .intro h2 {
+            color: #56ab2f;
+            margin-bottom: 15px;
+        }
+
+        .intro p {
+            line-height: 1.8;
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .learning-path {
+            background: #e8f5e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .learning-path h3 {
+            color: #56ab2f;
+            margin-bottom: 10px;
+        }
+
+        .learning-path ol {
+            margin-left: 20px;
+            line-height: 2;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 40px;
+        }
+
+        .topic-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .topic-header {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+            padding: 25px;
+        }
+
+        .topic-header h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .topic-description {
+            font-size: 0.95em;
+            opacity: 0.95;
+        }
+
+        .topic-content {
+            padding: 25px;
+        }
+
+        .preview-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .preview-tab {
+            padding: 8px 15px;
+            background: #e8f5e9;
+            border-radius: 8px;
+            font-size: 0.9em;
+            color: #56ab2f;
+            font-weight: 500;
+        }
+
+        .topic-link {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+            margin-top: 15px;
+            transition: transform 0.2s;
+        }
+
+        .topic-link:hover {
+            transform: scale(1.05);
+        }
+
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .feature-icon {
+            width: 20px;
+            height: 20px;
+            background: #56ab2f;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .intro, .topics-grid {
+                padding: 20px;
+            }
+
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-tabs {
+                font-size: 0.85em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="../index.html" class="back-button">← Back to Chapter 4</a>
+            <h1>Section 4.9</h1>
+            <div class="subtitle">Modeling with Polynomial Functions</div>
+        </header>
+
+        <div class="intro">
+            <h2>Welcome to Polynomial Modeling</h2>
+            <p>
+                Polynomial functions are powerful tools for modeling real-world phenomena. From the path of a projectile
+                to the growth of populations, from business revenue models to engineering designs, polynomials help us
+                understand and predict patterns in data.
+            </p>
+            <p>
+                In this section, you'll learn how to analyze data to determine what degree polynomial best fits it,
+                how to create polynomial models from data points, and how to apply these models to solve practical problems.
+                You'll work with real-world scenarios involving physics, business, and optimization.
+            </p>
+
+            <div class="learning-path">
+                <h3>Recommended Learning Path</h3>
+                <ol>
+                    <li><strong>Start with Finite Differences</strong> - Learn how to analyze data patterns to determine polynomial degree</li>
+                    <li><strong>Move to Polynomial Regression</strong> - Discover how to fit polynomial curves to data points</li>
+                    <li><strong>Apply to Real-World Problems</strong> - Use polynomial models to solve practical applications</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="topics-grid">
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h3>Finite Differences</h3>
+                    <div class="topic-description">
+                        Determine polynomial degree from data patterns
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span>
+                        <span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span>
+                        <span class="preview-tab">Do</span>
+                    </div>
+                    <div class="features">
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Calculate differences between consecutive y-values</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Identify constant differences to find degree</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Visualize data patterns with interactive tables</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Practice with equally-spaced x-values</span>
+                        </div>
+                    </div>
+                    <a href="Finite_Differences_Complete.html" class="topic-link">Start Learning →</a>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h3>Polynomial Regression</h3>
+                    <div class="topic-description">
+                        Fit polynomial models to data points
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span>
+                        <span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span>
+                        <span class="preview-tab">Do</span>
+                    </div>
+                    <div class="features">
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Use systems of equations for exact fits</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Apply regression for best-fit curves</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Visualize data and fitted curves with Plotly</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Interpret coefficients and make predictions</span>
+                        </div>
+                    </div>
+                    <a href="Polynomial_Regression_Complete.html" class="topic-link">Start Learning →</a>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h3>Real-World Applications</h3>
+                    <div class="topic-description">
+                        Model projectile motion, volume, and revenue
+                    </div>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span>
+                        <span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span>
+                        <span class="preview-tab">Do</span>
+                    </div>
+                    <div class="features">
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Model projectile motion with quadratics</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Optimize volume and area problems</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Analyze business revenue and profit models</span>
+                        </div>
+                        <div class="feature">
+                            <span class="feature-icon">✓</span>
+                            <span>Interactive graphs with real-world contexts</span>
+                        </div>
+                    </div>
+                    <a href="Real_World_Applications_Complete.html" class="topic-link">Start Learning →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

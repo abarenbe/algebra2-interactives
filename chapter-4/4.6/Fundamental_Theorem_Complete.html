@@ -1,0 +1,961 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Fundamental Theorem of Algebra</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+            text-decoration: none;
+        }
+
+        .nav-btn:hover {
+            background: white;
+            color: #0083b0;
+            transform: translateY(-2px);
+        }
+
+        .tabs {
+            display: flex;
+            background: #f0f0f0;
+            border-bottom: 3px solid #00b4db;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            border: none;
+            background: #f0f0f0;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #333;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .tab:hover {
+            background: #e0e0e0;
+        }
+
+        .tab.active {
+            background: white;
+            color: #00b4db;
+            border-bottom: 4px solid #00b4db;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #e0f7ff 0%, #b3e5fc 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #00b4db;
+        }
+
+        .concept-box h3 {
+            color: #0083b0;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .concept-box p, .concept-box ul {
+            color: #333;
+            font-size: 1.1em;
+            margin: 10px 0;
+        }
+
+        .concept-box ul {
+            margin-left: 20px;
+        }
+
+        .concept-box li {
+            margin: 8px 0;
+        }
+
+        .example-box {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #00b4db;
+        }
+
+        .example-box h4 {
+            color: #0083b0;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .step {
+            background: white;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #00b4db;
+        }
+
+        .step-label {
+            font-weight: bold;
+            color: #00b4db;
+            margin-bottom: 8px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .nav-button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+
+        .nav-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 180, 219, 0.4);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .problem-box {
+            background: #f0f8ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #00b4db;
+        }
+
+        .problem-statement {
+            font-size: 1.3em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #333;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 1.1em;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #00b4db;
+            box-shadow: 0 0 10px rgba(0, 180, 219, 0.3);
+        }
+
+        .submit-button {
+            padding: 15px 30px;
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .submit-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 180, 219, 0.4);
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+            display: block;
+        }
+
+        .hint-button {
+            padding: 10px 20px;
+            background: #ffc107;
+            color: #333;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .hint-button:hover {
+            background: #ffb300;
+            transform: translateY(-2px);
+        }
+
+        .hint-box {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #ffc107;
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00b4db 0%, #0083b0 100%);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.3em;
+            color: #333;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 12px 24px;
+            border: 2px solid #00b4db;
+            background: white;
+            color: #00b4db;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .difficulty-btn:hover, .difficulty-btn.active {
+            background: linear-gradient(135deg, #00b4db 0%, #0083b0 100%);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .workspace {
+            background: #fff;
+            border: 2px solid #00b4db;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+
+        .workspace h4 {
+            color: #0083b0;
+            margin-bottom: 15px;
+        }
+
+        .workspace-area {
+            background: #f9f9f9;
+            border: 1px dashed #00b4db;
+            border-radius: 10px;
+            padding: 15px;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            font-size: 1.1em;
+        }
+
+        .root-display {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .root-item {
+            background: #e0f7ff;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 2px solid #00b4db;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .tab {
+                padding: 15px 10px;
+                font-size: 0.9em;
+            }
+
+            .concept-box, .example-box, .problem-box {
+                padding: 15px;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+
+            .nav-button {
+                width: 100%;
+            }
+
+            .difficulty-selector {
+                flex-direction: column;
+            }
+
+            .difficulty-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>The Fundamental Theorem of Algebra</h1>
+            <p>Understanding how many roots every polynomial has</p>
+            <div class="nav-buttons">
+                <a href="index.html" class="nav-btn">Back to Section 4.6</a>
+                <a href="../index.html" class="nav-btn">Chapter 4 Home</a>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">Learn</button>
+            <button class="tab" onclick="showTab('see')">See</button>
+            <button class="tab" onclick="showTab('practice')">Practice</button>
+            <button class="tab" onclick="showTab('do')">Do</button>
+        </div>
+
+        <div class="content">
+            <!-- LEARN TAB -->
+            <div id="learn" class="tab-content active">
+                <h2 style="color: #0083b0; margin-bottom: 20px;">Understanding the Fundamental Theorem</h2>
+
+                <div class="concept-box">
+                    <h3>What is the Fundamental Theorem of Algebra?</h3>
+                    <p><strong>The Fundamental Theorem of Algebra states:</strong></p>
+                    <p style="font-size: 1.2em; background: white; padding: 15px; border-radius: 10px; margin: 15px 0;">
+                        Every polynomial of degree <em>n</em> has exactly <em>n</em> roots (counting multiplicity) in the complex number system.
+                    </p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Why This Matters</h3>
+                    <p>This theorem tells us:</p>
+                    <ul>
+                        <li><strong>How many roots to expect:</strong> A cubic (degree 3) has exactly 3 roots, a quartic (degree 4) has exactly 4 roots, etc.</li>
+                        <li><strong>Roots can be real or complex:</strong> Some roots might be complex numbers like 2 + 3i</li>
+                        <li><strong>Multiplicity counts:</strong> If (x - 2)² is a factor, we count x = 2 twice</li>
+                        <li><strong>Complex roots come in pairs:</strong> If a + bi is a root, then a - bi is also a root (for polynomials with real coefficients)</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>How to Count Roots</h3>
+                    <p><strong>Step 1:</strong> Identify the degree of the polynomial (highest power of x)</p>
+                    <p><strong>Step 2:</strong> Find all real roots (where the graph crosses the x-axis)</p>
+                    <p><strong>Step 3:</strong> Count multiplicity (if a root appears multiple times)</p>
+                    <p><strong>Step 4:</strong> Remaining roots must be complex (they come in conjugate pairs)</p>
+                </div>
+
+                <div class="example-box">
+                    <h4>Example: f(x) = x³ - 2x² - 5x + 6</h4>
+                    <div class="step">
+                        <div class="step-label">Degree:</div>
+                        The highest power is 3, so we expect exactly 3 roots
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Finding real roots:</div>
+                        By factoring or graphing: x = 1, x = -2, x = 3
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Count:</div>
+                        3 real roots (all with multiplicity 1)
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Complex roots:</div>
+                        3 - 3 = 0 complex roots needed
+                    </div>
+                </div>
+
+                <div class="example-box">
+                    <h4>Example: f(x) = x⁴ - 1</h4>
+                    <div class="step">
+                        <div class="step-label">Degree:</div>
+                        The highest power is 4, so we expect exactly 4 roots
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Factoring:</div>
+                        x⁴ - 1 = (x² - 1)(x² + 1) = (x - 1)(x + 1)(x² + 1)
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Real roots:</div>
+                        x = 1 and x = -1 (2 real roots)
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Complex roots:</div>
+                        From x² + 1 = 0: x = i and x = -i (2 complex roots, conjugate pair)
+                    </div>
+                    <div class="step">
+                        <div class="step-label">Total:</div>
+                        2 real + 2 complex = 4 roots total ✓
+                    </div>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Key Principles</h3>
+                    <ul>
+                        <li><strong>Complex Conjugate Theorem:</strong> If a polynomial has real coefficients and a + bi is a root, then a - bi is also a root</li>
+                        <li><strong>Multiplicity:</strong> A root of multiplicity k is counted k times</li>
+                        <li><strong>Degree = Total Roots:</strong> Always! (when counting multiplicity and complex roots)</li>
+                        <li><strong>Real vs Complex:</strong> (# of real roots) + (# of complex roots) = degree</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- SEE TAB -->
+            <div id="see" class="tab-content">
+                <h2 style="color: #0083b0; margin-bottom: 20px;">Step-by-Step Examples</h2>
+
+                <div class="example-box" id="example-container">
+                    <!-- Example content will be loaded here -->
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-button" id="prevBtn" onclick="changeExample(-1)">Previous Example</button>
+                    <span style="align-self: center; font-weight: bold; color: #0083b0;">
+                        Example <span id="exampleNum">1</span> of <span id="totalExamples">3</span>
+                    </span>
+                    <button class="nav-button" id="nextBtn" onclick="changeExample(1)">Next Example</button>
+                </div>
+            </div>
+
+            <!-- PRACTICE TAB -->
+            <div id="practice" class="tab-content">
+                <h2 style="color: #0083b0; margin-bottom: 20px;">Practice Problems</h2>
+
+                <div class="score-display">
+                    Score: <span id="practiceScore">0</span> / <span id="practiceTotal">0</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="practiceProgress" style="width: 0%">0%</div>
+                </div>
+
+                <div class="problem-box" id="practice-problem">
+                    <!-- Problem will be loaded here -->
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-button" onclick="newPracticeProblem()">New Problem</button>
+                </div>
+            </div>
+
+            <!-- DO TAB -->
+            <div id="do" class="tab-content">
+                <h2 style="color: #0083b0; margin-bottom: 20px;">Independent Practice</h2>
+
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="difficulty-btn" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="difficulty-btn" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+
+                <div class="score-display">
+                    Score: <span id="doScore">0</span> / <span id="doTotal">0</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="doProgress" style="width: 0%">0%</div>
+                </div>
+
+                <div class="workspace">
+                    <h4>Scratch Workspace</h4>
+                    <div class="workspace-area" contenteditable="true" id="workspace">
+                        Use this space to work out your solution...
+                    </div>
+                </div>
+
+                <div class="problem-box" id="do-problem">
+                    <!-- Problem will be loaded here -->
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-button" onclick="newDoProblem()">New Problem</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Example Navigation
+        let currentExample = 0;
+        const examples = [
+            {
+                title: "Example 1: Cubic Polynomial with All Real Roots",
+                problem: "f(x) = x³ - 6x² + 11x - 6",
+                steps: [
+                    { label: "Step 1: Identify the degree", content: "The highest power is x³, so degree = 3<br>By the Fundamental Theorem, we expect exactly 3 roots." },
+                    { label: "Step 2: Try to factor", content: "Using the Rational Root Theorem, test factors of 6: ±1, ±2, ±3, ±6<br>f(1) = 1 - 6 + 11 - 6 = 0 ✓<br>So (x - 1) is a factor!" },
+                    { label: "Step 3: Factor completely", content: "Using synthetic division:<br>x³ - 6x² + 11x - 6 = (x - 1)(x² - 5x + 6)<br>= (x - 1)(x - 2)(x - 3)" },
+                    { label: "Step 4: List all roots", content: "x = 1, x = 2, x = 3<br>All three roots are real and have multiplicity 1." },
+                    { label: "Step 5: Verify", content: "Real roots: 3<br>Complex roots: 0<br>Total: 3 = degree ✓" }
+                ]
+            },
+            {
+                title: "Example 2: Quartic with Complex Roots",
+                problem: "f(x) = x⁴ + 5x² + 4",
+                steps: [
+                    { label: "Step 1: Identify the degree", content: "The highest power is x⁴, so degree = 4<br>We expect exactly 4 roots." },
+                    { label: "Step 2: Recognize the pattern", content: "This is a quadratic in disguise! Let u = x²<br>u² + 5u + 4 = 0" },
+                    { label: "Step 3: Factor the quadratic", content: "(u + 1)(u + 4) = 0<br>u = -1 or u = -4" },
+                    { label: "Step 4: Substitute back", content: "x² = -1 gives x = ±i<br>x² = -4 gives x = ±2i" },
+                    { label: "Step 5: List all roots", content: "x = i, x = -i, x = 2i, x = -2i<br>All 4 roots are complex (come in conjugate pairs)." },
+                    { label: "Step 6: Verify", content: "Real roots: 0<br>Complex roots: 4<br>Total: 4 = degree ✓" }
+                ]
+            },
+            {
+                title: "Example 3: Polynomial with Repeated Roots",
+                problem: "f(x) = x⁴ - 4x³ + 4x²",
+                steps: [
+                    { label: "Step 1: Identify the degree", content: "The highest power is x⁴, so degree = 4<br>We expect exactly 4 roots (counting multiplicity)." },
+                    { label: "Step 2: Factor out common factor", content: "x⁴ - 4x³ + 4x² = x²(x² - 4x + 4)" },
+                    { label: "Step 3: Factor the quadratic", content: "x² - 4x + 4 = (x - 2)²<br>So: f(x) = x²(x - 2)²" },
+                    { label: "Step 4: Find roots and multiplicity", content: "x² = 0 gives x = 0 with multiplicity 2<br>(x - 2)² = 0 gives x = 2 with multiplicity 2" },
+                    { label: "Step 5: List all roots", content: "x = 0 (multiplicity 2)<br>x = 2 (multiplicity 2)<br>Total: 2 + 2 = 4 roots ✓" },
+                    { label: "Step 6: Verify", content: "Real roots: 4 (counting multiplicity)<br>Complex roots: 0<br>Total: 4 = degree ✓" }
+                ]
+            }
+        ];
+
+        function loadExample(index) {
+            const example = examples[index];
+            const container = document.getElementById('example-container');
+
+            let html = `<h4>${example.title}</h4>`;
+            html += `<div class="problem-statement">Find all roots of: ${example.problem}</div>`;
+
+            example.steps.forEach(step => {
+                html += `
+                    <div class="step">
+                        <div class="step-label">${step.label}</div>
+                        <div>${step.content}</div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+            document.getElementById('exampleNum').textContent = index + 1;
+            document.getElementById('totalExamples').textContent = examples.length;
+
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === examples.length - 1;
+        }
+
+        function changeExample(direction) {
+            currentExample += direction;
+            if (currentExample < 0) currentExample = 0;
+            if (currentExample >= examples.length) currentExample = examples.length - 1;
+            loadExample(currentExample);
+        }
+
+        // Practice Problems
+        let practiceScore = 0;
+        let practiceTotal = 0;
+        let currentPracticeStep = 0;
+
+        const practiceProblems = [
+            {
+                polynomial: "x³ - 1",
+                degree: 3,
+                realRoots: 1,
+                complexRoots: 2,
+                steps: [
+                    { question: "What is the degree of the polynomial?", answer: "3", hint: "Look at the highest power of x" },
+                    { question: "How many total roots does this polynomial have?", answer: "3", hint: "The Fundamental Theorem tells us: # of roots = degree" },
+                    { question: "How many real roots? (Use factoring: x³ - 1 = (x-1)(x²+x+1))", answer: "1", hint: "(x-1) gives one real root; x²+x+1 has no real roots" },
+                    { question: "How many complex roots?", answer: "2", hint: "Total roots - Real roots = Complex roots" }
+                ]
+            },
+            {
+                polynomial: "(x - 3)²(x + 1)",
+                degree: 3,
+                realRoots: 3,
+                complexRoots: 0,
+                steps: [
+                    { question: "What is the degree of the polynomial?", answer: "3", hint: "Expand to find the highest power: degree 2 + degree 1 = degree 3" },
+                    { question: "How many total roots does this polynomial have?", answer: "3", hint: "The degree tells us" },
+                    { question: "What is the multiplicity of x = 3?", answer: "2", hint: "Look at the exponent of (x - 3)" },
+                    { question: "How many complex roots?", answer: "0", hint: "All roots are visible and real" }
+                ]
+            },
+            {
+                polynomial: "x⁴ + 1",
+                degree: 4,
+                realRoots: 0,
+                complexRoots: 4,
+                steps: [
+                    { question: "What is the degree of the polynomial?", answer: "4", hint: "Look at the highest power" },
+                    { question: "How many total roots does this polynomial have?", answer: "4", hint: "Degree = number of roots" },
+                    { question: "How many real roots? (Graph never crosses x-axis)", answer: "0", hint: "x⁴ is always positive, so x⁴ + 1 is never zero for real x" },
+                    { question: "How many complex roots?", answer: "4", hint: "Total - Real = Complex" }
+                ]
+            }
+        ];
+
+        function loadPracticeProblem() {
+            const problem = practiceProblems[Math.floor(Math.random() * practiceProblems.length)];
+            currentPracticeStep = 0;
+
+            displayPracticeStep(problem);
+        }
+
+        function displayPracticeStep(problem) {
+            const container = document.getElementById('practice-problem');
+            const step = problem.steps[currentPracticeStep];
+
+            let html = `
+                <div class="problem-statement">Polynomial: ${problem.polynomial}</div>
+                <div class="input-group">
+                    <label>Step ${currentPracticeStep + 1} of ${problem.steps.length}: ${step.question}</label>
+                    <input type="text" id="practiceInput" placeholder="Enter your answer">
+                </div>
+                <button class="submit-button" onclick="checkPracticeAnswer('${problem.polynomial}', ${currentPracticeStep})">Submit Answer</button>
+                <button class="hint-button" onclick="showPracticeHint()">Show Hint</button>
+                <div class="hint-box" id="practiceHint">${step.hint}</div>
+                <div class="feedback" id="practiceFeedback"></div>
+            `;
+
+            container.innerHTML = html;
+
+            // Add enter key support
+            document.getElementById('practiceInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkPracticeAnswer(problem.polynomial, currentPracticeStep);
+                }
+            });
+        }
+
+        function checkPracticeAnswer(polynomialStr, stepIndex) {
+            const problem = practiceProblems.find(p => p.polynomial === polynomialStr);
+            const step = problem.steps[stepIndex];
+            const input = document.getElementById('practiceInput').value.trim();
+            const feedback = document.getElementById('practiceFeedback');
+
+            if (input === step.answer) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Correct! ✓';
+                practiceScore++;
+                practiceTotal++;
+
+                setTimeout(() => {
+                    currentPracticeStep++;
+                    if (currentPracticeStep < problem.steps.length) {
+                        displayPracticeStep(problem);
+                    } else {
+                        feedback.className = 'feedback correct';
+                        feedback.textContent = 'Problem Complete! All steps correct. Click "New Problem" to continue.';
+                    }
+                }, 1500);
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Not quite. Try again or click "Show Hint" for help.';
+                practiceTotal++;
+            }
+
+            updatePracticeScore();
+        }
+
+        function showPracticeHint() {
+            const hint = document.getElementById('practiceHint');
+            hint.style.display = hint.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function updatePracticeScore() {
+            document.getElementById('practiceScore').textContent = practiceScore;
+            document.getElementById('practiceTotal').textContent = practiceTotal;
+            const percentage = practiceTotal > 0 ? (practiceScore / practiceTotal * 100) : 0;
+            document.getElementById('practiceProgress').style.width = percentage + '%';
+            document.getElementById('practiceProgress').textContent = Math.round(percentage) + '%';
+        }
+
+        function newPracticeProblem() {
+            loadPracticeProblem();
+            document.getElementById('practiceFeedback').style.display = 'none';
+        }
+
+        // Do Section
+        let difficulty = 'easy';
+        let doScore = 0;
+        let doTotal = 0;
+
+        function setDifficulty(level) {
+            difficulty = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            newDoProblem();
+        }
+
+        function generateDoProblem() {
+            if (difficulty === 'easy') {
+                // Quadratic polynomials
+                const types = [
+                    { poly: "x² - 4", degree: 2, real: 2, complex: 0, factored: "(x - 2)(x + 2)" },
+                    { poly: "x² + 1", degree: 2, real: 0, complex: 2, factored: "no real factorization" },
+                    { poly: "x² - 6x + 9", degree: 2, real: 2, complex: 0, factored: "(x - 3)²" }
+                ];
+                return types[Math.floor(Math.random() * types.length)];
+            } else if (difficulty === 'medium') {
+                // Cubic polynomials
+                const types = [
+                    { poly: "x³ - 8", degree: 3, real: 1, complex: 2, factored: "(x - 2)(x² + 2x + 4)" },
+                    { poly: "x³ + x² - 2x", degree: 3, real: 3, complex: 0, factored: "x(x - 1)(x + 2)" },
+                    { poly: "(x - 1)²(x + 3)", degree: 3, real: 3, complex: 0, factored: "(x - 1)²(x + 3)" }
+                ];
+                return types[Math.floor(Math.random() * types.length)];
+            } else {
+                // Quartic polynomials
+                const types = [
+                    { poly: "x⁴ - 16", degree: 4, real: 2, complex: 2, factored: "(x - 2)(x + 2)(x² + 4)" },
+                    { poly: "x⁴ + 2x² + 1", degree: 4, real: 0, complex: 4, factored: "(x² + 1)²" },
+                    { poly: "x⁴ - 5x² + 4", degree: 4, real: 4, complex: 0, factored: "(x - 1)(x + 1)(x - 2)(x + 2)" }
+                ];
+                return types[Math.floor(Math.random() * types.length)];
+            }
+        }
+
+        function newDoProblem() {
+            const problem = generateDoProblem();
+            const container = document.getElementById('do-problem');
+
+            let html = `
+                <div class="problem-statement">Analyze: f(x) = ${problem.poly}</div>
+
+                <div class="input-group">
+                    <label>What is the degree of this polynomial?</label>
+                    <input type="number" id="degreeInput" placeholder="Enter degree">
+                </div>
+
+                <div class="input-group">
+                    <label>How many total roots does this polynomial have?</label>
+                    <input type="number" id="totalRootsInput" placeholder="Enter total number of roots">
+                </div>
+
+                <div class="input-group">
+                    <label>How many real roots?</label>
+                    <input type="number" id="realRootsInput" placeholder="Enter number of real roots">
+                </div>
+
+                <div class="input-group">
+                    <label>How many complex roots?</label>
+                    <input type="number" id="complexRootsInput" placeholder="Enter number of complex roots">
+                </div>
+
+                <button class="submit-button" onclick="checkDoAnswer(${problem.degree}, ${problem.real}, ${problem.complex})">Submit All Answers</button>
+                <div class="feedback" id="doFeedback"></div>
+            `;
+
+            container.innerHTML = html;
+
+            // Add enter key support
+            document.getElementById('complexRootsInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkDoAnswer(problem.degree, problem.real, problem.complex);
+                }
+            });
+        }
+
+        function checkDoAnswer(correctDegree, correctReal, correctComplex) {
+            const degreeInput = parseInt(document.getElementById('degreeInput').value);
+            const totalInput = parseInt(document.getElementById('totalRootsInput').value);
+            const realInput = parseInt(document.getElementById('realRootsInput').value);
+            const complexInput = parseInt(document.getElementById('complexRootsInput').value);
+
+            const feedback = document.getElementById('doFeedback');
+
+            if (degreeInput === correctDegree && totalInput === correctDegree &&
+                realInput === correctReal && complexInput === correctComplex) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Perfect! All answers correct! ✓';
+                doScore++;
+            } else {
+                feedback.className = 'feedback incorrect';
+                let msg = 'Some answers are incorrect:\n';
+                if (degreeInput !== correctDegree) msg += `Degree should be ${correctDegree}. `;
+                if (totalInput !== correctDegree) msg += `Total roots should equal degree (${correctDegree}). `;
+                if (realInput !== correctReal) msg += `Real roots: ${correctReal}. `;
+                if (complexInput !== correctComplex) msg += `Complex roots: ${correctComplex}. `;
+                feedback.textContent = msg;
+            }
+
+            doTotal++;
+            updateDoScore();
+        }
+
+        function updateDoScore() {
+            document.getElementById('doScore').textContent = doScore;
+            document.getElementById('doTotal').textContent = doTotal;
+            const percentage = doTotal > 0 ? (doScore / doTotal * 100) : 0;
+            document.getElementById('doProgress').style.width = percentage + '%';
+            document.getElementById('doProgress').textContent = Math.round(percentage) + '%';
+        }
+
+        // Initialize
+        window.onload = function() {
+            loadExample(0);
+            loadPracticeProblem();
+            newDoProblem();
+        };
+    </script>
+</body>
+</html>

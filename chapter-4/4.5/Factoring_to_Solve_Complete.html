@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factoring to Solve - Interactive Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .back-link::before {
+            content: "←";
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f7fafc;
+            border-bottom: 3px solid #e2e8f0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #718096;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+        }
+
+        .tab:hover {
+            background: #edf2f7;
+            color: #667eea;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .concept-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .concept-box p, .concept-box ul {
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .concept-box ul {
+            margin-left: 20px;
+        }
+
+        .concept-box li {
+            margin: 8px 0;
+        }
+
+        .example-box {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #e2e8f0;
+        }
+
+        .example-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .example-counter {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .nav-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .step-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .step-content {
+            color: #2d3748;
+            font-size: 1.1em;
+            font-family: 'Courier New', monospace;
+        }
+
+        .practice-problem {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .problem-text {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.correct {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 2px solid #48bb78;
+        }
+
+        .feedback.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #f56565;
+        }
+
+        .hint-box {
+            background: #fef5e7;
+            border: 2px solid #f39c12;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .hint-box.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        .hint-btn {
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .hint-btn:hover {
+            background: #e67e22;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.2em;
+            color: #4a5568;
+            margin: 10px 0;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 10px 25px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .difficulty-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .difficulty-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .scratch-workspace {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 200px;
+        }
+
+        .scratch-workspace h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .work-area {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .solution-input {
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .tab {
+                padding: 15px 10px;
+                font-size: 1em;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-btn {
+                width: 100%;
+            }
+
+            .difficulty-selector {
+                flex-direction: column;
+            }
+
+            .difficulty-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-link">Back to Section 4.5</a>
+            <h1>Factoring to Solve</h1>
+            <p class="subtitle">Use factoring techniques to solve polynomial equations</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">Learn</button>
+            <button class="tab" onclick="showTab('see')">See</button>
+            <button class="tab" onclick="showTab('practice')">Practice</button>
+            <button class="tab" onclick="showTab('do')">Do</button>
+        </div>
+
+        <div class="content">
+            <!-- Learn Tab -->
+            <div id="learn" class="tab-content active">
+                <h2 style="color: #2d3748; margin-bottom: 20px;">Understanding How to Solve by Factoring</h2>
+
+                <div class="concept-box">
+                    <h3>The Zero Product Property</h3>
+                    <p>The foundation of solving by factoring is the Zero Product Property:</p>
+                    <p style="font-weight: 600; font-size: 1.1em; text-align: center; margin: 15px 0;">
+                        If a × b = 0, then a = 0 or b = 0 (or both)
+                    </p>
+                    <p><strong>Why this works:</strong> Zero is the only number that makes any product equal to zero.
+                    If two numbers multiply to zero, at least one of them MUST be zero.</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Step-by-Step Process</h3>
+                    <p><strong>To solve a polynomial equation by factoring:</strong></p>
+                    <ul>
+                        <li><strong>Step 1:</strong> Move all terms to one side so the equation equals 0</li>
+                        <li><strong>Step 2:</strong> Factor the polynomial completely</li>
+                        <li><strong>Step 3:</strong> Set each factor equal to 0</li>
+                        <li><strong>Step 4:</strong> Solve each simple equation</li>
+                        <li><strong>Step 5:</strong> Check solutions in the original equation</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Types of Factoring You'll Use</h3>
+                    <ul>
+                        <li><strong>GCF (Greatest Common Factor):</strong> Pull out common factors first
+                            <br>Example: 3x² + 6x = 3x(x + 2)</li>
+                        <li><strong>Trinomials:</strong> Factor expressions like x² + bx + c
+                            <br>Example: x² + 5x + 6 = (x + 2)(x + 3)</li>
+                        <li><strong>Difference of Squares:</strong> a² - b² = (a + b)(a - b)
+                            <br>Example: x² - 9 = (x + 3)(x - 3)</li>
+                        <li><strong>Grouping:</strong> Factor by grouping terms in pairs
+                            <br>Example: x³ + 2x² + 3x + 6 = (x + 2)(x² + 3)</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Why This Method Works</h3>
+                    <p>When we factor a polynomial equation and set it equal to zero, we're finding the x-values
+                    where the polynomial crosses or touches the x-axis. Each factor represents a potential solution
+                    because when that factor equals zero, the entire product equals zero.</p>
+                    <p style="margin-top: 15px;"><strong>Real-world connection:</strong> This is like finding when a
+                    projectile hits the ground (height = 0) or when profit becomes zero in a business model.</p>
+                </div>
+            </div>
+
+            <!-- See Tab -->
+            <div id="see" class="tab-content">
+                <h2 style="color: #2d3748; margin-bottom: 20px;">Example Walkthroughs</h2>
+
+                <div class="example-box">
+                    <div class="example-nav">
+                        <span class="example-counter">Example <span id="currentExample">1</span> of <span id="totalExamples">4</span></span>
+                        <div class="nav-buttons">
+                            <button class="nav-btn" id="prevBtn" onclick="changeExample(-1)">Previous</button>
+                            <button class="nav-btn" id="nextBtn" onclick="changeExample(1)">Next</button>
+                        </div>
+                    </div>
+                    <div id="exampleContent"></div>
+                </div>
+            </div>
+
+            <!-- Practice Tab -->
+            <div id="practice" class="tab-content">
+                <h2 style="color: #2d3748; margin-bottom: 20px;">Practice Problems</h2>
+                <p style="color: #4a5568; margin-bottom: 20px;">Solve each problem step by step. Enter your answers and get immediate feedback!</p>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="practiceProgress"></div>
+                </div>
+                <div class="score-display">Problem <span id="practiceNum">1</span> of 5 | Score: <span id="practiceScore">0</span>/5</div>
+
+                <div class="practice-problem" id="practiceContainer"></div>
+            </div>
+
+            <!-- Do Tab -->
+            <div id="do" class="tab-content">
+                <h2 style="color: #2d3748; margin-bottom: 20px;">Independent Practice</h2>
+                <p style="color: #4a5568; margin-bottom: 20px;">Solve problems on your own with a scratch workspace!</p>
+
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="difficulty-btn" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="difficulty-btn" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="doProgress"></div>
+                </div>
+                <div class="score-display">Problem <span id="doNum">1</span> of 10 | Score: <span id="doScore">0</span>/10</div>
+
+                <div class="practice-problem">
+                    <div class="problem-text" id="doProblem"></div>
+
+                    <div class="scratch-workspace">
+                        <h3>Scratch Workspace</h3>
+                        <p style="color: #718096; margin-bottom: 10px;">Use this space to work through the problem:</p>
+                        <div class="work-area" contenteditable="true" id="scratchArea">
+Click here to show your work...
+                        </div>
+                    </div>
+
+                    <div class="solution-input">
+                        <label>Enter your solutions (separate multiple solutions with commas):</label>
+                        <input type="text" id="doAnswer" placeholder="e.g., 2, -3, 5">
+                        <button class="btn" onclick="checkDoAnswer()" style="margin-top: 15px; width: 100%;">Check Answer</button>
+                    </div>
+
+                    <div class="feedback" id="doFeedback"></div>
+                </div>
+
+                <button class="btn" onclick="generateDoProblem()" style="margin-top: 20px; width: 100%;">New Problem</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Management
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Example Data
+        const examples = [
+            {
+                problem: "x² + 5x + 6 = 0",
+                steps: [
+                    { label: "Original Equation", content: "x² + 5x + 6 = 0" },
+                    { label: "Step 1: Identify factors", content: "We need two numbers that multiply to 6 and add to 5\nThose numbers are 2 and 3" },
+                    { label: "Step 2: Factor", content: "(x + 2)(x + 3) = 0" },
+                    { label: "Step 3: Set each factor = 0", content: "x + 2 = 0  OR  x + 3 = 0" },
+                    { label: "Step 4: Solve", content: "x = -2  OR  x = -3" },
+                    { label: "Solution", content: "x = -2, -3" }
+                ]
+            },
+            {
+                problem: "2x² - 8 = 0",
+                steps: [
+                    { label: "Original Equation", content: "2x² - 8 = 0" },
+                    { label: "Step 1: Factor out GCF", content: "2(x² - 4) = 0" },
+                    { label: "Step 2: Recognize difference of squares", content: "2(x + 2)(x - 2) = 0" },
+                    { label: "Step 3: Set each factor = 0", content: "x + 2 = 0  OR  x - 2 = 0\n(The factor 2 ≠ 0, so we ignore it)" },
+                    { label: "Step 4: Solve", content: "x = -2  OR  x = 2" },
+                    { label: "Solution", content: "x = -2, 2" }
+                ]
+            },
+            {
+                problem: "x³ + 3x² - 4x - 12 = 0",
+                steps: [
+                    { label: "Original Equation", content: "x³ + 3x² - 4x - 12 = 0" },
+                    { label: "Step 1: Group terms", content: "(x³ + 3x²) + (-4x - 12) = 0" },
+                    { label: "Step 2: Factor each group", content: "x²(x + 3) - 4(x + 3) = 0" },
+                    { label: "Step 3: Factor out common binomial", content: "(x + 3)(x² - 4) = 0" },
+                    { label: "Step 4: Factor x² - 4", content: "(x + 3)(x + 2)(x - 2) = 0" },
+                    { label: "Step 5: Set each factor = 0", content: "x + 3 = 0  OR  x + 2 = 0  OR  x - 2 = 0" },
+                    { label: "Step 6: Solve", content: "x = -3  OR  x = -2  OR  x = 2" },
+                    { label: "Solution", content: "x = -3, -2, 2" }
+                ]
+            },
+            {
+                problem: "3x² + 12x = 0",
+                steps: [
+                    { label: "Original Equation", content: "3x² + 12x = 0" },
+                    { label: "Step 1: Factor out GCF", content: "3x(x + 4) = 0" },
+                    { label: "Step 2: Set each factor = 0", content: "3x = 0  OR  x + 4 = 0" },
+                    { label: "Step 3: Solve", content: "x = 0  OR  x = -4" },
+                    { label: "Solution", content: "x = 0, -4" }
+                ]
+            }
+        ];
+
+        let currentExampleIndex = 0;
+
+        function displayExample(index) {
+            const example = examples[index];
+            const content = document.getElementById('exampleContent');
+
+            let html = `<div class="problem-text">${example.problem}</div>`;
+
+            example.steps.forEach(step => {
+                html += `
+                    <div class="step">
+                        <div class="step-label">${step.label}</div>
+                        <div class="step-content">${step.content}</div>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
+            document.getElementById('currentExample').textContent = index + 1;
+            document.getElementById('totalExamples').textContent = examples.length;
+
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === examples.length - 1;
+        }
+
+        function changeExample(direction) {
+            currentExampleIndex += direction;
+            if (currentExampleIndex < 0) currentExampleIndex = 0;
+            if (currentExampleIndex >= examples.length) currentExampleIndex = examples.length - 1;
+            displayExample(currentExampleIndex);
+        }
+
+        // Practice Problems
+        const practiceProblems = [
+            {
+                equation: "x² + 7x + 12 = 0",
+                steps: [
+                    { question: "Factor the equation:", answer: "(x+3)(x+4)", hint: "Find two numbers that multiply to 12 and add to 7" },
+                    { question: "What are the solutions?", answer: "-3,-4", hint: "Set each factor equal to zero and solve" }
+                ]
+            },
+            {
+                equation: "x² - 9 = 0",
+                steps: [
+                    { question: "Factor the equation:", answer: "(x+3)(x-3)", hint: "This is a difference of squares: a² - b²" },
+                    { question: "What are the solutions?", answer: "-3,3", hint: "Set each factor equal to zero" }
+                ]
+            },
+            {
+                equation: "2x² - 10x = 0",
+                steps: [
+                    { question: "Factor out the GCF:", answer: "2x(x-5)", hint: "Both terms have 2x in common" },
+                    { question: "What are the solutions?", answer: "0,5", hint: "Set each factor equal to zero: 2x = 0 and x - 5 = 0" }
+                ]
+            },
+            {
+                equation: "x² - 4x - 5 = 0",
+                steps: [
+                    { question: "Factor the equation:", answer: "(x-5)(x+1)", hint: "Find two numbers that multiply to -5 and add to -4" },
+                    { question: "What are the solutions?", answer: "5,-1", hint: "Set each factor equal to zero" }
+                ]
+            },
+            {
+                equation: "x² + 2x - 15 = 0",
+                steps: [
+                    { question: "Factor the equation:", answer: "(x+5)(x-3)", hint: "Find two numbers that multiply to -15 and add to 2" },
+                    { question: "What are the solutions?", answer: "-5,3", hint: "Set each factor equal to zero" }
+                ]
+            }
+        ];
+
+        let currentPractice = 0;
+        let currentStep = 0;
+        let practiceScore = 0;
+
+        function displayPractice() {
+            const problem = practiceProblems[currentPractice];
+            const step = problem.steps[currentStep];
+
+            const container = document.getElementById('practiceContainer');
+            container.innerHTML = `
+                <div class="problem-text">${problem.equation}</div>
+                <div class="input-group">
+                    <label>${step.question}</label>
+                    <input type="text" id="practiceInput" placeholder="Enter your answer">
+                </div>
+                <button class="btn" onclick="checkPractice()">Submit</button>
+                <button class="hint-btn" onclick="showHint()">Show Hint</button>
+                <div class="hint-box" id="hintBox">${step.hint}</div>
+                <div class="feedback" id="practiceFeedback"></div>
+            `;
+
+            document.getElementById('practiceNum').textContent = currentPractice + 1;
+            document.getElementById('practiceScore').textContent = practiceScore;
+
+            const progress = ((currentPractice * 2 + currentStep) / 10) * 100;
+            document.getElementById('practiceProgress').style.width = progress + '%';
+
+            // Add enter key support
+            document.getElementById('practiceInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkPractice();
+            });
+        }
+
+        function normalizeAnswer(answer) {
+            return answer.toLowerCase()
+                .replace(/\s/g, '')
+                .replace(/\*\*/g, '^')
+                .replace(/\*/g, '')
+                .split(',')
+                .map(s => s.trim())
+                .sort()
+                .join(',');
+        }
+
+        function checkPractice() {
+            const input = document.getElementById('practiceInput').value;
+            const problem = practiceProblems[currentPractice];
+            const step = problem.steps[currentStep];
+            const feedback = document.getElementById('practiceFeedback');
+
+            const userAnswer = normalizeAnswer(input);
+            const correctAnswer = normalizeAnswer(step.answer);
+
+            if (userAnswer === correctAnswer) {
+                feedback.className = 'feedback correct show';
+                feedback.textContent = 'Correct! Well done!';
+
+                setTimeout(() => {
+                    currentStep++;
+                    if (currentStep >= problem.steps.length) {
+                        practiceScore++;
+                        currentStep = 0;
+                        currentPractice++;
+
+                        if (currentPractice >= practiceProblems.length) {
+                            showPracticeComplete();
+                            return;
+                        }
+                    }
+                    displayPractice();
+                }, 1500);
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.textContent = 'Not quite. Try again or check the hint!';
+            }
+        }
+
+        function showHint() {
+            document.getElementById('hintBox').classList.add('show');
+        }
+
+        function showPracticeComplete() {
+            const container = document.getElementById('practiceContainer');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <h2 style="color: #667eea; margin-bottom: 20px;">Practice Complete!</h2>
+                    <p style="font-size: 1.5em; color: #4a5568;">Final Score: ${practiceScore}/5</p>
+                    <button class="btn" onclick="resetPractice()" style="margin-top: 20px;">Try Again</button>
+                </div>
+            `;
+            document.getElementById('practiceProgress').style.width = '100%';
+        }
+
+        function resetPractice() {
+            currentPractice = 0;
+            currentStep = 0;
+            practiceScore = 0;
+            displayPractice();
+        }
+
+        // Do Section
+        let currentDifficulty = 'easy';
+        let doScore = 0;
+        let doCount = 0;
+        let currentDoAnswer = [];
+
+        function setDifficulty(level) {
+            currentDifficulty = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            generateDoProblem();
+        }
+
+        function generateDoProblem() {
+            let problem, answer;
+
+            if (currentDifficulty === 'easy') {
+                // Simple quadratics
+                const a = Math.floor(Math.random() * 5) + 2;
+                const b = Math.floor(Math.random() * 10) - 5;
+                const c = a * b;
+                const d = a + b;
+
+                problem = `x² ${d >= 0 ? '+' : ''} ${d}x ${c >= 0 ? '+' : ''} ${c} = 0`;
+                answer = [-a, -b].sort((x, y) => x - y);
+            } else if (currentDifficulty === 'medium') {
+                // GCF factoring or difference of squares
+                if (Math.random() < 0.5) {
+                    // GCF
+                    const gcf = Math.floor(Math.random() * 4) + 2;
+                    const root = Math.floor(Math.random() * 8) - 4;
+                    problem = `${gcf}x² ${root * gcf >= 0 ? '+' : ''} ${root * gcf}x = 0`;
+                    answer = [0, -root].sort((x, y) => x - y);
+                } else {
+                    // Difference of squares
+                    const n = Math.floor(Math.random() * 6) + 2;
+                    problem = `x² - ${n * n} = 0`;
+                    answer = [-n, n];
+                }
+            } else {
+                // Harder polynomials with grouping
+                const roots = [
+                    Math.floor(Math.random() * 6) - 3,
+                    Math.floor(Math.random() * 6) - 3,
+                    Math.floor(Math.random() * 6) - 3
+                ].filter((v, i, a) => a.indexOf(v) === i); // Remove duplicates
+
+                if (roots.length === 2) roots.push(Math.floor(Math.random() * 6) - 3);
+
+                // Build polynomial from roots
+                const a = -roots[0], b = -roots[1], c = -roots[2];
+                const coef2 = a + b + c;
+                const coef1 = a*b + a*c + b*c;
+                const coef0 = -a*b*c;
+
+                problem = `x³ ${coef2 >= 0 ? '+' : ''} ${coef2}x² ${coef1 >= 0 ? '+' : ''} ${coef1}x ${coef0 >= 0 ? '+' : ''} ${coef0} = 0`;
+                answer = roots.sort((x, y) => x - y);
+            }
+
+            document.getElementById('doProblem').textContent = problem;
+            currentDoAnswer = answer;
+        }
+
+        function checkDoAnswer() {
+            const input = document.getElementById('doAnswer').value;
+            const feedback = document.getElementById('doFeedback');
+
+            const userAnswers = input.split(',').map(s => parseFloat(s.trim())).sort((a, b) => a - b);
+            const correct = JSON.stringify(userAnswers) === JSON.stringify(currentDoAnswer);
+
+            if (correct) {
+                feedback.className = 'feedback correct show';
+                feedback.textContent = 'Correct! Excellent work!';
+                doScore++;
+                doCount++;
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.textContent = `Not quite. The correct answer is: ${currentDoAnswer.join(', ')}`;
+                doCount++;
+            }
+
+            document.getElementById('doScore').textContent = doScore;
+            document.getElementById('doNum').textContent = doCount + 1;
+            document.getElementById('doProgress').style.width = (doCount / 10 * 100) + '%';
+
+            if (doCount >= 10) {
+                setTimeout(() => {
+                    alert(`Practice complete! Final score: ${doScore}/10`);
+                    doScore = 0;
+                    doCount = 0;
+                    document.getElementById('doProgress').style.width = '0%';
+                    document.getElementById('doScore').textContent = '0';
+                    document.getElementById('doNum').textContent = '1';
+                }, 2000);
+            }
+        }
+
+        // Add enter key support for Do section
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('doAnswer').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkDoAnswer();
+            });
+        });
+
+        // Initialize
+        displayExample(0);
+        displayPractice();
+        generateDoProblem();
+    </script>
+</body>
+</html>

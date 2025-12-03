@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rational Root Theorem - Interactive Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 1;
+        }
+
+        .back-link::before {
+            content: "←";
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .tabs {
+            display: flex;
+            background: #f7fafc;
+            border-bottom: 3px solid #e2e8f0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #718096;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+        }
+
+        .tab:hover {
+            background: #edf2f7;
+            color: #667eea;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            background: white;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #667eea;
+        }
+
+        .concept-box h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .concept-box p, .concept-box ul {
+            color: #4a5568;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .concept-box ul {
+            margin-left: 20px;
+        }
+
+        .concept-box li {
+            margin: 8px 0;
+        }
+
+        .formula-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: 600;
+            border: 2px solid #667eea;
+        }
+
+        .example-box {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #e2e8f0;
+        }
+
+        .example-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .example-counter {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 8px 20px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        .nav-btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+        }
+
+        .step {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .step-label {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 8px;
+        }
+
+        .step-content {
+            color: #2d3748;
+            font-size: 1.1em;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .practice-problem {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .problem-text {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            background: #cbd5e0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.correct {
+            background: #c6f6d5;
+            color: #22543d;
+            border: 2px solid #48bb78;
+        }
+
+        .feedback.incorrect {
+            background: #fed7d7;
+            color: #742a2a;
+            border: 2px solid #f56565;
+        }
+
+        .hint-box {
+            background: #fef5e7;
+            border: 2px solid #f39c12;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .hint-box.show {
+            display: block;
+            animation: slideIn 0.3s;
+        }
+
+        .hint-btn {
+            background: #f39c12;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .hint-btn:hover {
+            background: #e67e22;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s;
+        }
+
+        .score-display {
+            text-align: center;
+            font-size: 1.2em;
+            color: #4a5568;
+            margin: 10px 0;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 10px 25px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .difficulty-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .difficulty-btn.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .scratch-workspace {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            min-height: 250px;
+        }
+
+        .scratch-workspace h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        .work-area {
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 10px;
+            min-height: 180px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-wrap;
+        }
+
+        .solution-input {
+            margin-top: 20px;
+        }
+
+        .test-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .test-table th, .test-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .test-table th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .test-table tr:hover {
+            background: #f7fafc;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+
+            .tab {
+                padding: 15px 10px;
+                font-size: 1em;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+
+            .nav-buttons {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-btn {
+                width: 100%;
+            }
+
+            .difficulty-selector {
+                flex-direction: column;
+            }
+
+            .difficulty-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="index.html" class="back-link">Back to Section 4.5</a>
+            <h1>Rational Root Theorem</h1>
+            <p class="subtitle">Find all possible rational roots using the p/q formula</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">Learn</button>
+            <button class="tab" onclick="showTab('see')">See</button>
+            <button class="tab" onclick="showTab('practice')">Practice</button>
+            <button class="tab" onclick="showTab('do')">Do</button>
+        </div>
+
+        <div class="content">
+            <!-- Learn Tab -->
+            <div id="learn" class="tab-content active">
+                <h2 style="color: #2d3748; margin-bottom: 20px;">Understanding the Rational Root Theorem</h2>
+
+                <div class="concept-box">
+                    <h3>What is the Rational Root Theorem?</h3>
+                    <p>The Rational Root Theorem is a powerful tool that gives us a list of ALL possible rational
+                    roots (solutions) of a polynomial equation. It doesn't tell us which ones ARE roots, but it
+                    tells us which ones COULD BE roots.</p>
+
+                    <div class="formula-box">
+                        Possible Rational Roots = ± p/q
+                    </div>
+
+                    <p><strong>Where:</strong></p>
+                    <ul>
+                        <li><strong>p</strong> = factors of the constant term (the number without x)</li>
+                        <li><strong>q</strong> = factors of the leading coefficient (the coefficient of the highest power term)</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>How to Use the Rational Root Theorem</h3>
+                    <p><strong>Step-by-Step Process:</strong></p>
+                    <ul>
+                        <li><strong>Step 1:</strong> Identify the constant term and find all its factors (p)</li>
+                        <li><strong>Step 2:</strong> Identify the leading coefficient and find all its factors (q)</li>
+                        <li><strong>Step 3:</strong> Create all possible fractions ± p/q</li>
+                        <li><strong>Step 4:</strong> Test each possible root using synthetic division or substitution</li>
+                        <li><strong>Step 5:</strong> When you find a root, factor it out and repeat if needed</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Example: Finding Factors</h3>
+                    <p>For the polynomial: <strong>2x³ - 3x² - 11x + 6 = 0</strong></p>
+                    <ul>
+                        <li>Constant term = 6, so p = ±1, ±2, ±3, ±6</li>
+                        <li>Leading coefficient = 2, so q = ±1, ±2</li>
+                        <li>Possible rational roots = ±1, ±2, ±3, ±6, ±1/2, ±3/2</li>
+                    </ul>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Why This Works</h3>
+                    <p>If a polynomial with integer coefficients has a rational root p/q (in lowest terms), then:</p>
+                    <ul>
+                        <li>p must divide the constant term evenly</li>
+                        <li>q must divide the leading coefficient evenly</li>
+                    </ul>
+                    <p style="margin-top: 15px;"><strong>This theorem dramatically reduces trial and error!</strong>
+                    Instead of testing infinitely many numbers, we only test a small, finite list of possibilities.</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Testing the Roots</h3>
+                    <p>Once you have your list of possible roots, test them efficiently:</p>
+                    <ul>
+                        <li><strong>Synthetic Division:</strong> Fast method to test and factor simultaneously</li>
+                        <li><strong>Direct Substitution:</strong> Plug the value into the polynomial and see if you get 0</li>
+                        <li><strong>Start with small integers:</strong> Try ±1, ±2 first as they're most common</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- See Tab -->
+            <div id="see" class="tab-content">
+                <h2 style="color: #2d3748; margin-bottom: 20px;">Example Walkthroughs</h2>
+
+                <div class="example-box">
+                    <div class="example-nav">
+                        <span class="example-counter">Example <span id="currentExample">1</span> of <span id="totalExamples">3</span></span>
+                        <div class="nav-buttons">
+                            <button class="nav-btn" id="prevBtn" onclick="changeExample(-1)">Previous</button>
+                            <button class="nav-btn" id="nextBtn" onclick="changeExample(1)">Next</button>
+                        </div>
+                    </div>
+                    <div id="exampleContent"></div>
+                </div>
+            </div>
+
+            <!-- Practice Tab -->
+            <div id="practice" class="tab-content">
+                <h2 style="color: #2d3748; margin-bottom: 20px;">Practice Problems</h2>
+                <p style="color: #4a5568; margin-bottom: 20px;">Work through each step to find the rational roots!</p>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="practiceProgress"></div>
+                </div>
+                <div class="score-display">Problem <span id="practiceNum">1</span> of 5 | Score: <span id="practiceScore">0</span>/5</div>
+
+                <div class="practice-problem" id="practiceContainer"></div>
+            </div>
+
+            <!-- Do Tab -->
+            <div id="do" class="tab-content">
+                <h2 style="color: #2d3748; margin-bottom: 20px;">Independent Practice</h2>
+                <p style="color: #4a5568; margin-bottom: 20px;">Use the Rational Root Theorem to find all rational roots!</p>
+
+                <div class="difficulty-selector">
+                    <button class="difficulty-btn active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="difficulty-btn" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="difficulty-btn" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="doProgress"></div>
+                </div>
+                <div class="score-display">Problem <span id="doNum">1</span> of 10 | Score: <span id="doScore">0</span>/10</div>
+
+                <div class="practice-problem">
+                    <div class="problem-text" id="doProblem"></div>
+
+                    <div class="scratch-workspace">
+                        <h3>Scratch Workspace</h3>
+                        <p style="color: #718096; margin-bottom: 10px;">Show your work here:</p>
+                        <div class="work-area" contenteditable="true" id="scratchArea">
+1. List factors of constant term (p):
+
+2. List factors of leading coefficient (q):
+
+3. List all possible rational roots (±p/q):
+
+4. Test each root:
+
+                        </div>
+                    </div>
+
+                    <div class="solution-input">
+                        <label>Enter all rational roots (separate with commas):</label>
+                        <input type="text" id="doAnswer" placeholder="e.g., 1, -2, 1/2">
+                        <button class="btn" onclick="checkDoAnswer()" style="margin-top: 15px; width: 100%;">Check Answer</button>
+                    </div>
+
+                    <div class="feedback" id="doFeedback"></div>
+                </div>
+
+                <button class="btn" onclick="generateDoProblem()" style="margin-top: 20px; width: 100%;">New Problem</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Management
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // Helper function to find factors
+        function getFactors(n) {
+            n = Math.abs(n);
+            const factors = [];
+            for (let i = 1; i <= n; i++) {
+                if (n % i === 0) factors.push(i);
+            }
+            return factors;
+        }
+
+        // Example Data
+        const examples = [
+            {
+                problem: "x³ - 6x² + 11x - 6 = 0",
+                steps: [
+                    { label: "Original Equation", content: "x³ - 6x² + 11x - 6 = 0" },
+                    { label: "Step 1: Find factors of constant term", content: "Constant term = -6\np (factors of 6) = ±1, ±2, ±3, ±6" },
+                    { label: "Step 2: Find factors of leading coefficient", content: "Leading coefficient = 1\nq (factors of 1) = ±1" },
+                    { label: "Step 3: List possible rational roots", content: "Possible roots = ±p/q = ±1, ±2, ±3, ±6" },
+                    { label: "Step 4: Test x = 1", content: "1³ - 6(1)² + 11(1) - 6 = 1 - 6 + 11 - 6 = 0 ✓\nx = 1 is a root!" },
+                    { label: "Step 5: Test x = 2", content: "2³ - 6(2)² + 11(2) - 6 = 8 - 24 + 22 - 6 = 0 ✓\nx = 2 is a root!" },
+                    { label: "Step 6: Test x = 3", content: "3³ - 6(3)² + 11(3) - 6 = 27 - 54 + 33 - 6 = 0 ✓\nx = 3 is a root!" },
+                    { label: "Solution", content: "Rational roots: x = 1, 2, 3" }
+                ]
+            },
+            {
+                problem: "2x³ + 5x² - 4x - 3 = 0",
+                steps: [
+                    { label: "Original Equation", content: "2x³ + 5x² - 4x - 3 = 0" },
+                    { label: "Step 1: Find factors of constant term", content: "Constant term = -3\np (factors of 3) = ±1, ±3" },
+                    { label: "Step 2: Find factors of leading coefficient", content: "Leading coefficient = 2\nq (factors of 2) = ±1, ±2" },
+                    { label: "Step 3: List possible rational roots", content: "Possible roots = ±1, ±3, ±1/2, ±3/2" },
+                    { label: "Step 4: Test x = 1", content: "2(1)³ + 5(1)² - 4(1) - 3 = 2 + 5 - 4 - 3 = 0 ✓\nx = 1 is a root!" },
+                    { label: "Step 5: Test x = -3", content: "2(-3)³ + 5(-3)² - 4(-3) - 3 = -54 + 45 + 12 - 3 = 0 ✓\nx = -3 is a root!" },
+                    { label: "Step 6: Test x = -1/2", content: "2(-1/2)³ + 5(-1/2)² - 4(-1/2) - 3 = -1/4 + 5/4 + 2 - 3 = 0 ✓\nx = -1/2 is a root!" },
+                    { label: "Solution", content: "Rational roots: x = 1, -3, -1/2" }
+                ]
+            },
+            {
+                problem: "3x³ - 10x² + 9x - 2 = 0",
+                steps: [
+                    { label: "Original Equation", content: "3x³ - 10x² + 9x - 2 = 0" },
+                    { label: "Step 1: Find factors of constant term", content: "Constant term = -2\np (factors of 2) = ±1, ±2" },
+                    { label: "Step 2: Find factors of leading coefficient", content: "Leading coefficient = 3\nq (factors of 3) = ±1, ±3" },
+                    { label: "Step 3: List possible rational roots", content: "Possible roots = ±1, ±2, ±1/3, ±2/3" },
+                    { label: "Step 4: Test x = 1", content: "3(1)³ - 10(1)² + 9(1) - 2 = 3 - 10 + 9 - 2 = 0 ✓\nx = 1 is a root!" },
+                    { label: "Step 5: Test x = 2", content: "3(2)³ - 10(2)² + 9(2) - 2 = 24 - 40 + 18 - 2 = 0 ✓\nx = 2 is a root!" },
+                    { label: "Step 6: Test x = 1/3", content: "3(1/3)³ - 10(1/3)² + 9(1/3) - 2 = 1/9 - 10/9 + 3 - 2 = 0 ✓\nx = 1/3 is a root!" },
+                    { label: "Solution", content: "Rational roots: x = 1/3, 1, 2" }
+                ]
+            }
+        ];
+
+        let currentExampleIndex = 0;
+
+        function displayExample(index) {
+            const example = examples[index];
+            const content = document.getElementById('exampleContent');
+
+            let html = `<div class="problem-text">${example.problem}</div>`;
+
+            example.steps.forEach(step => {
+                html += `
+                    <div class="step">
+                        <div class="step-label">${step.label}</div>
+                        <div class="step-content">${step.content}</div>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
+            document.getElementById('currentExample').textContent = index + 1;
+            document.getElementById('totalExamples').textContent = examples.length;
+
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === examples.length - 1;
+        }
+
+        function changeExample(direction) {
+            currentExampleIndex += direction;
+            if (currentExampleIndex < 0) currentExampleIndex = 0;
+            if (currentExampleIndex >= examples.length) currentExampleIndex = examples.length - 1;
+            displayExample(currentExampleIndex);
+        }
+
+        // Practice Problems
+        const practiceProblems = [
+            {
+                equation: "x³ - 2x² - 5x + 6 = 0",
+                constant: 6,
+                leading: 1,
+                pFactors: "±1, ±2, ±3, ±6",
+                qFactors: "±1",
+                possibleRoots: "±1, ±2, ±3, ±6",
+                actualRoots: [-2, 1, 3]
+            },
+            {
+                equation: "2x³ - x² - 13x - 6 = 0",
+                constant: -6,
+                leading: 2,
+                pFactors: "±1, ±2, ±3, ±6",
+                qFactors: "±1, ±2",
+                possibleRoots: "±1, ±2, ±3, ±6, ±1/2, ±3/2",
+                actualRoots: [-2, -0.5, 3]
+            },
+            {
+                equation: "x³ + 2x² - x - 2 = 0",
+                constant: -2,
+                leading: 1,
+                pFactors: "±1, ±2",
+                qFactors: "±1",
+                possibleRoots: "±1, ±2",
+                actualRoots: [-2, -1, 1]
+            },
+            {
+                equation: "3x³ - 7x² - 4 = 0",
+                constant: -4,
+                leading: 3,
+                pFactors: "±1, ±2, ±4",
+                qFactors: "±1, ±3",
+                possibleRoots: "±1, ±2, ±4, ±1/3, ±2/3, ±4/3",
+                actualRoots: [-2/3, 2]
+            },
+            {
+                equation: "x³ - 7x + 6 = 0",
+                constant: 6,
+                leading: 1,
+                pFactors: "±1, ±2, ±3, ±6",
+                qFactors: "±1",
+                possibleRoots: "±1, ±2, ±3, ±6",
+                actualRoots: [-3, 1, 2]
+            }
+        ];
+
+        let currentPractice = 0;
+        let currentStep = 0;
+        let practiceScore = 0;
+
+        function displayPractice() {
+            const problem = practiceProblems[currentPractice];
+            const container = document.getElementById('practiceContainer');
+
+            const steps = [
+                { question: "What is the constant term?", answer: Math.abs(problem.constant).toString(), hint: "The term without any x" },
+                { question: "List all factors of the constant term (p):", answer: problem.pFactors, hint: "Include both positive and negative factors" },
+                { question: "What is the leading coefficient?", answer: problem.leading.toString(), hint: "The coefficient of the highest degree term" },
+                { question: "List all factors of the leading coefficient (q):", answer: problem.qFactors, hint: "Include ±1 and other factors" },
+                { question: "Enter all rational roots that actually work:", answer: problem.actualRoots.join(','), hint: "Test each possible root in the equation" }
+            ];
+
+            const step = steps[currentStep];
+
+            container.innerHTML = `
+                <div class="problem-text">${problem.equation}</div>
+                <div class="input-group">
+                    <label>Step ${currentStep + 1}: ${step.question}</label>
+                    <input type="text" id="practiceInput" placeholder="Enter your answer">
+                </div>
+                <button class="btn" onclick="checkPractice()">Submit</button>
+                <button class="hint-btn" onclick="showHint()">Show Hint</button>
+                <div class="hint-box" id="hintBox">${step.hint}</div>
+                <div class="feedback" id="practiceFeedback"></div>
+            `;
+
+            document.getElementById('practiceNum').textContent = currentPractice + 1;
+            document.getElementById('practiceScore').textContent = practiceScore;
+
+            const progress = ((currentPractice * 5 + currentStep) / 25) * 100;
+            document.getElementById('practiceProgress').style.width = progress + '%';
+
+            document.getElementById('practiceInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkPractice();
+            });
+        }
+
+        function normalizeAnswer(answer) {
+            return answer.toLowerCase()
+                .replace(/\s/g, '')
+                .replace(/±/g, '')
+                .split(',')
+                .map(s => {
+                    // Handle fractions
+                    if (s.includes('/')) {
+                        const parts = s.split('/');
+                        return (parseFloat(parts[0]) / parseFloat(parts[1])).toString();
+                    }
+                    return s;
+                })
+                .sort()
+                .join(',');
+        }
+
+        function checkPractice() {
+            const input = document.getElementById('practiceInput').value;
+            const problem = practiceProblems[currentPractice];
+            const feedback = document.getElementById('practiceFeedback');
+
+            const steps = [
+                { answer: Math.abs(problem.constant).toString() },
+                { answer: problem.pFactors },
+                { answer: problem.leading.toString() },
+                { answer: problem.qFactors },
+                { answer: problem.actualRoots.join(',') }
+            ];
+
+            const userAnswer = normalizeAnswer(input);
+            const correctAnswer = normalizeAnswer(steps[currentStep].answer);
+
+            if (userAnswer === correctAnswer) {
+                feedback.className = 'feedback correct show';
+                feedback.textContent = 'Correct! Moving to next step...';
+
+                setTimeout(() => {
+                    currentStep++;
+                    if (currentStep >= 5) {
+                        practiceScore++;
+                        currentStep = 0;
+                        currentPractice++;
+
+                        if (currentPractice >= practiceProblems.length) {
+                            showPracticeComplete();
+                            return;
+                        }
+                    }
+                    displayPractice();
+                }, 1500);
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.textContent = 'Not quite. Check your work and try again!';
+            }
+        }
+
+        function showHint() {
+            document.getElementById('hintBox').classList.add('show');
+        }
+
+        function showPracticeComplete() {
+            const container = document.getElementById('practiceContainer');
+            container.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <h2 style="color: #667eea; margin-bottom: 20px;">Practice Complete!</h2>
+                    <p style="font-size: 1.5em; color: #4a5568;">Final Score: ${practiceScore}/5</p>
+                    <button class="btn" onclick="resetPractice()" style="margin-top: 20px;">Try Again</button>
+                </div>
+            `;
+            document.getElementById('practiceProgress').style.width = '100%';
+        }
+
+        function resetPractice() {
+            currentPractice = 0;
+            currentStep = 0;
+            practiceScore = 0;
+            displayPractice();
+        }
+
+        // Do Section
+        let currentDifficulty = 'easy';
+        let doScore = 0;
+        let doCount = 0;
+        let currentDoAnswer = [];
+
+        function setDifficulty(level) {
+            currentDifficulty = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            generateDoProblem();
+        }
+
+        function generateDoProblem() {
+            let problem, roots;
+
+            if (currentDifficulty === 'easy') {
+                // Simple cubic with integer roots
+                const r1 = Math.floor(Math.random() * 5) - 2;
+                const r2 = Math.floor(Math.random() * 5) - 2;
+                const r3 = Math.floor(Math.random() * 5) - 2;
+                roots = [r1, r2, r3];
+
+                const a = -r1 - r2 - r3;
+                const b = r1*r2 + r1*r3 + r2*r3;
+                const c = -r1*r2*r3;
+
+                problem = `x³ ${a >= 0 ? '+' : ''} ${a}x² ${b >= 0 ? '+' : ''} ${b}x ${c >= 0 ? '+' : ''} ${c} = 0`;
+            } else if (currentDifficulty === 'medium') {
+                // Cubic with leading coefficient > 1
+                const r1 = Math.floor(Math.random() * 4) - 2;
+                const r2 = Math.floor(Math.random() * 4) - 2;
+                const r3 = (Math.random() < 0.5) ? 0.5 : 1.5;
+                roots = [r1, r2, r3].sort((a, b) => a - b);
+
+                const lead = 2;
+                const a = -lead * (r1 + r2 + r3);
+                const b = lead * (r1*r2 + r1*r3 + r2*r3);
+                const c = -lead * r1*r2*r3;
+
+                problem = `${lead}x³ ${a >= 0 ? '+' : ''} ${Math.round(a)}x² ${b >= 0 ? '+' : ''} ${Math.round(b)}x ${c >= 0 ? '+' : ''} ${Math.round(c)} = 0`;
+            } else {
+                // Harder cubic with various coefficients
+                const r1 = Math.floor(Math.random() * 6) - 3;
+                const r2 = (Math.random() < 0.5) ? -1/3 : 2/3;
+                const r3 = Math.floor(Math.random() * 4) - 1;
+                roots = [r1, r2, r3].sort((a, b) => a - b);
+
+                const lead = 3;
+                const a = -lead * (r1 + r2 + r3);
+                const b = lead * (r1*r2 + r1*r3 + r2*r3);
+                const c = -lead * r1*r2*r3;
+
+                problem = `${lead}x³ ${a >= 0 ? '+' : ''} ${Math.round(a)}x² ${b >= 0 ? '+' : ''} ${Math.round(b)}x ${c >= 0 ? '+' : ''} ${Math.round(c)} = 0`;
+            }
+
+            document.getElementById('doProblem').textContent = problem;
+            currentDoAnswer = roots.sort((a, b) => a - b);
+        }
+
+        function checkDoAnswer() {
+            const input = document.getElementById('doAnswer').value;
+            const feedback = document.getElementById('doFeedback');
+
+            const userAnswers = input.split(',').map(s => {
+                const trimmed = s.trim();
+                if (trimmed.includes('/')) {
+                    const parts = trimmed.split('/');
+                    return parseFloat(parts[0]) / parseFloat(parts[1]);
+                }
+                return parseFloat(trimmed);
+            }).sort((a, b) => a - b);
+
+            const correct = userAnswers.length === currentDoAnswer.length &&
+                userAnswers.every((val, idx) => Math.abs(val - currentDoAnswer[idx]) < 0.01);
+
+            if (correct) {
+                feedback.className = 'feedback correct show';
+                feedback.textContent = 'Correct! Excellent work!';
+                doScore++;
+            } else {
+                feedback.className = 'feedback incorrect show';
+                feedback.textContent = `Not quite. The correct roots are: ${currentDoAnswer.map(r =>
+                    r % 1 === 0 ? r : r.toFixed(2)).join(', ')}`;
+            }
+
+            doCount++;
+            document.getElementById('doScore').textContent = doScore;
+            document.getElementById('doNum').textContent = doCount + 1;
+            document.getElementById('doProgress').style.width = (doCount / 10 * 100) + '%';
+
+            if (doCount >= 10) {
+                setTimeout(() => {
+                    alert(`Practice complete! Final score: ${doScore}/10`);
+                    doScore = 0;
+                    doCount = 0;
+                    document.getElementById('doProgress').style.width = '0%';
+                    document.getElementById('doScore').textContent = '0';
+                    document.getElementById('doNum').textContent = '1';
+                }, 2000);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('doAnswer').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkDoAnswer();
+            });
+        });
+
+        // Initialize
+        displayExample(0);
+        displayPractice();
+        generateDoProblem();
+    </script>
+</body>
+</html>

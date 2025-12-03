@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 4.8: Analyzing Graphs of Polynomial Functions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .nav-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 12px 24px;
+            background: white;
+            color: #667eea;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .learning-path {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .learning-path h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .learning-path ol {
+            padding-left: 25px;
+            color: #666;
+        }
+
+        .learning-path li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .topic-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .topic-header {
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            color: white;
+            padding: 25px;
+        }
+
+        .topic-header h3 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+
+        .topic-header p {
+            opacity: 0.95;
+            font-size: 0.95em;
+        }
+
+        .topic-preview {
+            padding: 20px;
+        }
+
+        .preview-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .preview-tab {
+            padding: 8px 16px;
+            background: #f0f0f0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+
+        .preview-tab.active {
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            color: white;
+        }
+
+        .preview-content {
+            display: none;
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .preview-content.active {
+            display: block;
+        }
+
+        .topic-link {
+            display: block;
+            margin-top: 15px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .topic-link:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="../index.html" class="nav-back">← Back to Chapter 4</a>
+
+        <div class="header">
+            <h1>Section 4.8: Analyzing Graphs of Polynomial Functions</h1>
+            <p>Master the art of reading and interpreting polynomial graphs. Learn to identify key features like turning points, zeros, end behavior, and intervals of increase and decrease.</p>
+        </div>
+
+        <div class="learning-path">
+            <h2>Recommended Learning Path</h2>
+            <ol>
+                <li><strong>Start with End Behavior:</strong> Understanding how the degree and leading coefficient determine the graph's behavior at extreme values provides a foundation.</li>
+                <li><strong>Explore Zeros and Multiplicity:</strong> Learn how the multiplicity of zeros affects whether the graph crosses or touches the x-axis.</li>
+                <li><strong>Identify Turning Points:</strong> Discover local maxima and minima and understand the relationship between degree and turning points.</li>
+                <li><strong>Analyze Intervals:</strong> Put it all together by identifying where functions are increasing and decreasing.</li>
+            </ol>
+        </div>
+
+        <div class="topics-grid">
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h3>End Behavior</h3>
+                    <p>Analyze how polynomials behave as x approaches infinity</p>
+                </div>
+                <div class="topic-preview">
+                    <div class="preview-tabs">
+                        <button class="preview-tab active" onclick="showPreview(this, 0, 0)">Learn</button>
+                        <button class="preview-tab" onclick="showPreview(this, 0, 1)">See</button>
+                        <button class="preview-tab" onclick="showPreview(this, 0, 2)">Practice</button>
+                        <button class="preview-tab" onclick="showPreview(this, 0, 3)">Do</button>
+                    </div>
+                    <div class="preview-content active">
+                        Learn how degree and leading coefficient determine end behavior using limit notation and visual analysis.
+                    </div>
+                    <div class="preview-content">
+                        Step through examples analyzing f(x) = -2x³ + 5x² - x + 3 and similar polynomials.
+                    </div>
+                    <div class="preview-content">
+                        Practice identifying end behavior with immediate feedback on your reasoning.
+                    </div>
+                    <div class="preview-content">
+                        Work independently with a visual workspace to predict and verify end behavior.
+                    </div>
+                    <a href="End_Behavior_Complete.html" class="topic-link">Start Learning →</a>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h3>Zeros and Multiplicity</h3>
+                    <p>Understand how multiplicity affects graph behavior at zeros</p>
+                </div>
+                <div class="topic-preview">
+                    <div class="preview-tabs">
+                        <button class="preview-tab active" onclick="showPreview(this, 1, 0)">Learn</button>
+                        <button class="preview-tab" onclick="showPreview(this, 1, 1)">See</button>
+                        <button class="preview-tab" onclick="showPreview(this, 1, 2)">Practice</button>
+                        <button class="preview-tab" onclick="showPreview(this, 1, 3)">Do</button>
+                    </div>
+                    <div class="preview-content active">
+                        Discover why odd multiplicity means crossing and even multiplicity means touching the x-axis.
+                    </div>
+                    <div class="preview-content">
+                        See examples like f(x) = (x - 2)²(x + 1)³ with visual demonstrations of crossing vs touching.
+                    </div>
+                    <div class="preview-content">
+                        Identify zeros, their multiplicities, and predict graph behavior step-by-step.
+                    </div>
+                    <div class="preview-content">
+                        Analyze factored polynomials independently with interactive graph verification.
+                    </div>
+                    <a href="Zeros_and_Multiplicity_Complete.html" class="topic-link">Start Learning →</a>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h3>Turning Points</h3>
+                    <p>Find and classify local maxima and minima</p>
+                </div>
+                <div class="topic-preview">
+                    <div class="preview-tabs">
+                        <button class="preview-tab active" onclick="showPreview(this, 2, 0)">Learn</button>
+                        <button class="preview-tab" onclick="showPreview(this, 2, 1)">See</button>
+                        <button class="preview-tab" onclick="showPreview(this, 2, 2)">Practice</button>
+                        <button class="preview-tab" onclick="showPreview(this, 2, 3)">Do</button>
+                    </div>
+                    <div class="preview-content active">
+                        Learn why a degree n polynomial has at most n-1 turning points and how to identify them.
+                    </div>
+                    <div class="preview-content">
+                        Walk through finding turning points on graphs and classifying them as maxima or minima.
+                    </div>
+                    <div class="preview-content">
+                        Practice counting and locating turning points with guided feedback.
+                    </div>
+                    <div class="preview-content">
+                        Analyze polynomial graphs to find all turning points and their approximate coordinates.
+                    </div>
+                    <a href="Turning_Points_Complete.html" class="topic-link">Start Learning →</a>
+                </div>
+            </div>
+
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h3>Intervals of Increase/Decrease</h3>
+                    <p>Identify where functions are rising or falling</p>
+                </div>
+                <div class="topic-preview">
+                    <div class="preview-tabs">
+                        <button class="preview-tab active" onclick="showPreview(this, 3, 0)">Learn</button>
+                        <button class="preview-tab" onclick="showPreview(this, 3, 1)">See</button>
+                        <button class="preview-tab" onclick="showPreview(this, 3, 2)">Practice</button>
+                        <button class="preview-tab" onclick="showPreview(this, 3, 3)">Do</button>
+                    </div>
+                    <div class="preview-content active">
+                        Understand how to use turning points to determine intervals of increase and decrease.
+                    </div>
+                    <div class="preview-content">
+                        See examples showing how to write intervals in proper notation using graph analysis.
+                    </div>
+                    <div class="preview-content">
+                        Practice identifying intervals with step-by-step guidance and interval notation.
+                    </div>
+                    <div class="preview-content">
+                        Analyze complete graphs to determine all intervals where functions increase or decrease.
+                    </div>
+                    <a href="Intervals_of_Increase_Decrease_Complete.html" class="topic-link">Start Learning →</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showPreview(button, cardIndex, tabIndex) {
+            const card = button.closest('.topic-card');
+            const tabs = card.querySelectorAll('.preview-tab');
+            const contents = card.querySelectorAll('.preview-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            button.classList.add('active');
+            contents[tabIndex].classList.add('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 4.5: Solving Polynomial Equations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            margin-bottom: 30px;
+        }
+
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #667eea;
+            text-decoration: none;
+            margin-bottom: 15px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+
+        .back-link::before {
+            content: "←";
+            margin-right: 8px;
+            font-size: 1.2em;
+        }
+
+        h1 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 2.5em;
+        }
+
+        .section-intro {
+            color: #4a5568;
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .learning-path {
+            background: linear-gradient(135deg, #667eea20 0%, #764ba220 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .learning-path h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .learning-path ol {
+            margin-left: 20px;
+            color: #4a5568;
+            line-height: 2;
+        }
+
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .topic-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+        }
+
+        .topic-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+        }
+
+        .topic-header h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .topic-description {
+            font-size: 0.95em;
+            opacity: 0.95;
+            line-height: 1.5;
+        }
+
+        .topic-content {
+            padding: 25px;
+        }
+
+        .preview-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .preview-tab {
+            padding: 8px 16px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #667eea;
+            transition: all 0.2s;
+        }
+
+        .preview-tab:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .topic-link {
+            display: block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .topic-link:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .concept-list {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .concept-list li {
+            padding: 8px 0;
+            color: #4a5568;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .concept-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .header {
+                padding: 20px;
+            }
+
+            .topics-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .topic-header {
+                padding: 20px;
+            }
+
+            .topic-header h2 {
+                font-size: 1.3em;
+            }
+
+            .preview-tabs {
+                gap: 8px;
+            }
+
+            .preview-tab {
+                font-size: 0.85em;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="../index.html" class="back-link">Back to Chapter 4</a>
+            <h1>Section 4.5: Solving Polynomial Equations</h1>
+            <p class="section-intro">
+                Master the techniques for finding solutions to polynomial equations of all degrees.
+                This section builds on your factoring skills and introduces powerful theorems that help
+                predict and find rational, irrational, and complex roots. You'll learn systematic methods
+                to solve equations that can't be factored by inspection, including using the Rational Root
+                Theorem and understanding how conjugate pairs of roots work together.
+            </p>
+            <div class="learning-path">
+                <h3>Recommended Learning Path</h3>
+                <ol>
+                    <li>Start with <strong>Factoring to Solve</strong> to build on your factoring skills</li>
+                    <li>Move to <strong>Rational Root Theorem</strong> for finding possible rational solutions</li>
+                    <li>Learn about <strong>Irrational Conjugates</strong> to understand radical roots</li>
+                    <li>Complete with <strong>Complex Conjugates</strong> for imaginary solutions</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="topics-grid">
+            <!-- Topic 1: Factoring to Solve -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h2>Factoring to Solve</h2>
+                    <p class="topic-description">
+                        Use factoring techniques to solve polynomial equations by setting each factor equal to zero.
+                    </p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span>
+                        <span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span>
+                        <span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>Zero Product Property</li>
+                        <li>Solving by GCF factoring</li>
+                        <li>Solving trinomials</li>
+                        <li>Solving by grouping</li>
+                    </ul>
+                    <a href="Factoring_to_Solve_Complete.html" class="topic-link">Start Learning</a>
+                </div>
+            </div>
+
+            <!-- Topic 2: Rational Root Theorem -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h2>Rational Root Theorem</h2>
+                    <p class="topic-description">
+                        Find all possible rational roots using p/q, then test systematically to solve polynomial equations.
+                    </p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span>
+                        <span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span>
+                        <span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>Understanding p/q formula</li>
+                        <li>Listing possible roots</li>
+                        <li>Testing with synthetic division</li>
+                        <li>Finding all rational roots</li>
+                    </ul>
+                    <a href="Rational_Root_Theorem_Complete.html" class="topic-link">Start Learning</a>
+                </div>
+            </div>
+
+            <!-- Topic 3: Irrational Conjugates -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h2>Irrational Conjugates</h2>
+                    <p class="topic-description">
+                        Understand that irrational roots with radicals always come in conjugate pairs.
+                    </p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span>
+                        <span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span>
+                        <span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>Conjugate pairs theorem</li>
+                        <li>Finding missing conjugate</li>
+                        <li>Writing factors from roots</li>
+                        <li>Building polynomials</li>
+                    </ul>
+                    <a href="Irrational_Conjugates_Complete.html" class="topic-link">Start Learning</a>
+                </div>
+            </div>
+
+            <!-- Topic 4: Complex Conjugates -->
+            <div class="topic-card">
+                <div class="topic-header">
+                    <h2>Complex Conjugates</h2>
+                    <p class="topic-description">
+                        Learn how complex roots with imaginary components always appear as conjugate pairs.
+                    </p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span>
+                        <span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span>
+                        <span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>Complex conjugate theorem</li>
+                        <li>Finding conjugate pairs</li>
+                        <li>Multiplying conjugate factors</li>
+                        <li>Complete root analysis</li>
+                    </ul>
+                    <a href="Complex_Conjugates_Complete.html" class="topic-link">Start Learning</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

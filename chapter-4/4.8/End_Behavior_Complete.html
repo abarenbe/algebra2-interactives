@@ -1,0 +1,1210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>End Behavior - Analyzing Polynomial Graphs</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-back {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 12px 24px;
+            background: white;
+            color: #ec008c;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .tab-button {
+            flex: 1;
+            min-width: 120px;
+            padding: 15px 25px;
+            background: white;
+            color: #666;
+            border: none;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .tab-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .tab-button.active {
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            color: white;
+        }
+
+        .content-section {
+            display: none;
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .content-section h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .content-section h3 {
+            color: #ec008c;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .content-section p, .content-section li {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            font-size: 1.05em;
+        }
+
+        .content-section ul, .content-section ol {
+            margin-left: 25px;
+            margin-bottom: 20px;
+        }
+
+        .rule-box {
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe5f0 100%);
+            border-left: 4px solid #ec008c;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .rule-box strong {
+            color: #ec008c;
+            font-size: 1.1em;
+        }
+
+        .example-nav {
+            display: flex;
+            gap: 15px;
+            margin: 25px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .example-nav button {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .example-nav button:hover {
+            opacity: 0.9;
+            transform: scale(1.05);
+        }
+
+        .example-nav button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .example-content {
+            display: none;
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .example-content.active {
+            display: block;
+        }
+
+        .step {
+            background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 10px;
+            border-left: 4px solid #ec008c;
+        }
+
+        .step-number {
+            display: inline-block;
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .practice-problem {
+            background: #f9f9f9;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .practice-input {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .practice-input label {
+            font-weight: 600;
+            color: #333;
+            min-width: 200px;
+        }
+
+        .practice-input input, .practice-input select {
+            flex: 1;
+            min-width: 200px;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .practice-input input:focus, .practice-input select:focus {
+            outline: none;
+            border-color: #ec008c;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+            transform: scale(1.02);
+        }
+
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .feedback.correct {
+            display: block;
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            display: block;
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+
+        .hint {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            color: #856404;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            transition: width 0.3s ease;
+        }
+
+        .score {
+            text-align: center;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin: 15px 0;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .difficulty-btn {
+            padding: 12px 30px;
+            border: 2px solid #ec008c;
+            background: white;
+            color: #ec008c;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.active {
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            color: white;
+        }
+
+        .scratch-workspace {
+            background: #f9f9f9;
+            border: 2px dashed #ddd;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 25px 0;
+            min-height: 200px;
+        }
+
+        .scratch-workspace h4 {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .graph-container {
+            margin: 25px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 15px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f5f5f5;
+        }
+
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+
+            .tab-button {
+                min-width: 100%;
+            }
+
+            .practice-input {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .practice-input label {
+                min-width: 100%;
+            }
+
+            .practice-input input, .practice-input select {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="nav-back">← Back to Section 4.8</a>
+
+        <div class="header">
+            <h1>End Behavior</h1>
+            <p>Analyze how polynomial functions behave as x approaches positive and negative infinity</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('learn')">Learn</button>
+            <button class="tab-button" onclick="showTab('see')">See</button>
+            <button class="tab-button" onclick="showTab('practice')">Practice</button>
+            <button class="tab-button" onclick="showTab('do')">Do</button>
+        </div>
+
+        <div id="learn" class="content-section active">
+            <h2>Understanding End Behavior</h2>
+
+            <p>The <strong>end behavior</strong> of a polynomial function describes what happens to the function values (y-values) as x approaches positive infinity (∞) or negative infinity (-∞).</p>
+
+            <h3>Why Study End Behavior?</h3>
+            <p>End behavior helps us:</p>
+            <ul>
+                <li>Sketch accurate graphs of polynomials</li>
+                <li>Understand the long-term trends of mathematical models</li>
+                <li>Predict function values for very large or very small inputs</li>
+                <li>Classify polynomials by their dominant characteristics</li>
+            </ul>
+
+            <h3>How to Determine End Behavior</h3>
+            <p>The end behavior of a polynomial is determined by only TWO factors:</p>
+
+            <div class="rule-box">
+                <strong>1. The Degree of the Polynomial</strong>
+                <p>The degree tells us whether both ends go in the same direction or opposite directions:</p>
+                <ul>
+                    <li><strong>Even degree:</strong> Both ends go in the SAME direction (both up or both down)</li>
+                    <li><strong>Odd degree:</strong> Ends go in OPPOSITE directions (one up, one down)</li>
+                </ul>
+            </div>
+
+            <div class="rule-box">
+                <strong>2. The Leading Coefficient</strong>
+                <p>The leading coefficient (the coefficient of the highest degree term) tells us whether the right end goes up or down:</p>
+                <ul>
+                    <li><strong>Positive leading coefficient:</strong> Right end goes UP</li>
+                    <li><strong>Negative leading coefficient:</strong> Right end goes DOWN</li>
+                </ul>
+            </div>
+
+            <h3>The Four Possible End Behaviors</h3>
+            <table>
+                <tr>
+                    <th>Degree</th>
+                    <th>Leading Coefficient</th>
+                    <th>Left End</th>
+                    <th>Right End</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td>Even</td>
+                    <td>Positive</td>
+                    <td>Up (→ ∞)</td>
+                    <td>Up (→ ∞)</td>
+                    <td>f(x) = x²</td>
+                </tr>
+                <tr>
+                    <td>Even</td>
+                    <td>Negative</td>
+                    <td>Down (→ -∞)</td>
+                    <td>Down (→ -∞)</td>
+                    <td>f(x) = -x²</td>
+                </tr>
+                <tr>
+                    <td>Odd</td>
+                    <td>Positive</td>
+                    <td>Down (→ -∞)</td>
+                    <td>Up (→ ∞)</td>
+                    <td>f(x) = x³</td>
+                </tr>
+                <tr>
+                    <td>Odd</td>
+                    <td>Negative</td>
+                    <td>Up (→ ∞)</td>
+                    <td>Down (→ -∞)</td>
+                    <td>f(x) = -x³</td>
+                </tr>
+            </table>
+
+            <h3>Why Does This Work?</h3>
+            <p>For very large values of |x|, the highest degree term dominates all other terms. For example:</p>
+            <p>In f(x) = -2x⁴ + 100x³ - 500x² + 1000x - 2000</p>
+            <ul>
+                <li>When x = 1000, the x⁴ term contributes -2,000,000,000,000</li>
+                <li>All other terms combined contribute much less</li>
+                <li>So the function behaves like f(x) ≈ -2x⁴ for large |x|</li>
+            </ul>
+
+            <div id="learnGraph" class="graph-container"></div>
+        </div>
+
+        <div id="see" class="content-section">
+            <h2>See Examples</h2>
+
+            <div class="example-nav">
+                <button onclick="showExample(1)">Example 1</button>
+                <button onclick="showExample(2)">Example 2</button>
+                <button onclick="showExample(3)">Example 3</button>
+            </div>
+
+            <div id="example1" class="example-content active">
+                <h3>Example 1: f(x) = 2x³ - 5x² + x - 3</h3>
+
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Identify the degree:</strong>
+                    <p>The highest power of x is 3, so the degree is 3 (odd).</p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Identify the leading coefficient:</strong>
+                    <p>The coefficient of x³ is 2 (positive).</p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Determine end behavior:</strong>
+                    <p>Since the degree is odd and the leading coefficient is positive:</p>
+                    <ul>
+                        <li>As x → -∞, f(x) → -∞ (left end goes down)</li>
+                        <li>As x → ∞, f(x) → ∞ (right end goes up)</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Visualize:</strong>
+                    <div id="example1Graph" class="graph-container"></div>
+                </div>
+            </div>
+
+            <div id="example2" class="example-content">
+                <h3>Example 2: g(x) = -x⁴ + 3x² - 2</h3>
+
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Identify the degree:</strong>
+                    <p>The highest power of x is 4, so the degree is 4 (even).</p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Identify the leading coefficient:</strong>
+                    <p>The coefficient of x⁴ is -1 (negative).</p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Determine end behavior:</strong>
+                    <p>Since the degree is even and the leading coefficient is negative:</p>
+                    <ul>
+                        <li>As x → -∞, g(x) → -∞ (left end goes down)</li>
+                        <li>As x → ∞, g(x) → -∞ (right end goes down)</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Visualize:</strong>
+                    <div id="example2Graph" class="graph-container"></div>
+                </div>
+            </div>
+
+            <div id="example3" class="example-content">
+                <h3>Example 3: h(x) = 0.5x⁵ - 2x³ + x</h3>
+
+                <div class="step">
+                    <span class="step-number">1</span>
+                    <strong>Identify the degree:</strong>
+                    <p>The highest power of x is 5, so the degree is 5 (odd).</p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">2</span>
+                    <strong>Identify the leading coefficient:</strong>
+                    <p>The coefficient of x⁵ is 0.5 (positive).</p>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">3</span>
+                    <strong>Determine end behavior:</strong>
+                    <p>Since the degree is odd and the leading coefficient is positive:</p>
+                    <ul>
+                        <li>As x → -∞, h(x) → -∞ (left end goes down)</li>
+                        <li>As x → ∞, h(x) → ∞ (right end goes up)</li>
+                    </ul>
+                </div>
+
+                <div class="step">
+                    <span class="step-number">4</span>
+                    <strong>Visualize:</strong>
+                    <div id="example3Graph" class="graph-container"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="practice" class="content-section">
+            <h2>Practice</h2>
+            <p>Determine the end behavior step-by-step with immediate feedback.</p>
+
+            <div class="progress-bar">
+                <div id="practiceProgress" class="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="score">Problem <span id="practiceCount">1</span> of 5 | Score: <span id="practiceScore">0</span>/5</div>
+
+            <div class="practice-problem">
+                <h3>Problem: <span id="practiceProblem"></span></h3>
+
+                <div id="step1Practice" style="display: block;">
+                    <div class="practice-input">
+                        <label>What is the degree of the polynomial?</label>
+                        <input type="number" id="degreeInput" min="1" max="10">
+                    </div>
+                    <button class="submit-btn" onclick="checkStep1()">Check Degree</button>
+                    <div id="step1Feedback" class="feedback"></div>
+                </div>
+
+                <div id="step2Practice" style="display: none;">
+                    <div class="practice-input">
+                        <label>Is the degree even or odd?</label>
+                        <select id="parityInput">
+                            <option value="">Select...</option>
+                            <option value="even">Even</option>
+                            <option value="odd">Odd</option>
+                        </select>
+                    </div>
+                    <button class="submit-btn" onclick="checkStep2()">Check Parity</button>
+                    <div id="step2Feedback" class="feedback"></div>
+                </div>
+
+                <div id="step3Practice" style="display: none;">
+                    <div class="practice-input">
+                        <label>What is the leading coefficient?</label>
+                        <input type="number" id="leadingCoeffInput" step="0.1">
+                    </div>
+                    <button class="submit-btn" onclick="checkStep3()">Check Leading Coefficient</button>
+                    <div id="step3Feedback" class="feedback"></div>
+                </div>
+
+                <div id="step4Practice" style="display: none;">
+                    <div class="practice-input">
+                        <label>Is the leading coefficient positive or negative?</label>
+                        <select id="signInput">
+                            <option value="">Select...</option>
+                            <option value="positive">Positive</option>
+                            <option value="negative">Negative</option>
+                        </select>
+                    </div>
+                    <button class="submit-btn" onclick="checkStep4()">Check Sign</button>
+                    <div id="step4Feedback" class="feedback"></div>
+                </div>
+
+                <div id="step5Practice" style="display: none;">
+                    <div class="practice-input">
+                        <label>As x → -∞, f(x) → ?</label>
+                        <select id="leftEndInput">
+                            <option value="">Select...</option>
+                            <option value="∞">∞ (up)</option>
+                            <option value="-∞">-∞ (down)</option>
+                        </select>
+                    </div>
+                    <div class="practice-input">
+                        <label>As x → ∞, f(x) → ?</label>
+                        <select id="rightEndInput">
+                            <option value="">Select...</option>
+                            <option value="∞">∞ (up)</option>
+                            <option value="-∞">-∞ (down)</option>
+                        </select>
+                    </div>
+                    <button class="submit-btn" onclick="checkStep5()">Check End Behavior</button>
+                    <div id="step5Feedback" class="feedback"></div>
+                </div>
+
+                <button id="nextPracticeBtn" class="submit-btn" onclick="nextPractice()" style="display: none;">Next Problem</button>
+            </div>
+
+            <div id="practiceComplete" style="display: none; text-align: center; padding: 30px;">
+                <h2>Practice Complete!</h2>
+                <p style="font-size: 1.3em; margin: 20px 0;">Final Score: <span id="finalPracticeScore"></span>/5</p>
+                <button class="submit-btn" onclick="resetPractice()">Practice Again</button>
+            </div>
+        </div>
+
+        <div id="do" class="content-section">
+            <h2>Do</h2>
+            <p>Work independently to analyze end behavior of polynomials.</p>
+
+            <div class="difficulty-selector">
+                <button class="difficulty-btn active" onclick="setDifficulty('easy')">Easy</button>
+                <button class="difficulty-btn" onclick="setDifficulty('medium')">Medium</button>
+                <button class="difficulty-btn" onclick="setDifficulty('hard')">Hard</button>
+            </div>
+
+            <div class="progress-bar">
+                <div id="doProgress" class="progress-fill" style="width: 0%"></div>
+            </div>
+            <div class="score">Problem <span id="doCount">1</span> of 10 | Score: <span id="doScore">0</span>/10</div>
+
+            <div class="practice-problem">
+                <h3>Problem: <span id="doProblem"></span></h3>
+
+                <div class="scratch-workspace">
+                    <h4>Scratch Workspace</h4>
+                    <p>Use this space to work out the problem:</p>
+                    <p>1. Identify the degree: _____</p>
+                    <p>2. Is it even or odd? _____</p>
+                    <p>3. Leading coefficient: _____</p>
+                    <p>4. Is it positive or negative? _____</p>
+                    <p>5. Left end behavior: _____</p>
+                    <p>6. Right end behavior: _____</p>
+                </div>
+
+                <div id="doGraph" class="graph-container"></div>
+
+                <div class="practice-input">
+                    <label>As x → -∞, f(x) → ?</label>
+                    <select id="doLeftEnd">
+                        <option value="">Select...</option>
+                        <option value="∞">∞ (up)</option>
+                        <option value="-∞">-∞ (down)</option>
+                    </select>
+                </div>
+
+                <div class="practice-input">
+                    <label>As x → ∞, f(x) → ?</label>
+                    <select id="doRightEnd">
+                        <option value="">Select...</option>
+                        <option value="∞">∞ (up)</option>
+                        <option value="-∞">-∞ (down)</option>
+                    </select>
+                </div>
+
+                <button class="submit-btn" onclick="checkDoAnswer()">Submit Answer</button>
+                <div id="doFeedback" class="feedback"></div>
+                <button id="nextDoBtn" class="submit-btn" onclick="nextDo()" style="display: none;">Next Problem</button>
+            </div>
+
+            <div id="doComplete" style="display: none; text-align: center; padding: 30px;">
+                <h2>Session Complete!</h2>
+                <p style="font-size: 1.3em; margin: 20px 0;">Final Score: <span id="finalDoScore"></span>/10</p>
+                <button class="submit-btn" onclick="resetDo()">Practice Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab Navigation
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.content-section');
+            const buttons = document.querySelectorAll('.tab-button');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'learn') {
+                setTimeout(createLearnGraphs, 100);
+            } else if (tabName === 'see') {
+                setTimeout(() => createExampleGraph(1), 100);
+            } else if (tabName === 'practice') {
+                if (!practiceProblems.length) initPractice();
+            } else if (tabName === 'do') {
+                if (!doProblems.length) initDo();
+            }
+        }
+
+        // Learn Section Graphs
+        function createLearnGraphs() {
+            const functions = [
+                { expr: (x) => x**2, name: 'f(x) = x² (Even, Positive)', color: '#ec008c' },
+                { expr: (x) => -x**2, name: 'g(x) = -x² (Even, Negative)', color: '#fc6767' },
+                { expr: (x) => x**3/10, name: 'h(x) = x³ (Odd, Positive)', color: '#00bcd4' },
+                { expr: (x) => -x**3/10, name: 'k(x) = -x³ (Odd, Negative)', color: '#4caf50' }
+            ];
+
+            const traces = functions.map(func => {
+                const x = [];
+                const y = [];
+                for (let i = -5; i <= 5; i += 0.1) {
+                    x.push(i);
+                    y.push(func.expr(i));
+                }
+                return {
+                    x: x,
+                    y: y,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: func.name,
+                    line: { color: func.color, width: 3 }
+                };
+            });
+
+            const layout = {
+                title: 'Four Types of End Behavior',
+                xaxis: { title: 'x', zeroline: true, gridcolor: '#e0e0e0' },
+                yaxis: { title: 'f(x)', zeroline: true, gridcolor: '#e0e0e0' },
+                showlegend: true,
+                legend: { x: 0.02, y: 0.98 },
+                plot_bgcolor: '#fafafa',
+                paper_bgcolor: '#f9f9f9'
+            };
+
+            Plotly.newPlot('learnGraph', traces, layout, { responsive: true });
+        }
+
+        // See Section
+        function showExample(num) {
+            const examples = document.querySelectorAll('.example-content');
+            examples.forEach(ex => ex.classList.remove('active'));
+            document.getElementById('example' + num).classList.add('active');
+            setTimeout(() => createExampleGraph(num), 100);
+        }
+
+        function createExampleGraph(num) {
+            const functions = [
+                { expr: (x) => 2*x**3 - 5*x**2 + x - 3, name: 'f(x) = 2x³ - 5x² + x - 3', id: 'example1Graph' },
+                { expr: (x) => -x**4 + 3*x**2 - 2, name: 'g(x) = -x⁴ + 3x² - 2', id: 'example2Graph' },
+                { expr: (x) => 0.5*x**5 - 2*x**3 + x, name: 'h(x) = 0.5x⁵ - 2x³ + x', id: 'example3Graph' }
+            ];
+
+            const func = functions[num - 1];
+            const x = [];
+            const y = [];
+
+            const range = num === 3 ? 3 : num === 2 ? 2.5 : 4;
+            for (let i = -range; i <= range; i += 0.1) {
+                x.push(i);
+                y.push(func.expr(i));
+            }
+
+            const trace = {
+                x: x,
+                y: y,
+                type: 'scatter',
+                mode: 'lines',
+                name: func.name,
+                line: { color: '#ec008c', width: 3 }
+            };
+
+            const layout = {
+                title: func.name,
+                xaxis: { title: 'x', zeroline: true, gridcolor: '#e0e0e0' },
+                yaxis: { title: 'f(x)', zeroline: true, gridcolor: '#e0e0e0' },
+                plot_bgcolor: '#fafafa',
+                paper_bgcolor: '#f9f9f9'
+            };
+
+            Plotly.newPlot(func.id, [trace], layout, { responsive: true });
+        }
+
+        // Practice Section
+        let practiceProblems = [];
+        let currentPractice = 0;
+        let practiceScore = 0;
+        let currentPracticeAnswer = {};
+
+        function initPractice() {
+            practiceProblems = [
+                { poly: '3x⁴ - 2x² + 1', degree: 4, parity: 'even', leadingCoeff: 3, sign: 'positive', leftEnd: '∞', rightEnd: '∞' },
+                { poly: '-2x³ + 5x - 1', degree: 3, parity: 'odd', leadingCoeff: -2, sign: 'negative', leftEnd: '∞', rightEnd: '-∞' },
+                { poly: 'x⁵ - 3x³ + x', degree: 5, parity: 'odd', leadingCoeff: 1, sign: 'positive', leftEnd: '-∞', rightEnd: '∞' },
+                { poly: '-x⁶ + 4x⁴ - 2x² + 3', degree: 6, parity: 'even', leadingCoeff: -1, sign: 'negative', leftEnd: '-∞', rightEnd: '-∞' },
+                { poly: '0.5x⁷ - x⁵ + 2x³', degree: 7, parity: 'odd', leadingCoeff: 0.5, sign: 'positive', leftEnd: '-∞', rightEnd: '∞' }
+            ];
+            currentPractice = 0;
+            practiceScore = 0;
+            loadPractice();
+        }
+
+        function loadPractice() {
+            if (currentPractice >= practiceProblems.length) {
+                document.querySelector('.practice-problem').style.display = 'none';
+                document.getElementById('practiceComplete').style.display = 'block';
+                document.getElementById('finalPracticeScore').textContent = practiceScore;
+                return;
+            }
+
+            currentPracticeAnswer = practiceProblems[currentPractice];
+            document.getElementById('practiceProblem').textContent = 'f(x) = ' + currentPracticeAnswer.poly;
+
+            // Reset all steps
+            for (let i = 1; i <= 5; i++) {
+                document.getElementById('step' + i + 'Practice').style.display = i === 1 ? 'block' : 'none';
+                document.getElementById('step' + i + 'Feedback').className = 'feedback';
+                document.getElementById('step' + i + 'Feedback').style.display = 'none';
+            }
+
+            document.getElementById('degreeInput').value = '';
+            document.getElementById('parityInput').value = '';
+            document.getElementById('leadingCoeffInput').value = '';
+            document.getElementById('signInput').value = '';
+            document.getElementById('leftEndInput').value = '';
+            document.getElementById('rightEndInput').value = '';
+            document.getElementById('nextPracticeBtn').style.display = 'none';
+
+            document.getElementById('practiceCount').textContent = currentPractice + 1;
+            document.getElementById('practiceScore').textContent = practiceScore;
+            document.getElementById('practiceProgress').style.width = (currentPractice / practiceProblems.length * 100) + '%';
+        }
+
+        function checkStep1() {
+            const input = parseInt(document.getElementById('degreeInput').value);
+            const feedback = document.getElementById('step1Feedback');
+
+            if (input === currentPracticeAnswer.degree) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Correct! The degree is ' + currentPracticeAnswer.degree + '.';
+                document.getElementById('step2Practice').style.display = 'block';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Not quite. Look at the highest power of x in the polynomial.';
+            }
+        }
+
+        function checkStep2() {
+            const input = document.getElementById('parityInput').value;
+            const feedback = document.getElementById('step2Feedback');
+
+            if (input === currentPracticeAnswer.parity) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Correct! The degree ' + currentPracticeAnswer.degree + ' is ' + currentPracticeAnswer.parity + '.';
+                document.getElementById('step3Practice').style.display = 'block';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Not quite. Is ' + currentPracticeAnswer.degree + ' divisible by 2?';
+            }
+        }
+
+        function checkStep3() {
+            const input = parseFloat(document.getElementById('leadingCoeffInput').value);
+            const feedback = document.getElementById('step3Feedback');
+
+            if (input === currentPracticeAnswer.leadingCoeff) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Correct! The leading coefficient is ' + currentPracticeAnswer.leadingCoeff + '.';
+                document.getElementById('step4Practice').style.display = 'block';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Not quite. Look at the coefficient of the highest degree term.';
+            }
+        }
+
+        function checkStep4() {
+            const input = document.getElementById('signInput').value;
+            const feedback = document.getElementById('step4Feedback');
+
+            if (input === currentPracticeAnswer.sign) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Correct! The leading coefficient ' + currentPracticeAnswer.leadingCoeff + ' is ' + currentPracticeAnswer.sign + '.';
+                document.getElementById('step5Practice').style.display = 'block';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Not quite. Is ' + currentPracticeAnswer.leadingCoeff + ' greater than or less than 0?';
+            }
+        }
+
+        function checkStep5() {
+            const leftEnd = document.getElementById('leftEndInput').value;
+            const rightEnd = document.getElementById('rightEndInput').value;
+            const feedback = document.getElementById('step5Feedback');
+
+            if (leftEnd === currentPracticeAnswer.leftEnd && rightEnd === currentPracticeAnswer.rightEnd) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Excellent! You correctly determined the end behavior!';
+                practiceScore++;
+                document.getElementById('practiceScore').textContent = practiceScore;
+                document.getElementById('nextPracticeBtn').style.display = 'block';
+            } else {
+                feedback.className = 'feedback incorrect';
+                let hint = 'Not quite. Remember: ';
+                if (currentPracticeAnswer.parity === 'even') {
+                    hint += 'Even degree means both ends go the same direction. ';
+                } else {
+                    hint += 'Odd degree means ends go opposite directions. ';
+                }
+                if (currentPracticeAnswer.sign === 'positive') {
+                    hint += 'Positive leading coefficient means right end goes up.';
+                } else {
+                    hint += 'Negative leading coefficient means right end goes down.';
+                }
+                feedback.textContent = hint;
+            }
+        }
+
+        function nextPractice() {
+            currentPractice++;
+            loadPractice();
+        }
+
+        function resetPractice() {
+            document.querySelector('.practice-problem').style.display = 'block';
+            document.getElementById('practiceComplete').style.display = 'none';
+            initPractice();
+        }
+
+        // Do Section
+        let doProblems = [];
+        let currentDo = 0;
+        let doScore = 0;
+        let currentDoAnswer = {};
+        let difficulty = 'easy';
+
+        function setDifficulty(level) {
+            difficulty = level;
+            document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            resetDo();
+        }
+
+        function generatePolynomial(difficulty) {
+            let degree, leadingCoeff, poly, parity, sign, leftEnd, rightEnd;
+
+            if (difficulty === 'easy') {
+                degree = Math.random() < 0.5 ? 2 : 3;
+                leadingCoeff = Math.random() < 0.5 ? 1 : -1;
+            } else if (difficulty === 'medium') {
+                degree = Math.floor(Math.random() * 3) + 3; // 3-5
+                leadingCoeff = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 4) + 1);
+            } else {
+                degree = Math.floor(Math.random() * 5) + 4; // 4-8
+                leadingCoeff = (Math.random() < 0.5 ? 1 : -1) * (Math.random() * 4 + 0.5);
+                leadingCoeff = Math.round(leadingCoeff * 10) / 10;
+            }
+
+            // Generate polynomial string
+            poly = (leadingCoeff === 1 ? '' : leadingCoeff === -1 ? '-' : leadingCoeff) + 'x^' + degree;
+
+            // Add random terms
+            const numTerms = Math.floor(Math.random() * Math.min(3, degree)) + 1;
+            const usedDegrees = [degree];
+
+            for (let i = 0; i < numTerms; i++) {
+                let termDegree;
+                do {
+                    termDegree = Math.floor(Math.random() * degree);
+                } while (usedDegrees.includes(termDegree));
+                usedDegrees.push(termDegree);
+
+                const coeff = Math.floor(Math.random() * 10) - 5;
+                if (coeff !== 0) {
+                    poly += (coeff > 0 ? ' + ' : ' - ') + Math.abs(coeff);
+                    if (termDegree > 1) poly += 'x^' + termDegree;
+                    else if (termDegree === 1) poly += 'x';
+                }
+            }
+
+            parity = degree % 2 === 0 ? 'even' : 'odd';
+            sign = leadingCoeff > 0 ? 'positive' : 'negative';
+
+            if (parity === 'even') {
+                leftEnd = sign === 'positive' ? '∞' : '-∞';
+                rightEnd = leftEnd;
+            } else {
+                rightEnd = sign === 'positive' ? '∞' : '-∞';
+                leftEnd = rightEnd === '∞' ? '-∞' : '∞';
+            }
+
+            return { poly, degree, parity, leadingCoeff, sign, leftEnd, rightEnd };
+        }
+
+        function initDo() {
+            doProblems = [];
+            for (let i = 0; i < 10; i++) {
+                doProblems.push(generatePolynomial(difficulty));
+            }
+            currentDo = 0;
+            doScore = 0;
+            loadDo();
+        }
+
+        function loadDo() {
+            if (currentDo >= doProblems.length) {
+                document.querySelector('#do .practice-problem').style.display = 'none';
+                document.getElementById('doComplete').style.display = 'block';
+                document.getElementById('finalDoScore').textContent = doScore;
+                return;
+            }
+
+            currentDoAnswer = doProblems[currentDo];
+            document.getElementById('doProblem').textContent = 'f(x) = ' + currentDoAnswer.poly;
+
+            document.getElementById('doLeftEnd').value = '';
+            document.getElementById('doRightEnd').value = '';
+            document.getElementById('doFeedback').className = 'feedback';
+            document.getElementById('doFeedback').style.display = 'none';
+            document.getElementById('nextDoBtn').style.display = 'none';
+
+            document.getElementById('doCount').textContent = currentDo + 1;
+            document.getElementById('doScore').textContent = doScore;
+            document.getElementById('doProgress').style.width = (currentDo / doProblems.length * 100) + '%';
+
+            createDoGraph();
+        }
+
+        function createDoGraph() {
+            // Create a simplified function for graphing
+            const degree = currentDoAnswer.degree;
+            const leadingCoeff = currentDoAnswer.leadingCoeff;
+
+            const func = (x) => {
+                return leadingCoeff * Math.pow(x, degree) / Math.pow(10, degree - 2);
+            };
+
+            const x = [];
+            const y = [];
+            const range = Math.min(5, Math.max(2, 10 / degree));
+
+            for (let i = -range; i <= range; i += 0.1) {
+                x.push(i);
+                y.push(func(i));
+            }
+
+            const trace = {
+                x: x,
+                y: y,
+                type: 'scatter',
+                mode: 'lines',
+                name: 'Graph',
+                line: { color: '#ec008c', width: 3 }
+            };
+
+            const layout = {
+                title: 'Visual Reference',
+                xaxis: { title: 'x', zeroline: true, gridcolor: '#e0e0e0' },
+                yaxis: { title: 'f(x)', zeroline: true, gridcolor: '#e0e0e0' },
+                showlegend: false,
+                plot_bgcolor: '#fafafa',
+                paper_bgcolor: '#f9f9f9'
+            };
+
+            Plotly.newPlot('doGraph', [trace], layout, { responsive: true });
+        }
+
+        function checkDoAnswer() {
+            const leftEnd = document.getElementById('doLeftEnd').value;
+            const rightEnd = document.getElementById('doRightEnd').value;
+            const feedback = document.getElementById('doFeedback');
+
+            if (!leftEnd || !rightEnd) {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Please select both end behaviors.';
+                return;
+            }
+
+            if (leftEnd === currentDoAnswer.leftEnd && rightEnd === currentDoAnswer.rightEnd) {
+                feedback.className = 'feedback correct';
+                feedback.textContent = 'Correct! The end behavior is: as x → -∞, f(x) → ' + leftEnd + ', and as x → ∞, f(x) → ' + rightEnd + '.';
+                doScore++;
+                document.getElementById('doScore').textContent = doScore;
+                document.getElementById('nextDoBtn').style.display = 'block';
+            } else {
+                feedback.className = 'feedback incorrect';
+                feedback.textContent = 'Not quite. Check the degree (' + currentDoAnswer.degree + ', which is ' + currentDoAnswer.parity + ') and the leading coefficient (' + currentDoAnswer.leadingCoeff + ', which is ' + currentDoAnswer.sign + ').';
+            }
+        }
+
+        function nextDo() {
+            currentDo++;
+            loadDo();
+        }
+
+        function resetDo() {
+            document.querySelector('#do .practice-problem').style.display = 'block';
+            document.getElementById('doComplete').style.display = 'none';
+            initDo();
+        }
+
+        // Enter key support
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                const activeTab = document.querySelector('.content-section.active').id;
+                if (activeTab === 'practice') {
+                    if (document.getElementById('step1Practice').style.display !== 'none') checkStep1();
+                    else if (document.getElementById('step2Practice').style.display !== 'none') checkStep2();
+                    else if (document.getElementById('step3Practice').style.display !== 'none') checkStep3();
+                    else if (document.getElementById('step4Practice').style.display !== 'none') checkStep4();
+                    else if (document.getElementById('step5Practice').style.display !== 'none') checkStep5();
+                } else if (activeTab === 'do') {
+                    checkDoAnswer();
+                }
+            }
+        });
+
+        // Initialize
+        setTimeout(createLearnGraphs, 500);
+    </script>
+</body>
+</html>

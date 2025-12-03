@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GCF Factoring | 4.4 Factoring Polynomials</title>
+    <title>Factor by Grouping | 4.4 Factoring Polynomials</title>
     <style>
         * {
             box-sizing: border-box;
@@ -119,11 +119,11 @@
 
         .formula-box {
             background: #fff3cd;
-            padding: 15px 20px;
+            padding: 20px;
             border-radius: 10px;
             margin: 15px 0;
             border: 2px solid #ffc107;
-            font-size: 1.2em;
+            font-size: 1.1em;
             text-align: center;
         }
 
@@ -151,7 +151,6 @@
             font-family: 'Times New Roman', serif;
         }
 
-        /* Step navigation for Watch section */
         .step-navigator {
             display: flex;
             justify-content: center;
@@ -224,14 +223,15 @@
             padding: 15px;
             border-radius: 8px;
             font-family: 'Courier New', monospace;
-            font-size: 1.2em;
+            font-size: 1.1em;
             line-height: 2;
         }
 
         .highlight { background: #fff3cd; padding: 2px 6px; border-radius: 4px; }
         .highlight-green { background: #d4edda; padding: 2px 6px; border-radius: 4px; }
+        .highlight-blue { background: #cce5ff; padding: 2px 6px; border-radius: 4px; }
+        .highlight-pink { background: #f8d7da; padding: 2px 6px; border-radius: 4px; }
 
-        /* Practice Section */
         .problem-card {
             background: #f8f9fa;
             padding: 20px;
@@ -271,7 +271,7 @@
         .step-title {
             font-weight: 600;
             color: #333;
-            font-size: 1.1em;
+            font-size: 1.05em;
         }
 
         .step-content { margin-left: 47px; }
@@ -378,7 +378,6 @@
 
         .hidden { display: none !important; }
 
-        /* Solo Scratch Workspace */
         .scratch-workspace {
             background: #fffbeb;
             border: 2px dashed #f59e0b;
@@ -392,33 +391,27 @@
             color: #92400e;
         }
 
-        .scratch-area {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .scratch-row {
-            display: flex;
-            gap: 10px;
+        .scratch-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 12px 15px;
             align-items: center;
-            flex-wrap: wrap;
         }
 
         .scratch-label {
-            min-width: 100px;
             font-weight: 500;
             color: #78716c;
+            text-align: right;
         }
 
         .scratch-input {
-            width: 200px;
             padding: 10px 12px;
             border: 1px dashed #d4d4d4;
             border-radius: 6px;
             font-family: 'Courier New', monospace;
             font-size: 1em;
             background: rgba(255,255,255,0.8);
+            max-width: 300px;
         }
 
         .scratch-input:focus {
@@ -458,26 +451,48 @@
             color: #4338ca;
         }
 
+        .grouping-visual {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+
+        .group-box {
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .group-1 { background: #dbeafe; border: 2px solid #3b82f6; }
+        .group-2 { background: #fce7f3; border: 2px solid #ec4899; }
+
         @media (max-width: 768px) {
             header h1 { font-size: 1.6em; }
             .tab-btn { padding: 10px 16px; font-size: 0.9em; }
             .polynomial-display { font-size: 1.2em; }
             .step-content { margin-left: 0; margin-top: 10px; }
             .step-completed-text { margin-left: 0; }
-            .scratch-input { width: 100%; }
+            .scratch-grid { grid-template-columns: 1fr; }
+            .scratch-label { text-align: left; }
+            .scratch-input { max-width: 100%; }
+            .grouping-visual { font-size: 1em; }
         }
     </style>
 </head>
 <body>
     <nav class="site-nav">
         <a href="./" class="nav-link">&larr; 4.4 Factoring</a>
-        <span class="nav-title">GCF Factoring</span>
+        <span class="nav-title">Factor by Grouping</span>
     </nav>
 
     <div class="container">
         <header>
-            <h1>GCF Factoring</h1>
-            <p>Factor out the Greatest Common Factor</p>
+            <h1>Factor by Grouping</h1>
+            <p>Factor 4-term polynomials by grouping pairs</p>
         </header>
 
         <div class="tabs">
@@ -489,69 +504,77 @@
 
         <!-- LEARN SECTION -->
         <div id="learn" class="section active">
-            <h2>Understanding GCF Factoring</h2>
+            <h2>Understanding Factor by Grouping</h2>
 
             <div class="info-box">
-                <h3 style="margin-top:0;">What is GCF Factoring?</h3>
-                <p>The <strong>Greatest Common Factor (GCF)</strong> of a polynomial is the largest expression that divides evenly into every term. Factoring out the GCF is the first step in factoring any polynomial.</p>
+                <h3 style="margin-top:0;">What is Factor by Grouping?</h3>
+                <p><strong>Factor by grouping</strong> is a technique used for polynomials with 4 terms. We split the polynomial into two groups, factor each group, then factor out the common binomial.</p>
+            </div>
+
+            <div class="formula-box">
+                <strong>The Pattern:</strong><br><br>
+                ra + rb + sa + sb<br>
+                = r(a + b) + s(a + b)<br>
+                = <strong>(r + s)(a + b)</strong>
             </div>
 
             <div class="why-box">
-                <h3 style="margin-top:0;">Why Does GCF Factoring Work?</h3>
-                <p>GCF factoring is based on the <strong>Distributive Property</strong> in reverse:</p>
-                <p style="text-align:center; font-size:1.2em;">
-                    a(b + c) = ab + ac &nbsp;&nbsp;&rarr;&nbsp;&nbsp; ab + ac = a(b + c)
-                </p>
-                <p>When we "factor out" the GCF, we're essentially un-distributing it. This works because:</p>
+                <h3 style="margin-top:0;">Why Does Grouping Work?</h3>
+                <p>Factor by grouping works because of the <strong>distributive property</strong> applied twice:</p>
+                <ol>
+                    <li><strong>First grouping:</strong> We find a common factor in each pair of terms</li>
+                    <li><strong>Second grouping:</strong> If done correctly, both groups share a common binomial factor</li>
+                    <li><strong>Final step:</strong> We factor out that common binomial, leaving another binomial</li>
+                </ol>
+                <p>This works because when we expand (r + s)(a + b), we get ra + rb + sa + sb - exactly 4 terms where pairs share factors!</p>
+            </div>
+
+            <h3>Step-by-Step Process</h3>
+            <div class="example-card">
+                <h4>How to Factor by Grouping</h4>
+                <ol>
+                    <li><strong>Group the first two terms and last two terms</strong></li>
+                    <li><strong>Factor out the GCF from each group</strong></li>
+                    <li><strong>Identify the common binomial factor</strong></li>
+                    <li><strong>Factor out the common binomial</strong></li>
+                    <li><strong>Check if any factor can be factored further</strong></li>
+                </ol>
+            </div>
+
+            <h3>Detailed Example</h3>
+            <div class="example-card">
+                <h4>Factor: x<sup>3</sup> + 5x<sup>2</sup> - 4x - 20</h4>
+
+                <div class="grouping-visual">
+                    <div class="group-box group-1">x<sup>3</sup> + 5x<sup>2</sup></div>
+                    <span>+</span>
+                    <div class="group-box group-2">-4x - 20</div>
+                </div>
+
+                <div style="font-family:'Courier New', monospace; line-height:2.2; padding:15px; background:white; border-radius:8px;">
+                    <div><span class="highlight-blue">x<sup>3</sup> + 5x<sup>2</sup></span> <span class="highlight-pink">- 4x - 20</span> <span style="color:#666;">&larr; Group terms</span></div>
+                    <div>= <span class="highlight-blue">x<sup>2</sup>(x + 5)</span> <span class="highlight-pink">- 4(x + 5)</span> <span style="color:#666;">&larr; Factor each group</span></div>
+                    <div>= <span class="highlight">(x + 5)</span>(x<sup>2</sup> - 4) <span style="color:#666;">&larr; Factor out (x + 5)</span></div>
+                    <div>= <span class="highlight-green">(x + 5)(x - 2)(x + 2)</span> <span style="color:#666;">&larr; Factor difference of squares</span></div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3 style="margin-top:0;">Key Tips</h3>
                 <ul>
-                    <li><strong>Every term shares the GCF</strong> - if each term contains a factor, we can pull it out front</li>
-                    <li><strong>Division reverses multiplication</strong> - dividing each term by the GCF gives what remains inside the parentheses</li>
-                    <li><strong>The product is unchanged</strong> - if you re-distribute the GCF, you get back the original expression</li>
+                    <li><strong>Sign matters:</strong> When factoring the second group, be careful with negative signs. If the third term is negative, you may need to factor out a negative.</li>
+                    <li><strong>Check for match:</strong> After factoring each group, the binomial factors must be identical for this method to work.</li>
+                    <li><strong>Not always possible:</strong> If the binomials don't match, try regrouping or the polynomial may not factor by grouping.</li>
+                    <li><strong>Factor completely:</strong> Always check if the resulting factors can be factored further (difference of squares, trinomials, etc.)</li>
                 </ul>
             </div>
 
-            <h3>How to Find the GCF</h3>
-            <div class="example-card">
-                <h4>Finding the GCF of Polynomial Terms</h4>
-                <p><strong>Step 1:</strong> Find the GCF of the coefficients (numbers)</p>
-                <p><strong>Step 2:</strong> For each variable, take the lowest power that appears in ALL terms</p>
-                <p><strong>Step 3:</strong> Multiply them together</p>
-
-                <div style="margin-top:15px; padding:15px; background:#e0e7ff; border-radius:8px;">
-                    <strong>Example:</strong> Find the GCF of 6x<sup>3</sup>, 18x<sup>2</sup>, and 12x<sup>4</sup>
-                    <ul>
-                        <li>GCF of 6, 18, 12 = <strong>6</strong></li>
-                        <li>Lowest power of x: x<sup>1</sup>, x<sup>2</sup>, x<sup>4</sup> → <strong>x</strong> (or x<sup>1</sup>)</li>
-                        <li>GCF = <strong>6x</strong></li>
-                    </ul>
-                </div>
-            </div>
-
-            <h3>Complete Factoring Process</h3>
-            <div class="formula-box">
-                1. Factor out the GCF<br>
-                2. Check if the remaining polynomial can be factored further<br>
-                3. Continue until fully factored
-            </div>
-
-            <div class="example-card">
-                <h4>Example: Factor x<sup>3</sup> - 4x<sup>2</sup> - 5x completely</h4>
-                <div style="font-family:'Courier New', monospace; line-height:2.2; padding:15px; background:white; border-radius:8px;">
-                    <div>x<sup>3</sup> - 4x<sup>2</sup> - 5x <span class="highlight">GCF is x</span></div>
-                    <div>= x(x<sup>2</sup> - 4x - 5) <span class="highlight">Factor out x</span></div>
-                    <div>= x(x - 5)(x + 1) <span class="highlight-green">Factor the trinomial</span></div>
-                </div>
-                <p style="margin-top:10px;"><strong>Check:</strong> x(x - 5)(x + 1) = x(x<sup>2</sup> + x - 5x - 5) = x(x<sup>2</sup> - 4x - 5) = x<sup>3</sup> - 4x<sup>2</sup> - 5x ✓</p>
-            </div>
-
             <div class="why-box">
-                <h3 style="margin-top:0;">Why Factor Completely?</h3>
-                <p>Finding all factors helps us:</p>
+                <h3 style="margin-top:0;">When to Use Factor by Grouping</h3>
                 <ul>
-                    <li><strong>Find zeros/roots</strong> - Each linear factor (x - a) tells us x = a is a solution</li>
-                    <li><strong>Simplify expressions</strong> - Factored form makes division and simplification easier</li>
-                    <li><strong>Solve equations</strong> - Setting each factor = 0 solves the equation</li>
-                    <li><strong>Graph functions</strong> - Factors reveal x-intercepts of the graph</li>
+                    <li><strong>4-term polynomials</strong> - This is the primary use case</li>
+                    <li><strong>Cubic polynomials</strong> - Often ax<sup>3</sup> + bx<sup>2</sup> + cx + d can be factored this way</li>
+                    <li><strong>When other methods don't apply</strong> - Not a perfect cube, not a simple trinomial</li>
                 </ul>
             </div>
         </div>
@@ -566,7 +589,7 @@
                 <button class="diff-btn" onclick="selectWatchExample(2)">Example 3</button>
             </div>
 
-            <div class="polynomial-display" id="watch-problem">2x<sup>3</sup> - 18x</div>
+            <div class="polynomial-display" id="watch-problem">x<sup>3</sup> + 5x<sup>2</sup> - 4x - 20</div>
 
             <div class="step-dots" id="watch-dots"></div>
 
@@ -577,7 +600,7 @@
 
             <div class="step-navigator">
                 <button class="step-nav-btn" id="watch-prev" onclick="watchPrev()">← Previous</button>
-                <span class="step-indicator" id="watch-indicator">Step 1 of 4</span>
+                <span class="step-indicator" id="watch-indicator">Step 1 of 5</span>
                 <button class="step-nav-btn" id="watch-next" onclick="watchNext()">Next →</button>
             </div>
         </div>
@@ -585,7 +608,7 @@
         <!-- PRACTICE SECTION -->
         <div id="practice" class="section">
             <h2>Practice</h2>
-            <p>Factor each polynomial step by step. Get feedback after each step!</p>
+            <p>Factor each polynomial step by step. Work through each group!</p>
 
             <div class="score-display">
                 Score: <span id="practice-score">0</span> / <span id="practice-total">0</span>
@@ -596,51 +619,64 @@
                 <h3>Factor completely:</h3>
                 <div class="polynomial-display" id="practice-problem"></div>
 
-                <!-- Step 1: Identify GCF -->
+                <!-- Step 1: Factor first group -->
                 <div class="step-container" id="practice-step1">
                     <div class="step-header">
                         <div class="step-number" id="practice-step1-num">1</div>
-                        <div class="step-title">What is the GCF of all terms?</div>
+                        <div class="step-title">Factor the first group: <span id="practice-group1" style="color:#3b82f6;"></span></div>
                     </div>
                     <div class="step-content" id="practice-step1-content">
                         <div class="input-group">
-                            <input type="text" id="practice-step1-answer" placeholder="e.g., 2x">
+                            <input type="text" id="practice-step1-answer" placeholder="e.g., x²(x+5)">
                             <button class="btn btn-primary" onclick="checkPracticeStep1()">Check</button>
                         </div>
                     </div>
                     <div class="step-completed-text hidden" id="practice-step1-complete"></div>
                 </div>
 
-                <!-- Step 2: Write remaining polynomial -->
+                <!-- Step 2: Factor second group -->
                 <div class="step-container hidden" id="practice-step2">
                     <div class="step-header">
                         <div class="step-number" id="practice-step2-num">2</div>
-                        <div class="step-title">After factoring out the GCF, what's left in parentheses?</div>
+                        <div class="step-title">Factor the second group: <span id="practice-group2" style="color:#ec4899;"></span></div>
                     </div>
                     <div class="step-content" id="practice-step2-content">
                         <div class="input-group">
-                            <span style="font-size:1.2em;" id="practice-partial"></span>
-                            <input type="text" id="practice-step2-answer" placeholder="e.g., x²-9">
-                            <span style="font-size:1.2em;">)</span>
+                            <input type="text" id="practice-step2-answer" placeholder="e.g., -4(x+5)">
                             <button class="btn btn-primary" onclick="checkPracticeStep2()">Check</button>
                         </div>
                     </div>
                     <div class="step-completed-text hidden" id="practice-step2-complete"></div>
                 </div>
 
-                <!-- Step 3: Final factored form -->
+                <!-- Step 3: Identify common binomial -->
                 <div class="step-container hidden" id="practice-step3">
                     <div class="step-header">
                         <div class="step-number" id="practice-step3-num">3</div>
-                        <div class="step-title">Write the completely factored form</div>
+                        <div class="step-title">What is the common binomial factor?</div>
                     </div>
                     <div class="step-content" id="practice-step3-content">
                         <div class="input-group">
-                            <input type="text" id="practice-step3-answer" placeholder="e.g., 2x(x-3)(x+3)">
+                            <input type="text" id="practice-step3-answer" placeholder="e.g., (x+5)">
                             <button class="btn btn-primary" onclick="checkPracticeStep3()">Check</button>
                         </div>
                     </div>
                     <div class="step-completed-text hidden" id="practice-step3-complete"></div>
+                </div>
+
+                <!-- Step 4: Final answer -->
+                <div class="step-container hidden" id="practice-step4">
+                    <div class="step-header">
+                        <div class="step-number" id="practice-step4-num">4</div>
+                        <div class="step-title">Write the completely factored form</div>
+                    </div>
+                    <div class="step-content" id="practice-step4-content">
+                        <div class="input-group">
+                            <input type="text" id="practice-step4-answer" placeholder="e.g., (x+5)(x-2)(x+2)">
+                            <button class="btn btn-primary" onclick="checkPracticeStep4()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="practice-step4-complete"></div>
                 </div>
 
                 <div class="feedback" id="practice-feedback"></div>
@@ -670,19 +706,27 @@
 
                 <div class="scratch-workspace">
                     <h4>Scratch Workspace</h4>
-                    <div class="scratch-area" id="solo-scratch">
-                        <div class="scratch-row">
-                            <span class="scratch-label">GCF:</span>
-                            <input type="text" class="scratch-input" id="scratch-gcf" placeholder="Find the GCF...">
-                        </div>
-                        <div class="scratch-row">
-                            <span class="scratch-label">After GCF:</span>
-                            <input type="text" class="scratch-input" id="scratch-after-gcf" placeholder="What's left inside ( )...">
-                        </div>
-                        <div class="scratch-row">
-                            <span class="scratch-label">Factor more?</span>
-                            <input type="text" class="scratch-input" id="scratch-factor-more" placeholder="Can you factor further?">
-                        </div>
+                    <div class="scratch-grid">
+                        <span class="scratch-label">Group 1:</span>
+                        <input type="text" class="scratch-input" id="scratch-g1-terms" placeholder="First two terms">
+
+                        <span class="scratch-label">Factor Group 1:</span>
+                        <input type="text" class="scratch-input" id="scratch-g1-factored" placeholder="e.g., x²(x+5)">
+
+                        <span class="scratch-label">Group 2:</span>
+                        <input type="text" class="scratch-input" id="scratch-g2-terms" placeholder="Last two terms">
+
+                        <span class="scratch-label">Factor Group 2:</span>
+                        <input type="text" class="scratch-input" id="scratch-g2-factored" placeholder="e.g., -4(x+5)">
+
+                        <span class="scratch-label">Common binomial:</span>
+                        <input type="text" class="scratch-input" id="scratch-common" placeholder="e.g., (x+5)">
+
+                        <span class="scratch-label">Other factor:</span>
+                        <input type="text" class="scratch-input" id="scratch-other" placeholder="e.g., (x²-4)">
+
+                        <span class="scratch-label">Factor more?</span>
+                        <input type="text" class="scratch-input" id="scratch-more" placeholder="Can you factor further?">
                     </div>
                 </div>
 
@@ -713,7 +757,6 @@
             if (id === 'solo' && !currentSolo) newSoloProblem();
         }
 
-        // Normalize answer for comparison
         function normalizeAnswer(str) {
             return str.replace(/\s+/g, '').replace(/\*/g, '').replace(/\^/g, '').replace(/\u00B2/g, '2').replace(/\u00B3/g, '3').replace(/\u2074/g, '4').replace(/\u2075/g, '5').toLowerCase();
         }
@@ -728,33 +771,36 @@
         // =====================
         const watchExamples = [
             {
-                problem: "2x³ - 18x",
-                problemHTML: "2x<sup>3</sup> - 18x",
+                problem: "x³ + 5x² - 4x - 20",
+                problemHTML: "x<sup>3</sup> + 5x<sup>2</sup> - 4x - 20",
                 steps: [
-                    { title: "Step 1: Identify the GCF", content: "Look at each term: <span class='highlight'>2x³</span> and <span class='highlight'>18x</span><br><br>GCF of coefficients (2, 18) = <strong>2</strong><br>Lowest power of x (x³, x¹) = <strong>x</strong><br><br>GCF = <strong>2x</strong>" },
-                    { title: "Step 2: Factor out the GCF", content: "2x³ - 18x<br>= <span class='highlight'>2x</span>(x² - 9) <span style='color:#666;'>&larr; Divide each term by 2x</span>" },
-                    { title: "Step 3: Check if remaining factors", content: "x² - 9 is a <span class='highlight'>difference of squares</span>!<br><br>x² - 9 = x² - 3² = (x - 3)(x + 3)" },
-                    { title: "Step 4: Write final answer", content: "2x³ - 18x<br>= 2x(x² - 9)<br>= <span class='highlight-green'>2x(x - 3)(x + 3)</span><br><br><strong>Check:</strong> 2x · (x-3) · (x+3) = 2x(x² - 9) = 2x³ - 18x ✓" }
+                    { title: "Step 1: Identify the groups", content: "Split into two groups of two terms:<br><br><span class='highlight-blue'>x³ + 5x²</span> and <span class='highlight-pink'>-4x - 20</span><br><br>We'll factor each group separately." },
+                    { title: "Step 2: Factor the first group", content: "<span class='highlight-blue'>x³ + 5x²</span><br><br>GCF of x³ and 5x² is <strong>x²</strong><br><br>x³ + 5x² = <span class='highlight'>x²(x + 5)</span>" },
+                    { title: "Step 3: Factor the second group", content: "<span class='highlight-pink'>-4x - 20</span><br><br>GCF of -4x and -20 is <strong>-4</strong><br><br>-4x - 20 = <span class='highlight'>-4(x + 5)</span><br><br><em>Note: Factor out -4 (not 4) so the binomials match!</em>" },
+                    { title: "Step 4: Factor out the common binomial", content: "x²<span class='highlight'>(x + 5)</span> - 4<span class='highlight'>(x + 5)</span><br><br>Both terms have <span class='highlight'>(x + 5)</span> as a factor!<br><br>= (x + 5)(x² - 4)" },
+                    { title: "Step 5: Factor completely", content: "(x + 5)<span class='highlight'>(x² - 4)</span><br><br>x² - 4 is a <strong>difference of squares</strong>!<br>x² - 4 = (x - 2)(x + 2)<br><br>= <span class='highlight-green'>(x + 5)(x - 2)(x + 2)</span>" }
                 ]
             },
             {
-                problem: "3y⁵ - 48y³",
-                problemHTML: "3y<sup>5</sup> - 48y<sup>3</sup>",
+                problem: "x³ - x² - 9x + 9",
+                problemHTML: "x<sup>3</sup> - x<sup>2</sup> - 9x + 9",
                 steps: [
-                    { title: "Step 1: Identify the GCF", content: "Terms: <span class='highlight'>3y⁵</span> and <span class='highlight'>48y³</span><br><br>GCF of (3, 48) = <strong>3</strong><br>Lowest power of y (y⁵, y³) = <strong>y³</strong><br><br>GCF = <strong>3y³</strong>" },
-                    { title: "Step 2: Factor out the GCF", content: "3y⁵ - 48y³<br>= <span class='highlight'>3y³</span>(y² - 16) <span style='color:#666;'>&larr; 3y⁵÷3y³=y², 48y³÷3y³=16</span>" },
-                    { title: "Step 3: Check if remaining factors", content: "y² - 16 is a <span class='highlight'>difference of squares</span>!<br><br>y² - 16 = y² - 4² = (y - 4)(y + 4)" },
-                    { title: "Step 4: Write final answer", content: "3y⁵ - 48y³<br>= 3y³(y² - 16)<br>= <span class='highlight-green'>3y³(y - 4)(y + 4)</span>" }
+                    { title: "Step 1: Identify the groups", content: "Split into two groups:<br><br><span class='highlight-blue'>x³ - x²</span> and <span class='highlight-pink'>-9x + 9</span>" },
+                    { title: "Step 2: Factor the first group", content: "<span class='highlight-blue'>x³ - x²</span><br><br>GCF is x²<br><br>x³ - x² = <span class='highlight'>x²(x - 1)</span>" },
+                    { title: "Step 3: Factor the second group", content: "<span class='highlight-pink'>-9x + 9</span><br><br>GCF is -9<br><br>-9x + 9 = <span class='highlight'>-9(x - 1)</span><br><br><em>We factor out -9 so we get (x - 1) to match the first group</em>" },
+                    { title: "Step 4: Factor out the common binomial", content: "x²<span class='highlight'>(x - 1)</span> - 9<span class='highlight'>(x - 1)</span><br><br>= (x - 1)(x² - 9)" },
+                    { title: "Step 5: Factor completely", content: "(x - 1)(x² - 9)<br><br>x² - 9 = (x - 3)(x + 3)<br><br>= <span class='highlight-green'>(x - 1)(x - 3)(x + 3)</span>" }
                 ]
             },
             {
-                problem: "x³ - 7x² + 10x",
-                problemHTML: "x<sup>3</sup> - 7x<sup>2</sup> + 10x",
+                problem: "x³ + 2x² - x - 2",
+                problemHTML: "x<sup>3</sup> + 2x<sup>2</sup> - x - 2",
                 steps: [
-                    { title: "Step 1: Identify the GCF", content: "Terms: <span class='highlight'>x³</span>, <span class='highlight'>-7x²</span>, and <span class='highlight'>10x</span><br><br>GCF of (1, 7, 10) = <strong>1</strong><br>Lowest power of x (x³, x², x¹) = <strong>x</strong><br><br>GCF = <strong>x</strong>" },
-                    { title: "Step 2: Factor out the GCF", content: "x³ - 7x² + 10x<br>= <span class='highlight'>x</span>(x² - 7x + 10)" },
-                    { title: "Step 3: Factor the trinomial", content: "x² - 7x + 10: Find two numbers that<br>• Multiply to +10<br>• Add to -7<br><br>-2 × -5 = 10 ✓<br>-2 + -5 = -7 ✓<br><br>x² - 7x + 10 = (x - 2)(x - 5)" },
-                    { title: "Step 4: Write final answer", content: "x³ - 7x² + 10x<br>= x(x² - 7x + 10)<br>= <span class='highlight-green'>x(x - 2)(x - 5)</span>" }
+                    { title: "Step 1: Identify the groups", content: "Split into two groups:<br><br><span class='highlight-blue'>x³ + 2x²</span> and <span class='highlight-pink'>-x - 2</span>" },
+                    { title: "Step 2: Factor the first group", content: "<span class='highlight-blue'>x³ + 2x²</span><br><br>GCF is x²<br><br>x³ + 2x² = <span class='highlight'>x²(x + 2)</span>" },
+                    { title: "Step 3: Factor the second group", content: "<span class='highlight-pink'>-x - 2</span><br><br>GCF is -1<br><br>-x - 2 = <span class='highlight'>-1(x + 2)</span><br><br><em>We can also write this as -(x + 2)</em>" },
+                    { title: "Step 4: Factor out the common binomial", content: "x²<span class='highlight'>(x + 2)</span> - 1<span class='highlight'>(x + 2)</span><br><br>= (x + 2)(x² - 1)" },
+                    { title: "Step 5: Factor completely", content: "(x + 2)(x² - 1)<br><br>x² - 1 = (x - 1)(x + 1)<br><br>= <span class='highlight-green'>(x + 2)(x - 1)(x + 1)</span>" }
                 ]
             }
         ];
@@ -777,7 +823,6 @@
             const example = watchExamples[idx];
             document.getElementById('watch-problem').innerHTML = example.problemHTML;
 
-            // Build dots
             const dotsContainer = document.getElementById('watch-dots');
             dotsContainer.innerHTML = example.steps.map((_, i) =>
                 `<div class="step-dot${i === 0 ? ' active' : ''}"></div>`
@@ -794,14 +839,12 @@
             document.getElementById('watch-work').innerHTML = step.content;
             document.getElementById('watch-indicator').textContent = `Step ${currentWatchStep + 1} of ${example.steps.length}`;
 
-            // Update dots
             document.querySelectorAll('#watch .step-dot').forEach((dot, i) => {
                 dot.classList.remove('active', 'completed');
                 if (i < currentWatchStep) dot.classList.add('completed');
                 if (i === currentWatchStep) dot.classList.add('active');
             });
 
-            // Update buttons
             document.getElementById('watch-prev').disabled = currentWatchStep === 0;
             document.getElementById('watch-next').disabled = currentWatchStep === example.steps.length - 1;
         }
@@ -826,46 +869,44 @@
         // =====================
         const practiceProblems = [
             {
-                expr: "x³ - 4x² - 5x",
-                exprHTML: "x<sup>3</sup> - 4x<sup>2</sup> - 5x",
-                gcf: ["x"],
-                remaining: ["x²-4x-5", "x^2-4x-5", "x2-4x-5"],
-                final: ["x(x-5)(x+1)", "x(x+1)(x-5)"]
+                expr: "x³ + 5x² - 4x - 20",
+                exprHTML: "x<sup>3</sup> + 5x<sup>2</sup> - 4x - 20",
+                group1: "x³ + 5x²",
+                group2: "-4x - 20",
+                step1: ["x²(x+5)", "x^2(x+5)"],
+                step2: ["-4(x+5)"],
+                common: ["(x+5)", "x+5"],
+                final: ["(x+5)(x-2)(x+2)", "(x+5)(x+2)(x-2)", "(x-2)(x+2)(x+5)", "(x+2)(x-2)(x+5)"]
             },
             {
-                expr: "2x³ - 18x",
-                exprHTML: "2x<sup>3</sup> - 18x",
-                gcf: ["2x"],
-                remaining: ["x²-9", "x^2-9", "x2-9"],
-                final: ["2x(x-3)(x+3)", "2x(x+3)(x-3)"]
+                expr: "x³ - x² - 9x + 9",
+                exprHTML: "x<sup>3</sup> - x<sup>2</sup> - 9x + 9",
+                group1: "x³ - x²",
+                group2: "-9x + 9",
+                step1: ["x²(x-1)", "x^2(x-1)"],
+                step2: ["-9(x-1)"],
+                common: ["(x-1)", "x-1"],
+                final: ["(x-1)(x-3)(x+3)", "(x-1)(x+3)(x-3)", "(x-3)(x+3)(x-1)", "(x+3)(x-3)(x-1)"]
             },
             {
-                expr: "3y⁵ - 48y³",
-                exprHTML: "3y<sup>5</sup> - 48y<sup>3</sup>",
-                gcf: ["3y³", "3y^3", "3y3"],
-                remaining: ["y²-16", "y^2-16", "y2-16"],
-                final: ["3y³(y-4)(y+4)", "3y^3(y-4)(y+4)", "3y³(y+4)(y-4)", "3y^3(y+4)(y-4)", "3y3(y-4)(y+4)", "3y3(y+4)(y-4)"]
+                expr: "x³ + 2x² - x - 2",
+                exprHTML: "x<sup>3</sup> + 2x<sup>2</sup> - x - 2",
+                group1: "x³ + 2x²",
+                group2: "-x - 2",
+                step1: ["x²(x+2)", "x^2(x+2)"],
+                step2: ["-1(x+2)", "-(x+2)"],
+                common: ["(x+2)", "x+2"],
+                final: ["(x+2)(x-1)(x+1)", "(x+2)(x+1)(x-1)", "(x-1)(x+1)(x+2)", "(x+1)(x-1)(x+2)"]
             },
             {
-                expr: "x⁴ - 16x²",
-                exprHTML: "x<sup>4</sup> - 16x<sup>2</sup>",
-                gcf: ["x²", "x^2", "x2"],
-                remaining: ["x²-16", "x^2-16", "x2-16"],
-                final: ["x²(x-4)(x+4)", "x^2(x-4)(x+4)", "x²(x+4)(x-4)", "x^2(x+4)(x-4)", "x2(x-4)(x+4)", "x2(x+4)(x-4)"]
-            },
-            {
-                expr: "4x³ - 36x",
-                exprHTML: "4x<sup>3</sup> - 36x",
-                gcf: ["4x"],
-                remaining: ["x²-9", "x^2-9", "x2-9"],
-                final: ["4x(x-3)(x+3)", "4x(x+3)(x-3)"]
-            },
-            {
-                expr: "x³ - 7x² + 10x",
-                exprHTML: "x<sup>3</sup> - 7x<sup>2</sup> + 10x",
-                gcf: ["x"],
-                remaining: ["x²-7x+10", "x^2-7x+10", "x2-7x+10"],
-                final: ["x(x-2)(x-5)", "x(x-5)(x-2)"]
+                expr: "x³ - 3x² - 4x + 12",
+                exprHTML: "x<sup>3</sup> - 3x<sup>2</sup> - 4x + 12",
+                group1: "x³ - 3x²",
+                group2: "-4x + 12",
+                step1: ["x²(x-3)", "x^2(x-3)"],
+                step2: ["-4(x-3)"],
+                common: ["(x-3)", "x-3"],
+                final: ["(x-3)(x-2)(x+2)", "(x-3)(x+2)(x-2)", "(x-2)(x+2)(x-3)", "(x+2)(x-2)(x-3)"]
             }
         ];
 
@@ -877,9 +918,11 @@
             currentPractice = practiceProblems[Math.floor(Math.random() * practiceProblems.length)];
 
             document.getElementById('practice-problem').innerHTML = currentPractice.exprHTML;
+            document.getElementById('practice-group1').textContent = currentPractice.group1;
+            document.getElementById('practice-group2').textContent = currentPractice.group2;
 
             // Reset all steps
-            for (let i = 1; i <= 3; i++) {
+            for (let i = 1; i <= 4; i++) {
                 document.getElementById(`practice-step${i}`).classList.remove('hidden');
                 document.getElementById(`practice-step${i}-num`).classList.remove('completed');
                 document.getElementById(`practice-step${i}-content`).classList.remove('hidden');
@@ -893,6 +936,7 @@
 
             document.getElementById('practice-step2').classList.add('hidden');
             document.getElementById('practice-step3').classList.add('hidden');
+            document.getElementById('practice-step4').classList.add('hidden');
 
             document.getElementById('practice-feedback').className = 'feedback';
             document.getElementById('practice-feedback').style.display = 'none';
@@ -900,17 +944,16 @@
 
         function checkPracticeStep1() {
             const input = document.getElementById('practice-step1-answer');
-            const isCorrect = checkAnswerMatch(input.value, currentPractice.gcf);
+            const isCorrect = checkAnswerMatch(input.value, currentPractice.step1);
 
             if (isCorrect) {
                 input.classList.add('correct');
                 document.getElementById('practice-step1-num').classList.add('completed');
                 document.getElementById('practice-step1-content').classList.add('hidden');
-                document.getElementById('practice-step1-complete').textContent = `GCF: ${currentPractice.gcf[0]}`;
+                document.getElementById('practice-step1-complete').textContent = currentPractice.step1[0];
                 document.getElementById('practice-step1-complete').classList.remove('hidden');
 
                 document.getElementById('practice-step2').classList.remove('hidden');
-                document.getElementById('practice-partial').textContent = `${currentPractice.gcf[0]}(`;
             } else {
                 input.classList.add('incorrect');
                 setTimeout(() => input.classList.remove('incorrect'), 500);
@@ -919,13 +962,13 @@
 
         function checkPracticeStep2() {
             const input = document.getElementById('practice-step2-answer');
-            const isCorrect = checkAnswerMatch(input.value, currentPractice.remaining);
+            const isCorrect = checkAnswerMatch(input.value, currentPractice.step2);
 
             if (isCorrect) {
                 input.classList.add('correct');
                 document.getElementById('practice-step2-num').classList.add('completed');
                 document.getElementById('practice-step2-content').classList.add('hidden');
-                document.getElementById('practice-step2-complete').textContent = `${currentPractice.gcf[0]}(${currentPractice.remaining[0]})`;
+                document.getElementById('practice-step2-complete').textContent = currentPractice.step2[0];
                 document.getElementById('practice-step2-complete').classList.remove('hidden');
 
                 document.getElementById('practice-step3').classList.remove('hidden');
@@ -937,6 +980,24 @@
 
         function checkPracticeStep3() {
             const input = document.getElementById('practice-step3-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentPractice.common);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('practice-step3-num').classList.add('completed');
+                document.getElementById('practice-step3-content').classList.add('hidden');
+                document.getElementById('practice-step3-complete').textContent = `Common binomial: ${currentPractice.common[0]}`;
+                document.getElementById('practice-step3-complete').classList.remove('hidden');
+
+                document.getElementById('practice-step4').classList.remove('hidden');
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkPracticeStep4() {
+            const input = document.getElementById('practice-step4-answer');
             const isCorrect = checkAnswerMatch(input.value, currentPractice.final);
 
             practiceTotal++;
@@ -945,12 +1006,12 @@
             if (isCorrect) {
                 practiceScore++;
                 input.classList.add('correct');
-                document.getElementById('practice-step3-num').classList.add('completed');
-                document.getElementById('practice-step3-content').classList.add('hidden');
-                document.getElementById('practice-step3-complete').textContent = `Final: ${currentPractice.final[0]}`;
-                document.getElementById('practice-step3-complete').classList.remove('hidden');
+                document.getElementById('practice-step4-num').classList.add('completed');
+                document.getElementById('practice-step4-content').classList.add('hidden');
+                document.getElementById('practice-step4-complete').textContent = `Final: ${currentPractice.final[0]}`;
+                document.getElementById('practice-step4-complete').classList.remove('hidden');
 
-                feedback.innerHTML = '<strong>Excellent!</strong> You factored completely!';
+                feedback.innerHTML = '<strong>Excellent!</strong> Perfect factoring by grouping!';
                 feedback.className = 'feedback correct show';
             } else {
                 input.classList.add('incorrect');
@@ -968,22 +1029,22 @@
         // =====================
         const soloProblems = {
             easy: [
-                { expr: "2x² - 8", exprHTML: "2x<sup>2</sup> - 8", answers: ["2(x-2)(x+2)", "2(x+2)(x-2)"] },
-                { expr: "3x² - 12", exprHTML: "3x<sup>2</sup> - 12", answers: ["3(x-2)(x+2)", "3(x+2)(x-2)"] },
-                { expr: "x³ - x", exprHTML: "x<sup>3</sup> - x", answers: ["x(x-1)(x+1)", "x(x+1)(x-1)"] },
-                { expr: "5x² - 20", exprHTML: "5x<sup>2</sup> - 20", answers: ["5(x-2)(x+2)", "5(x+2)(x-2)"] }
+                { expr: "x³ + 2x² + 3x + 6", exprHTML: "x<sup>3</sup> + 2x<sup>2</sup> + 3x + 6", answers: ["(x+2)(x²+3)", "(x+2)(x^2+3)"] },
+                { expr: "x³ - 3x² + 2x - 6", exprHTML: "x<sup>3</sup> - 3x<sup>2</sup> + 2x - 6", answers: ["(x-3)(x²+2)", "(x-3)(x^2+2)"] },
+                { expr: "x³ + x² + x + 1", exprHTML: "x<sup>3</sup> + x<sup>2</sup> + x + 1", answers: ["(x+1)(x²+1)", "(x+1)(x^2+1)"] },
+                { expr: "x³ - 2x² + 5x - 10", exprHTML: "x<sup>3</sup> - 2x<sup>2</sup> + 5x - 10", answers: ["(x-2)(x²+5)", "(x-2)(x^2+5)"] }
             ],
             medium: [
-                { expr: "2x³ - 18x", exprHTML: "2x<sup>3</sup> - 18x", answers: ["2x(x-3)(x+3)", "2x(x+3)(x-3)"] },
-                { expr: "x³ - 4x² - 5x", exprHTML: "x<sup>3</sup> - 4x<sup>2</sup> - 5x", answers: ["x(x-5)(x+1)", "x(x+1)(x-5)"] },
-                { expr: "3x³ - 27x", exprHTML: "3x<sup>3</sup> - 27x", answers: ["3x(x-3)(x+3)", "3x(x+3)(x-3)"] },
-                { expr: "x³ + 2x² - 3x", exprHTML: "x<sup>3</sup> + 2x<sup>2</sup> - 3x", answers: ["x(x+3)(x-1)", "x(x-1)(x+3)"] }
+                { expr: "x³ + 5x² - 4x - 20", exprHTML: "x<sup>3</sup> + 5x<sup>2</sup> - 4x - 20", answers: ["(x+5)(x-2)(x+2)", "(x+5)(x+2)(x-2)", "(x-2)(x+2)(x+5)", "(x+2)(x-2)(x+5)"] },
+                { expr: "x³ - x² - 9x + 9", exprHTML: "x<sup>3</sup> - x<sup>2</sup> - 9x + 9", answers: ["(x-1)(x-3)(x+3)", "(x-1)(x+3)(x-3)", "(x-3)(x+3)(x-1)", "(x+3)(x-3)(x-1)"] },
+                { expr: "x³ + 2x² - x - 2", exprHTML: "x<sup>3</sup> + 2x<sup>2</sup> - x - 2", answers: ["(x+2)(x-1)(x+1)", "(x+2)(x+1)(x-1)", "(x-1)(x+1)(x+2)", "(x+1)(x-1)(x+2)"] },
+                { expr: "x³ - 3x² - 4x + 12", exprHTML: "x<sup>3</sup> - 3x<sup>2</sup> - 4x + 12", answers: ["(x-3)(x-2)(x+2)", "(x-3)(x+2)(x-2)", "(x-2)(x+2)(x-3)", "(x+2)(x-2)(x-3)"] }
             ],
             hard: [
-                { expr: "3y⁵ - 48y³", exprHTML: "3y<sup>5</sup> - 48y<sup>3</sup>", answers: ["3y³(y-4)(y+4)", "3y^3(y-4)(y+4)", "3y³(y+4)(y-4)", "3y^3(y+4)(y-4)"] },
-                { expr: "x⁴ - 16x²", exprHTML: "x<sup>4</sup> - 16x<sup>2</sup>", answers: ["x²(x-4)(x+4)", "x^2(x-4)(x+4)", "x²(x+4)(x-4)", "x^2(x+4)(x-4)"] },
-                { expr: "2x⁴ - 32x²", exprHTML: "2x<sup>4</sup> - 32x<sup>2</sup>", answers: ["2x²(x-4)(x+4)", "2x^2(x-4)(x+4)", "2x²(x+4)(x-4)", "2x^2(x+4)(x-4)"] },
-                { expr: "4x³ - 16x² - 20x", exprHTML: "4x<sup>3</sup> - 16x<sup>2</sup> - 20x", answers: ["4x(x-5)(x+1)", "4x(x+1)(x-5)"] }
+                { expr: "x³ + 4x² - 9x - 36", exprHTML: "x<sup>3</sup> + 4x<sup>2</sup> - 9x - 36", answers: ["(x+4)(x-3)(x+3)", "(x+4)(x+3)(x-3)", "(x-3)(x+3)(x+4)", "(x+3)(x-3)(x+4)"] },
+                { expr: "x³ - 2x² - 16x + 32", exprHTML: "x<sup>3</sup> - 2x<sup>2</sup> - 16x + 32", answers: ["(x-2)(x-4)(x+4)", "(x-2)(x+4)(x-4)", "(x-4)(x+4)(x-2)", "(x+4)(x-4)(x-2)"] },
+                { expr: "x³ + 3x² - 25x - 75", exprHTML: "x<sup>3</sup> + 3x<sup>2</sup> - 25x - 75", answers: ["(x+3)(x-5)(x+5)", "(x+3)(x+5)(x-5)", "(x-5)(x+5)(x+3)", "(x+5)(x-5)(x+3)"] },
+                { expr: "x³ - 5x² - x + 5", exprHTML: "x<sup>3</sup> - 5x<sup>2</sup> - x + 5", answers: ["(x-5)(x-1)(x+1)", "(x-5)(x+1)(x-1)", "(x-1)(x+1)(x-5)", "(x+1)(x-1)(x-5)"] }
             ]
         };
 
@@ -1006,11 +1067,11 @@
             document.getElementById('solo-problem').innerHTML = currentSolo.exprHTML;
 
             // Clear scratch workspace
-            document.getElementById('scratch-gcf').value = '';
-            document.getElementById('scratch-after-gcf').value = '';
-            document.getElementById('scratch-factor-more').value = '';
+            ['scratch-g1-terms', 'scratch-g1-factored', 'scratch-g2-terms',
+             'scratch-g2-factored', 'scratch-common', 'scratch-other', 'scratch-more'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
 
-            // Clear answer
             document.getElementById('solo-answer').value = '';
             document.getElementById('solo-answer').classList.remove('correct', 'incorrect');
 
@@ -1028,7 +1089,7 @@
             if (isCorrect) {
                 soloScore++;
                 input.classList.add('correct');
-                feedback.innerHTML = '<strong>Correct!</strong> Great job!';
+                feedback.innerHTML = '<strong>Correct!</strong> Great job with grouping!';
                 feedback.className = 'feedback correct show';
             } else {
                 input.classList.add('incorrect');
@@ -1048,6 +1109,7 @@
                 if (target.id === 'practice-step1-answer') checkPracticeStep1();
                 else if (target.id === 'practice-step2-answer') checkPracticeStep2();
                 else if (target.id === 'practice-step3-answer') checkPracticeStep3();
+                else if (target.id === 'practice-step4-answer') checkPracticeStep4();
                 else if (target.id === 'solo-answer') checkSoloAnswer();
             }
         });

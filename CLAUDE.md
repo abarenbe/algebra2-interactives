@@ -10,8 +10,8 @@
 
 4. **Scratch Workspace in Solo Practice**: Solo/independent practice sections must include a visual scratch workspace so students can work through problems without needing paper and pencil. The workspace should match the visual format of the problem type (e.g., synthetic division grid, long division layout) with editable input fields for intermediate steps.
 
-5. **Learn → See → Practice → Solo Pattern**: Every concept in a chapter subsection must follow this 4-tab structure:
+5. **Learn → See → Practice → Do Pattern**: Every concept in a chapter subsection must follow this 4-tab structure (all verbs):
    - **Learn**: Explain both HOW to do the concept AND WHY it works. Don't just teach the procedure—help students understand the underlying mathematical reasoning.
-   - **See (Watch)**: Step-by-step example walkthroughs where students can navigate through each step with explanations.
-   - **Practice (Guided)**: Student inputs each step with immediate feedback and hints available.
-   - **Solo**: Independent practice with scratch workspace and final answer entry.
+   - **See**: Step-by-step example walkthroughs where students can navigate through each step with explanations.
+   - **Practice**: Student inputs each step with immediate feedback and hints available.
+   - **Do**: Independent practice with scratch workspace and final answer entry.
