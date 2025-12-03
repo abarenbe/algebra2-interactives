@@ -1,0 +1,2215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polynomial Long Division - Complete Interactive</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #1e3c72;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        h3 {
+            color: #2a5298;
+            margin-top: 25px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 30px;
+            border: none;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: #1e3c72;
+            font-weight: bold;
+        }
+
+        .tab-btn .tab-number {
+            display: inline-block;
+            background: rgba(255,255,255,0.3);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            line-height: 24px;
+            margin-right: 8px;
+            font-size: 0.85em;
+        }
+
+        .tab-btn.active .tab-number {
+            background: #1e3c72;
+            color: white;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Steps Reference */
+        .steps-reference {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .step-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border-left: 4px solid #2a5298;
+        }
+
+        .step-card .step-num {
+            background: #2a5298;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .step-card h4 {
+            margin: 5px 0;
+            color: #1e3c72;
+        }
+
+        .step-card p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Explanation Box */
+        .explanation-box {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 5px solid #2196f3;
+            padding: 20px;
+            border-radius: 0 10px 10px 0;
+            margin: 20px 0;
+        }
+
+        .explanation-box h4 {
+            margin-top: 0;
+            color: #1565c0;
+        }
+
+        .explanation-box .math {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            font-size: 1.1em;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            display: inline-block;
+        }
+
+        /* Division Display */
+        .division-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .division-problem {
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 1.3em;
+            line-height: 2;
+            white-space: pre;
+            min-width: fit-content;
+        }
+
+        /* Step Navigation */
+        .step-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+
+        .step-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .step-dot {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .step-dot:hover {
+            background: #bbb;
+        }
+
+        .step-dot.active {
+            background: #2a5298;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .step-dot.complete {
+            background: #28a745;
+            color: white;
+        }
+
+        /* Problem Selector */
+        .problem-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            justify-content: center;
+        }
+
+        .problem-btn {
+            padding: 10px 20px;
+            border: 2px solid #2a5298;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95em;
+        }
+
+        .problem-btn:hover {
+            background: #e3f2fd;
+        }
+
+        .problem-btn.active {
+            background: #2a5298;
+            color: white;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 28px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(30, 60, 114, 0.4);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .buttons-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 25px;
+        }
+
+        /* ========== GUIDED PRACTICE STYLES ========== */
+        .score-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+
+        .score-item {
+            text-align: center;
+        }
+
+        .score-item .label {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+
+        .score-item .value {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .division-workspace {
+            background: #fafafa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .division-grid {
+            display: inline-block;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 1.3em;
+            line-height: 1.8;
+        }
+
+        .division-row {
+            display: flex;
+            align-items: center;
+            min-height: 45px;
+        }
+
+        .divisor-area {
+            display: flex;
+            align-items: flex-start;
+            margin-right: 5px;
+        }
+
+        .divisor {
+            padding-right: 10px;
+            white-space: nowrap;
+        }
+
+        .dividend-area {
+            border-top: 3px solid #333;
+            border-left: 3px solid #333;
+            border-top-left-radius: 10px;
+            padding: 5px 15px 5px 10px;
+            min-width: 300px;
+        }
+
+        .quotient-area {
+            margin-left: 60px;
+            margin-bottom: 5px;
+            min-height: 40px;
+            padding-left: 10px;
+        }
+
+        .work-row {
+            margin-left: 60px;
+            padding-left: 10px;
+            display: flex;
+            align-items: center;
+            min-height: 40px;
+        }
+
+        .term-cell {
+            display: inline-block;
+            min-width: 60px;
+            text-align: center;
+            padding: 2px 5px;
+        }
+
+        .term-input {
+            width: 65px;
+            padding: 8px;
+            border: 2px solid #2a5298;
+            border-radius: 8px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 1em;
+            text-align: center;
+            background: white;
+        }
+
+        .term-input:focus {
+            outline: none;
+            border-color: #1e3c72;
+            box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+        }
+
+        .term-input.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .term-input.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+            animation: shake 0.5s;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        /* Scratch workspace inputs */
+        .scratch-input {
+            width: 55px;
+            height: 32px;
+            border: 1px dashed #aaa;
+            border-radius: 4px;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            text-align: center;
+            background: rgba(255,255,255,0.8);
+        }
+
+        .scratch-input:focus {
+            outline: none;
+            border: 2px solid #2a5298;
+            background: white;
+        }
+
+        .scratch-row {
+            display: flex;
+            align-items: center;
+            min-height: 38px;
+        }
+
+        .scratch-divisor {
+            padding-right: 10px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .scratch-dividend-area {
+            border-top: 2px solid #333;
+            border-left: 2px solid #333;
+            border-top-left-radius: 8px;
+            padding: 5px 10px;
+            display: flex;
+            gap: 5px;
+        }
+
+        .scratch-quotient-area {
+            margin-left: 80px;
+            padding-left: 10px;
+            display: flex;
+            gap: 5px;
+            margin-bottom: 5px;
+        }
+
+        .scratch-work-area {
+            margin-left: 80px;
+            padding-left: 10px;
+        }
+
+        .scratch-work-row {
+            display: flex;
+            gap: 5px;
+            margin: 3px 0;
+        }
+
+        .term-fixed {
+            padding: 8px;
+        }
+
+        .term-highlight {
+            background: #fff9c4;
+            border-radius: 5px;
+        }
+
+        .term-result {
+            color: #1e3c72;
+            font-weight: bold;
+        }
+
+        .step-instruction {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .step-instruction h3 {
+            margin: 0 0 10px 0;
+            color: #1e3c72;
+        }
+
+        .step-instruction p {
+            margin: 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .step-instruction .math {
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+            background: white;
+            padding: 8px 15px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 1.2em;
+        }
+
+        .feedback-box {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+            text-align: center;
+        }
+
+        .feedback-box.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback-box.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #28a745;
+        }
+
+        .feedback-box.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #dc3545;
+        }
+
+        .feedback-box.hint {
+            background: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffc107;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .progress-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.complete {
+            background: #28a745;
+        }
+
+        .progress-dot.current {
+            background: #2a5298;
+            transform: scale(1.3);
+        }
+
+        .progress-dot.error {
+            background: #dc3545;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
+        .completion-message.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .completion-message h2 {
+            color: #28a745;
+            border: none;
+            margin-bottom: 15px;
+        }
+
+        .completion-message .final-answer {
+            font-size: 1.4em;
+            background: #d4edda;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+        }
+
+        /* ========== SOLO PRACTICE STYLES ========== */
+        .practice-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .problem-display {
+            font-size: 1.4em;
+            text-align: center;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            border: 2px solid #2a5298;
+            margin-bottom: 20px;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+        }
+
+        .input-section {
+            display: grid;
+            gap: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .input-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .input-group label {
+            font-weight: bold;
+            min-width: 100px;
+            color: #333;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-family: 'Cambria Math', 'Times New Roman', serif;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #2a5298;
+        }
+
+        .input-group input.correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        .input-group input.incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
+        }
+
+        .feedback {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .feedback.hint {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+        }
+
+        .score-display {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .score-display h2 {
+            color: white;
+            border: none;
+            margin: 0;
+        }
+
+        .score-numbers {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            height: 12px;
+            overflow: hidden;
+            margin-top: 15px;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .difficulty-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .difficulty-btn {
+            padding: 10px 25px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .difficulty-btn.easy { border-color: #28a745; }
+        .difficulty-btn.medium { border-color: #ffc107; }
+        .difficulty-btn.hard { border-color: #dc3545; }
+
+        .difficulty-btn.active.easy { background: #28a745; color: white; }
+        .difficulty-btn.active.medium { background: #ffc107; color: #333; }
+        .difficulty-btn.active.hard { background: #dc3545; color: white; }
+
+        /* Flow Guide */
+        .flow-guide {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .flow-guide h3 {
+            color: #2e7d32;
+            margin-top: 0;
+        }
+
+        .flow-guide .flow-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .flow-guide .flow-step {
+            padding: 8px 16px;
+            background: white;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .flow-guide .flow-step.current {
+            background: #2e7d32;
+            color: white;
+            font-weight: bold;
+        }
+
+        .flow-guide .flow-arrow {
+            color: #2e7d32;
+            font-size: 1.2em;
+        }
+
+        sup { font-size: 0.7em; }
+
+        @media (max-width: 768px) {
+            header h1 { font-size: 1.8em; }
+            .division-problem { font-size: 1em; }
+            .division-grid { font-size: 1em; }
+            .step-dot { width: 28px; height: 28px; font-size: 0.8em; }
+            .btn { padding: 10px 20px; }
+            .term-input { width: 50px; padding: 6px; }
+            .term-cell { min-width: 45px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Polynomial Long Division</h1>
+            <p>Learn, Watch, Practice, Master</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab-btn active" onclick="showTab('learn')">
+                <span class="tab-number">1</span>Learn
+            </button>
+            <button class="tab-btn" onclick="showTab('examples')">
+                <span class="tab-number">2</span>Watch
+            </button>
+            <button class="tab-btn" onclick="showTab('guided')">
+                <span class="tab-number">3</span>Guided
+            </button>
+            <button class="tab-btn" onclick="showTab('solo')">
+                <span class="tab-number">4</span>Solo
+            </button>
+        </div>
+
+        <!-- ========== LEARN TAB ========== -->
+        <div id="learn" class="section active">
+            <div class="card">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step current">1. Learn the Concepts</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. Watch Examples</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Guided Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Solo Practice</span>
+                    </div>
+                </div>
+
+                <h2>How Long Division Works</h2>
+                <p>Polynomial long division works just like regular long division with numbers. Follow these steps:</p>
+
+                <div class="steps-reference">
+                    <div class="step-card">
+                        <div class="step-num">1</div>
+                        <h4>Divide</h4>
+                        <p>Divide leading terms</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">2</div>
+                        <h4>Multiply</h4>
+                        <p>Multiply divisor by result</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">3</div>
+                        <h4>Subtract</h4>
+                        <p>Subtract from dividend</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">4</div>
+                        <h4>Bring Down</h4>
+                        <p>Bring down next term</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-num">5</div>
+                        <h4>Repeat</h4>
+                        <p>Until degree < divisor</p>
+                    </div>
+                </div>
+
+                <div class="explanation-box">
+                    <h4>Key Points to Remember</h4>
+                    <ul>
+                        <li><strong>Standard Form:</strong> Write both polynomials in descending order of powers</li>
+                        <li><strong>Placeholders:</strong> Use 0 for missing terms (e.g., x³ + 1 becomes x³ + 0x² + 0x + 1)</li>
+                        <li><strong>Leading Terms:</strong> Always divide the leading term of what remains by the leading term of the divisor</li>
+                        <li><strong>Signs:</strong> Be careful with negative signs when subtracting!</li>
+                    </ul>
+                </div>
+
+                <h3>The Division Algorithm</h3>
+                <div class="explanation-box">
+                    <p>When you divide polynomial f(x) by d(x), you get:</p>
+                    <div class="math">f(x) = d(x) · q(x) + r(x)</div>
+                    <p>Where:</p>
+                    <ul>
+                        <li><strong>f(x)</strong> = Dividend (what you're dividing)</li>
+                        <li><strong>d(x)</strong> = Divisor (what you're dividing by)</li>
+                        <li><strong>q(x)</strong> = Quotient (the answer)</li>
+                        <li><strong>r(x)</strong> = Remainder (what's left over)</li>
+                    </ul>
+                </div>
+
+                <div class="buttons-row">
+                    <button class="btn btn-primary" onclick="showTab('examples')">Continue to Watch Examples →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== EXAMPLES TAB ========== -->
+        <div id="examples" class="section">
+            <div class="card">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn the Concepts</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">2. Watch Examples</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Guided Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Solo Practice</span>
+                    </div>
+                </div>
+
+                <h2>Step-by-Step Examples</h2>
+                <p>Choose an example and step through the division process:</p>
+
+                <div class="problem-selector" id="example-selector">
+                    <button class="problem-btn active" onclick="loadExample(0)">Example 1: Basic</button>
+                    <button class="problem-btn" onclick="loadExample(1)">Example 2: With Remainder</button>
+                    <button class="problem-btn" onclick="loadExample(2)">Example 3: Missing Terms</button>
+                    <button class="problem-btn" onclick="loadExample(3)">Example 4: Higher Degree</button>
+                </div>
+
+                <div class="division-container">
+                    <div class="division-problem" id="division-display"></div>
+                </div>
+
+                <div class="step-navigation">
+                    <button class="btn btn-secondary" onclick="prevStep()">← Previous</button>
+                    <div class="step-dots" id="step-dots"></div>
+                    <button class="btn btn-primary" onclick="nextStep()">Next →</button>
+                </div>
+
+                <div class="explanation-box" id="step-explanation"></div>
+
+                <div class="buttons-row">
+                    <button class="btn btn-warning" onclick="resetExample()">Start Over</button>
+                    <button class="btn btn-success" onclick="showAllSteps()">Show Complete Solution</button>
+                    <button class="btn btn-primary" onclick="showTab('guided')">Continue to Guided Practice →</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== GUIDED PRACTICE TAB ========== -->
+        <div id="guided" class="section">
+            <div class="card">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn the Concepts</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. Watch Examples</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">3. Guided Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Solo Practice</span>
+                    </div>
+                </div>
+
+                <h2>Guided Step-by-Step Practice</h2>
+                <p>Now it's your turn! Enter each step and get immediate feedback.</p>
+
+                <div class="score-bar">
+                    <div class="score-item">
+                        <div class="label">Problem</div>
+                        <div class="value"><span id="guided-current">1</span> / <span id="guided-total">5</span></div>
+                    </div>
+                    <div class="score-item">
+                        <div class="label">Steps Correct</div>
+                        <div class="value" id="guided-steps-correct">0</div>
+                    </div>
+                    <div class="score-item">
+                        <div class="label">Mistakes</div>
+                        <div class="value" id="guided-mistakes">0</div>
+                    </div>
+                </div>
+
+                <div class="difficulty-selector" id="guided-difficulty">
+                    <button class="difficulty-btn easy active" onclick="setGuidedDifficulty('easy')">Easy</button>
+                    <button class="difficulty-btn medium" onclick="setGuidedDifficulty('medium')">Medium</button>
+                    <button class="difficulty-btn hard" onclick="setGuidedDifficulty('hard')">Hard</button>
+                </div>
+
+                <h3 id="guided-problem-title">Divide: (x² + 5x + 6) ÷ (x + 2)</h3>
+
+                <div class="progress-steps" id="guided-progress-steps"></div>
+
+                <div class="division-workspace" id="guided-workspace">
+                    <!-- Division grid will be built here -->
+                </div>
+
+                <div class="step-instruction" id="guided-step-instruction">
+                    <h3>Step 1: Divide</h3>
+                    <p>What do you get when you divide the leading term of the dividend by the leading term of the divisor?</p>
+                    <div class="math">x² ÷ x = ?</div>
+                </div>
+
+                <div class="feedback-box" id="guided-feedback"></div>
+
+                <div class="buttons-row" id="guided-buttons">
+                    <button class="btn btn-warning" onclick="showGuidedHint()">Hint</button>
+                    <button class="btn btn-primary" id="guided-check-btn" onclick="checkGuidedStep()">Check Step</button>
+                    <button class="btn btn-secondary" onclick="skipGuidedStep()">Skip Step</button>
+                </div>
+
+                <div class="completion-message" id="guided-completion">
+                    <h2>Problem Complete!</h2>
+                    <div class="final-answer" id="guided-final-answer"></div>
+                    <div class="buttons-row">
+                        <button class="btn btn-success" onclick="nextGuidedProblem()">Next Problem</button>
+                        <button class="btn btn-primary" onclick="showTab('solo')">Continue to Solo Practice →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SOLO PRACTICE TAB ========== -->
+        <div id="solo" class="section">
+            <div class="card">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn the Concepts</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. Watch Examples</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Guided Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">4. Solo Practice</span>
+                    </div>
+                </div>
+
+                <h2>Solo Practice</h2>
+                <p>Work through each division on your own and enter your final answers.</p>
+
+                <div class="score-display">
+                    <h2>Your Score</h2>
+                    <div class="score-numbers"><span id="solo-score">0</span> / <span id="solo-total">0</span></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="solo-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="difficulty-selector" id="solo-difficulty">
+                    <button class="difficulty-btn easy active" onclick="setSoloDifficulty('easy')">Easy</button>
+                    <button class="difficulty-btn medium" onclick="setSoloDifficulty('medium')">Medium</button>
+                    <button class="difficulty-btn hard" onclick="setSoloDifficulty('hard')">Hard</button>
+                </div>
+
+                <div class="practice-container">
+                    <p style="text-align: center; color: #666;">Divide the polynomials:</p>
+                    <div class="problem-display" id="solo-problem"></div>
+
+                    <div class="division-workspace" id="solo-scratch-workspace">
+                        <div class="division-grid" id="solo-scratch-grid"></div>
+                    </div>
+                    <p style="text-align: center; color: #888; font-size: 0.9em; margin-top: -10px;">Use the workspace above as scratch work</p>
+
+                    <div class="input-section">
+                        <div class="input-group">
+                            <label>Quotient:</label>
+                            <input type="text" id="solo-quotient-input" placeholder="e.g., x^2 + 3x - 2">
+                        </div>
+                        <div class="input-group">
+                            <label>Remainder:</label>
+                            <input type="text" id="solo-remainder-input" placeholder="e.g., 5 (or 0 if none)">
+                        </div>
+                    </div>
+
+                    <div class="feedback" id="solo-feedback"></div>
+
+                    <div class="buttons-row">
+                        <button class="btn btn-warning" onclick="showSoloHint()">Hint</button>
+                        <button class="btn btn-secondary" onclick="showSoloSolution()">Show Solution</button>
+                        <button class="btn btn-primary" onclick="checkSoloAnswer()">Check Answer</button>
+                        <button class="btn btn-success" onclick="newSoloProblem()">New Problem</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ==================== TAB NAVIGATION ====================
+        function showTab(tabId) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                if (btn.textContent.toLowerCase().includes(tabId.substring(0, 4))) {
+                    btn.classList.add('active');
+                }
+            });
+
+            if (tabId === 'examples' && !currentExample) {
+                loadExample(0);
+            }
+            if (tabId === 'guided' && !guidedCurrentProblem) {
+                loadGuidedProblem();
+            }
+            if (tabId === 'solo' && !soloCurrentProblem) {
+                newSoloProblem();
+            }
+        }
+
+        // ==================== EXAMPLES DATA ====================
+        const examples = [
+            {
+                name: "Basic Division",
+                dividend: "x² + 5x + 6",
+                divisor: "x + 2",
+                dividendCoeffs: [1, 5, 6],
+                divisorCoeffs: [1, 2],
+                quotient: "x + 3",
+                remainder: "0",
+                steps: [
+                    {
+                        display: `        ________
+x + 2 ) x² + 5x + 6`,
+                        explanation: "<h4>Step 1: Set Up</h4><p>Write the dividend (x² + 5x + 6) under the division bar and the divisor (x + 2) to the left.</p><p>Make sure both are in standard form (descending powers).</p>"
+                    },
+                    {
+                        display: `        x
+        ________
+x + 2 ) x² + 5x + 6`,
+                        explanation: "<h4>Step 2: Divide Leading Terms</h4><p>Divide the leading term of the dividend by the leading term of the divisor:</p><div class='math'>x² ÷ x = x</div><p>Write <strong>x</strong> above the division bar.</p>"
+                    },
+                    {
+                        display: `        x
+        ________
+x + 2 ) x² + 5x + 6
+        x² + 2x`,
+                        explanation: "<h4>Step 3: Multiply</h4><p>Multiply the divisor (x + 2) by what you just wrote (x):</p><div class='math'>x · (x + 2) = x² + 2x</div><p>Write this below the dividend, aligned by like terms.</p>"
+                    },
+                    {
+                        display: `        x
+        ________
+x + 2 ) x² + 5x + 6
+        x² + 2x
+        -------
+             3x + 6`,
+                        explanation: "<h4>Step 4: Subtract & Bring Down</h4><p>Subtract (x² + 2x) from (x² + 5x):</p><div class='math'>(x² + 5x) - (x² + 2x) = 3x</div><p>Bring down the next term (+6) to get <strong>3x + 6</strong>.</p>"
+                    },
+                    {
+                        display: `        x + 3
+        ________
+x + 2 ) x² + 5x + 6
+        x² + 2x
+        -------
+             3x + 6`,
+                        explanation: "<h4>Step 5: Divide Again</h4><p>Divide the new leading term by the divisor's leading term:</p><div class='math'>3x ÷ x = 3</div><p>Write <strong>+3</strong> in the quotient.</p>"
+                    },
+                    {
+                        display: `        x + 3
+        ________
+x + 2 ) x² + 5x + 6
+        x² + 2x
+        -------
+             3x + 6
+             3x + 6`,
+                        explanation: "<h4>Step 6: Multiply Again</h4><p>Multiply the divisor by 3:</p><div class='math'>3 · (x + 2) = 3x + 6</div>"
+                    },
+                    {
+                        display: `        x + 3
+        ________
+x + 2 ) x² + 5x + 6
+        x² + 2x
+        -------
+             3x + 6
+             3x + 6
+             ------
+                  0`,
+                        explanation: "<h4>Step 7: Complete!</h4><p>Subtract:</p><div class='math'>(3x + 6) - (3x + 6) = 0</div><p><strong>Final Answer:</strong></p><p>Quotient = <strong>x + 3</strong></p><p>Remainder = <strong>0</strong></p><p>This means (x + 2) divides evenly into (x² + 5x + 6), so (x + 2) is a factor!</p>"
+                    }
+                ]
+            },
+            {
+                name: "With Remainder",
+                dividend: "2x² + 3x + 5",
+                divisor: "x + 1",
+                dividendCoeffs: [2, 3, 5],
+                divisorCoeffs: [1, 1],
+                quotient: "2x + 1",
+                remainder: "4",
+                steps: [
+                    {
+                        display: `        _________
+x + 1 ) 2x² + 3x + 5`,
+                        explanation: "<h4>Step 1: Set Up</h4><p>Dividend: 2x² + 3x + 5</p><p>Divisor: x + 1</p>"
+                    },
+                    {
+                        display: `        2x
+        _________
+x + 1 ) 2x² + 3x + 5`,
+                        explanation: "<h4>Step 2: Divide Leading Terms</h4><div class='math'>2x² ÷ x = 2x</div><p>Write <strong>2x</strong> in the quotient.</p>"
+                    },
+                    {
+                        display: `        2x
+        _________
+x + 1 ) 2x² + 3x + 5
+        2x² + 2x`,
+                        explanation: "<h4>Step 3: Multiply</h4><div class='math'>2x · (x + 1) = 2x² + 2x</div>"
+                    },
+                    {
+                        display: `        2x
+        _________
+x + 1 ) 2x² + 3x + 5
+        2x² + 2x
+        --------
+              x + 5`,
+                        explanation: "<h4>Step 4: Subtract & Bring Down</h4><div class='math'>(2x² + 3x) - (2x² + 2x) = x</div><p>Bring down +5 to get <strong>x + 5</strong>.</p>"
+                    },
+                    {
+                        display: `        2x + 1
+        _________
+x + 1 ) 2x² + 3x + 5
+        2x² + 2x
+        --------
+              x + 5`,
+                        explanation: "<h4>Step 5: Divide Again</h4><div class='math'>x ÷ x = 1</div><p>Write <strong>+1</strong> in the quotient.</p>"
+                    },
+                    {
+                        display: `        2x + 1
+        _________
+x + 1 ) 2x² + 3x + 5
+        2x² + 2x
+        --------
+              x + 5
+              x + 1`,
+                        explanation: "<h4>Step 6: Multiply</h4><div class='math'>1 · (x + 1) = x + 1</div>"
+                    },
+                    {
+                        display: `        2x + 1
+        _________
+x + 1 ) 2x² + 3x + 5
+        2x² + 2x
+        --------
+              x + 5
+              x + 1
+              -----
+                  4`,
+                        explanation: "<h4>Step 7: Complete!</h4><p>Subtract:</p><div class='math'>(x + 5) - (x + 1) = 4</div><p><strong>Final Answer:</strong></p><p>Quotient = <strong>2x + 1</strong></p><p>Remainder = <strong>4</strong></p><p>We can write: 2x² + 3x + 5 = (x + 1)(2x + 1) + 4</p>"
+                    }
+                ]
+            },
+            {
+                name: "Missing Terms",
+                dividend: "x³ - 8",
+                divisor: "x - 2",
+                dividendCoeffs: [1, 0, 0, -8],
+                divisorCoeffs: [1, -2],
+                quotient: "x² + 2x + 4",
+                remainder: "0",
+                steps: [
+                    {
+                        display: `        ________________
+x - 2 ) x³ + 0x² + 0x - 8`,
+                        explanation: "<h4>Step 1: Set Up with Placeholders</h4><p><strong>Important!</strong> The dividend x³ - 8 is missing the x² and x terms.</p><p>We must write it as: x³ + 0x² + 0x - 8</p><p>These placeholders keep everything aligned!</p>"
+                    },
+                    {
+                        display: `        x²
+        ________________
+x - 2 ) x³ + 0x² + 0x - 8`,
+                        explanation: "<h4>Step 2: Divide Leading Terms</h4><div class='math'>x³ ÷ x = x²</div>"
+                    },
+                    {
+                        display: `        x²
+        ________________
+x - 2 ) x³ + 0x² + 0x - 8
+        x³ - 2x²`,
+                        explanation: "<h4>Step 3: Multiply</h4><div class='math'>x² · (x - 2) = x³ - 2x²</div>"
+                    },
+                    {
+                        display: `        x²
+        ________________
+x - 2 ) x³ + 0x² + 0x - 8
+        x³ - 2x²
+        --------
+             2x² + 0x`,
+                        explanation: "<h4>Step 4: Subtract & Bring Down</h4><div class='math'>(x³ + 0x²) - (x³ - 2x²) = 2x²</div><p>Note: 0x² - (-2x²) = 0x² + 2x² = 2x²</p><p>Bring down 0x.</p>"
+                    },
+                    {
+                        display: `        x² + 2x
+        ________________
+x - 2 ) x³ + 0x² + 0x - 8
+        x³ - 2x²
+        --------
+             2x² + 0x
+             2x² - 4x`,
+                        explanation: "<h4>Steps 5-6: Divide & Multiply</h4><div class='math'>2x² ÷ x = 2x</div><div class='math'>2x · (x - 2) = 2x² - 4x</div>"
+                    },
+                    {
+                        display: `        x² + 2x
+        ________________
+x - 2 ) x³ + 0x² + 0x - 8
+        x³ - 2x²
+        --------
+             2x² + 0x
+             2x² - 4x
+             --------
+                  4x - 8`,
+                        explanation: "<h4>Step 7: Subtract & Bring Down</h4><div class='math'>(2x² + 0x) - (2x² - 4x) = 4x</div><p>Note: 0x - (-4x) = 4x</p><p>Bring down -8.</p>"
+                    },
+                    {
+                        display: `        x² + 2x + 4
+        ________________
+x - 2 ) x³ + 0x² + 0x - 8
+        x³ - 2x²
+        --------
+             2x² + 0x
+             2x² - 4x
+             --------
+                  4x - 8
+                  4x - 8
+                  ------
+                       0`,
+                        explanation: "<h4>Step 8: Complete!</h4><div class='math'>4x ÷ x = 4</div><div class='math'>4 · (x - 2) = 4x - 8</div><div class='math'>(4x - 8) - (4x - 8) = 0</div><p><strong>Final Answer:</strong></p><p>Quotient = <strong>x² + 2x + 4</strong></p><p>Remainder = <strong>0</strong></p><p>So x³ - 8 = (x - 2)(x² + 2x + 4)</p><p>This is the factorization of a difference of cubes!</p>"
+                    }
+                ]
+            },
+            {
+                name: "Higher Degree",
+                dividend: "x⁴ - 3x³ + 2x² - x + 5",
+                divisor: "x² - 1",
+                dividendCoeffs: [1, -3, 2, -1, 5],
+                divisorCoeffs: [1, 0, -1],
+                quotient: "x² - 3x + 3",
+                remainder: "-4x + 8",
+                steps: [
+                    {
+                        display: `            _____________________
+x² - 1 ) x⁴ - 3x³ + 2x² - x + 5`,
+                        explanation: "<h4>Step 1: Set Up</h4><p>We're dividing by x² - 1 (a quadratic).</p><p>Note: x² - 1 = x² + 0x - 1 (the x term is 0)</p><p>The quotient will be degree 4 - 2 = 2 (quadratic).</p>"
+                    },
+                    {
+                        display: `         x²
+            _____________________
+x² - 1 ) x⁴ - 3x³ + 2x² - x + 5`,
+                        explanation: "<h4>Step 2: Divide Leading Terms</h4><div class='math'>x⁴ ÷ x² = x²</div>"
+                    },
+                    {
+                        display: `         x²
+            _____________________
+x² - 1 ) x⁴ - 3x³ + 2x² - x + 5
+         x⁴ + 0x³ - x²`,
+                        explanation: "<h4>Step 3: Multiply</h4><div class='math'>x² · (x² - 1) = x⁴ - x²</div><p>Written with placeholder: x⁴ + 0x³ - x²</p>"
+                    },
+                    {
+                        display: `         x²
+            _____________________
+x² - 1 ) x⁴ - 3x³ + 2x² - x + 5
+         x⁴ + 0x³ - x²
+         --------------
+             -3x³ + 3x² - x`,
+                        explanation: "<h4>Step 4: Subtract & Bring Down</h4><p>(x⁴ - 3x³ + 2x²) - (x⁴ + 0x³ - x²)</p><p>= -3x³ + 3x²</p><p>Bring down -x.</p>"
+                    },
+                    {
+                        display: `         x² - 3x
+            _____________________
+x² - 1 ) x⁴ - 3x³ + 2x² - x + 5
+         x⁴ + 0x³ - x²
+         --------------
+             -3x³ + 3x² - x
+             -3x³ + 0x² + 3x`,
+                        explanation: "<h4>Steps 5-6: Divide & Multiply</h4><div class='math'>-3x³ ÷ x² = -3x</div><div class='math'>-3x · (x² - 1) = -3x³ + 3x</div>"
+                    },
+                    {
+                        display: `         x² - 3x
+            _____________________
+x² - 1 ) x⁴ - 3x³ + 2x² - x + 5
+         x⁴ + 0x³ - x²
+         --------------
+             -3x³ + 3x² - x
+             -3x³ + 0x² + 3x
+             --------------
+                   3x² - 4x + 5`,
+                        explanation: "<h4>Step 7: Subtract & Bring Down</h4><p>(-3x³ + 3x² - x) - (-3x³ + 0x² + 3x)</p><p>= 3x² - 4x</p><p>Bring down +5.</p>"
+                    },
+                    {
+                        display: `         x² - 3x + 3
+            _____________________
+x² - 1 ) x⁴ - 3x³ + 2x² - x + 5
+         x⁴ + 0x³ - x²
+         --------------
+             -3x³ + 3x² - x
+             -3x³ + 0x² + 3x
+             --------------
+                   3x² - 4x + 5
+                   3x² + 0x - 3`,
+                        explanation: "<h4>Steps 8-9: Divide & Multiply</h4><div class='math'>3x² ÷ x² = 3</div><div class='math'>3 · (x² - 1) = 3x² - 3</div>"
+                    },
+                    {
+                        display: `         x² - 3x + 3
+            _____________________
+x² - 1 ) x⁴ - 3x³ + 2x² - x + 5
+         x⁴ + 0x³ - x²
+         --------------
+             -3x³ + 3x² - x
+             -3x³ + 0x² + 3x
+             --------------
+                   3x² - 4x + 5
+                   3x² + 0x - 3
+                   ------------
+                       -4x + 8`,
+                        explanation: "<h4>Step 10: Complete!</h4><p>(3x² - 4x + 5) - (3x² - 3) = -4x + 8</p><p>The remainder (-4x + 8) has degree 1, which is less than the divisor's degree 2, so we stop.</p><p><strong>Final Answer:</strong></p><p>Quotient = <strong>x² - 3x + 3</strong></p><p>Remainder = <strong>-4x + 8</strong></p>"
+                    }
+                ]
+            }
+        ];
+
+        let currentExample = null;
+        let currentStep = 0;
+
+        function loadExample(index) {
+            currentExample = examples[index];
+            currentStep = 0;
+
+            document.querySelectorAll('#example-selector .problem-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+
+            const dotsContainer = document.getElementById('step-dots');
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < currentExample.steps.length; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'step-dot' + (i === 0 ? ' active' : '');
+                dot.textContent = i + 1;
+                dot.onclick = () => goToStep(i);
+                dotsContainer.appendChild(dot);
+            }
+
+            updateExampleDisplay();
+        }
+
+        function updateExampleDisplay() {
+            document.getElementById('division-display').innerHTML = currentExample.steps[currentStep].display;
+            document.getElementById('step-explanation').innerHTML = currentExample.steps[currentStep].explanation;
+
+            document.querySelectorAll('.step-dot').forEach((dot, i) => {
+                dot.classList.remove('active', 'complete');
+                if (i < currentStep) dot.classList.add('complete');
+                if (i === currentStep) dot.classList.add('active');
+            });
+        }
+
+        function nextStep() {
+            if (currentStep < currentExample.steps.length - 1) {
+                currentStep++;
+                updateExampleDisplay();
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                updateExampleDisplay();
+            }
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+            updateExampleDisplay();
+        }
+
+        function resetExample() {
+            currentStep = 0;
+            updateExampleDisplay();
+        }
+
+        function showAllSteps() {
+            currentStep = currentExample.steps.length - 1;
+            updateExampleDisplay();
+        }
+
+        // ==================== GUIDED PRACTICE ====================
+        const guidedProblems = {
+            easy: [
+                { dividend: [1, 5, 6], divisor: [1, 2], quotient: [1, 3], remainder: 0 },
+                { dividend: [1, 7, 12], divisor: [1, 3], quotient: [1, 4], remainder: 0 },
+                { dividend: [1, 4, 3], divisor: [1, 1], quotient: [1, 3], remainder: 0 },
+                { dividend: [1, -1, -6], divisor: [1, 2], quotient: [1, -3], remainder: 0 },
+                { dividend: [1, 2, -8], divisor: [1, -2], quotient: [1, 4], remainder: 0 }
+            ],
+            medium: [
+                { dividend: [1, 3, 5], divisor: [1, 2], quotient: [1, 1], remainder: 3 },
+                { dividend: [2, 5, 3], divisor: [1, 1], quotient: [2, 3], remainder: 0 },
+                { dividend: [1, -2, -5, 6], divisor: [1, -1], quotient: [1, -1, -6], remainder: 0 },
+                { dividend: [1, 1, -5, 3], divisor: [1, -1], quotient: [1, 2, -3], remainder: 0 },
+                { dividend: [2, -3, 0, 5], divisor: [1, -2], quotient: [2, 1, 2], remainder: 9 }
+            ],
+            hard: [
+                { dividend: [1, 0, 0, -8], divisor: [1, -2], quotient: [1, 2, 4], remainder: 0 },
+                { dividend: [1, -4, 6, -4, 1], divisor: [1, -1], quotient: [1, -3, 3, -1], remainder: 0 },
+                { dividend: [1, 0, -4, 0, 3], divisor: [1, -1], quotient: [1, 1, -3, -3], remainder: 0 },
+                { dividend: [2, 1, -5, 2], divisor: [1, 2], quotient: [2, -3, 1], remainder: 0 },
+                { dividend: [1, -1, 0, -1, 1], divisor: [1, -1], quotient: [1, 0, 0, -1], remainder: 0 }
+            ]
+        };
+
+        let guidedDifficulty = 'easy';
+        let guidedProblemIndex = 0;
+        let guidedCurrentProblem = null;
+        let guidedCurrentStep = 0;
+        let guidedStepsCorrect = 0;
+        let guidedMistakes = 0;
+        let guidedStepData = [];
+        let guidedTotalSteps = 0;
+
+        function setGuidedDifficulty(diff) {
+            guidedDifficulty = diff;
+            guidedProblemIndex = 0;
+            document.querySelectorAll('#guided-difficulty .difficulty-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.classList.contains(diff)) btn.classList.add('active');
+            });
+            loadGuidedProblem();
+        }
+
+        function loadGuidedProblem() {
+            const problemSet = guidedProblems[guidedDifficulty];
+            guidedCurrentProblem = problemSet[guidedProblemIndex % problemSet.length];
+            guidedCurrentStep = 0;
+            guidedStepData = generateGuidedStepData(guidedCurrentProblem);
+            guidedTotalSteps = guidedStepData.length;
+
+            document.getElementById('guided-current').textContent = guidedProblemIndex + 1;
+            document.getElementById('guided-total').textContent = problemSet.length;
+            document.getElementById('guided-problem-title').innerHTML =
+                `Divide: (${formatPoly(guidedCurrentProblem.dividend)}) ÷ (${formatPoly(guidedCurrentProblem.divisor)})`;
+
+            document.getElementById('guided-completion').classList.remove('show');
+            document.getElementById('guided-step-instruction').style.display = 'block';
+            document.getElementById('guided-workspace').style.display = 'block';
+            document.getElementById('guided-buttons').style.display = 'flex';
+
+            buildGuidedProgressDots();
+            buildGuidedWorkspace();
+            updateGuidedInstruction();
+            document.getElementById('guided-feedback').classList.remove('show');
+        }
+
+        function generateGuidedStepData(problem) {
+            const steps = [];
+            const dividend = [...problem.dividend];
+            const divisor = problem.divisor;
+            const quotient = problem.quotient;
+            const dividendDeg = dividend.length - 1;
+            const divisorDeg = divisor.length - 1;
+
+            let remainder = [...dividend];
+
+            for (let i = 0; i < quotient.length; i++) {
+                const qTerm = quotient[i];
+                const qPower = dividendDeg - divisorDeg - i;
+
+                steps.push({
+                    type: 'divide',
+                    position: i,
+                    leadingDividend: remainder[i],
+                    leadingDividendPower: dividendDeg - i,
+                    leadingDivisor: divisor[0],
+                    leadingDivisorPower: divisorDeg,
+                    answer: qTerm,
+                    answerPower: qPower
+                });
+
+                const multResult = [];
+                for (let j = 0; j < divisor.length; j++) {
+                    multResult.push(qTerm * divisor[j]);
+                }
+
+                steps.push({
+                    type: 'multiply',
+                    position: i,
+                    quotientTerm: qTerm,
+                    quotientPower: qPower,
+                    divisor: divisor,
+                    answer: multResult
+                });
+
+                const subResult = [];
+                for (let j = 0; j < multResult.length; j++) {
+                    subResult.push(remainder[i + j] - multResult[j]);
+                }
+
+                steps.push({
+                    type: 'subtract',
+                    position: i,
+                    minuend: remainder.slice(i, i + divisor.length),
+                    subtrahend: multResult,
+                    answer: subResult
+                });
+
+                for (let j = 0; j < subResult.length; j++) {
+                    remainder[i + j] = subResult[j];
+                }
+            }
+
+            return steps;
+        }
+
+        function buildGuidedProgressDots() {
+            const container = document.getElementById('guided-progress-steps');
+            container.innerHTML = '';
+            for (let i = 0; i < guidedTotalSteps; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot' + (i === 0 ? ' current' : '');
+                container.appendChild(dot);
+            }
+        }
+
+        function buildGuidedWorkspace() {
+            const workspace = document.getElementById('guided-workspace');
+            const dividendDeg = guidedCurrentProblem.dividend.length - 1;
+            const quotientLen = guidedCurrentProblem.quotient.length;
+
+            let html = '<div class="division-grid">';
+
+            html += '<div class="quotient-area">';
+            for (let i = 0; i < quotientLen; i++) {
+                html += `<span class="term-cell" id="guided-quotient-${i}"></span>`;
+            }
+            html += '</div>';
+
+            html += '<div class="division-row">';
+            html += '<div class="divisor-area">';
+            html += `<span class="divisor">${formatPoly(guidedCurrentProblem.divisor)}</span>`;
+            html += '</div>';
+            html += '<div class="dividend-area">';
+            for (let i = 0; i < guidedCurrentProblem.dividend.length; i++) {
+                const coef = guidedCurrentProblem.dividend[i];
+                const power = dividendDeg - i;
+                html += `<span class="term-cell term-fixed">${formatTerm(coef, power, i === 0)}</span>`;
+            }
+            html += '</div>';
+            html += '</div>';
+
+            html += '<div id="guided-work-rows"></div>';
+            html += '</div>';
+            workspace.innerHTML = html;
+        }
+
+        function updateGuidedInstruction() {
+            const instruction = document.getElementById('guided-step-instruction');
+            const step = guidedStepData[guidedCurrentStep];
+
+            if (!step) {
+                showGuidedCompletion();
+                return;
+            }
+
+            let title = '';
+            let desc = '';
+            let math = '';
+
+            if (step.type === 'divide') {
+                title = `Step ${guidedCurrentStep + 1}: Divide`;
+                desc = 'Divide the leading term of what remains by the leading term of the divisor.';
+                math = `${formatTerm(step.leadingDividend, step.leadingDividendPower, true)} ÷ ${formatTerm(step.leadingDivisor, step.leadingDivisorPower, true)} = ?`;
+                showGuidedDivideInput(step);
+            } else if (step.type === 'multiply') {
+                title = `Step ${guidedCurrentStep + 1}: Multiply`;
+                desc = `Multiply the divisor by ${formatTerm(step.quotientTerm, step.quotientPower, true)}`;
+                math = `${formatTerm(step.quotientTerm, step.quotientPower, true)} × (${formatPoly(step.divisor)}) = ?`;
+                showGuidedMultiplyInput(step);
+            } else if (step.type === 'subtract') {
+                title = `Step ${guidedCurrentStep + 1}: Subtract`;
+                desc = 'Subtract and bring down the next term (if any).';
+                math = `(${formatPolyFromTerms(step.minuend, guidedCurrentProblem.dividend.length - 1 - step.position)}) − (${formatPolyFromTerms(step.subtrahend, guidedCurrentProblem.dividend.length - 1 - step.position)}) = ?`;
+                showGuidedSubtractInput(step);
+            }
+
+            instruction.innerHTML = `
+                <h3>${title}</h3>
+                <p>${desc}</p>
+                <div class="math">${math}</div>
+            `;
+        }
+
+        function showGuidedDivideInput(step) {
+            const quotientCell = document.getElementById(`guided-quotient-${step.position}`);
+            quotientCell.innerHTML = `<input type="text" class="term-input guided-input" id="guided-current-input" placeholder="?" autofocus>`;
+            quotientCell.classList.add('term-highlight');
+            document.getElementById('guided-current-input').focus();
+        }
+
+        function showGuidedMultiplyInput(step) {
+            const workRows = document.getElementById('guided-work-rows');
+            let html = `<div class="work-row" id="guided-mult-row-${step.position}">`;
+            for (let s = 0; s < step.position; s++) {
+                html += `<span class="term-cell"></span>`;
+            }
+            for (let i = 0; i < step.answer.length; i++) {
+                html += `<span class="term-cell input-cell">
+                    <input type="text" class="term-input guided-input" id="guided-mult-input-${i}" placeholder="?">
+                </span>`;
+            }
+            html += '</div>';
+            workRows.innerHTML += html;
+            document.getElementById('guided-mult-input-0').focus();
+        }
+
+        function showGuidedSubtractInput(step) {
+            const workRows = document.getElementById('guided-work-rows');
+            const lastRow = workRows.lastElementChild;
+            if (lastRow) {
+                lastRow.innerHTML += '<span class="term-cell term-fixed subtract-line" style="width:100%"></span>';
+            }
+
+            const position = step.position;
+            const remainingTerms = guidedCurrentProblem.dividend.length - position - step.answer.length;
+            const showTerms = step.answer.length + (remainingTerms > 0 ? 1 : 0);
+
+            let html = `<div class="work-row" id="guided-sub-row-${step.position}">`;
+            for (let s = 0; s < step.position; s++) {
+                html += `<span class="term-cell"></span>`;
+            }
+            for (let i = 0; i < showTerms; i++) {
+                if (i < step.answer.length) {
+                    html += `<span class="term-cell input-cell">
+                        <input type="text" class="term-input guided-input" id="guided-sub-input-${i}" placeholder="?">
+                    </span>`;
+                } else {
+                    const broughtDownIdx = position + step.answer.length;
+                    const broughtDownCoef = guidedCurrentProblem.dividend[broughtDownIdx];
+                    const broughtDownPower = guidedCurrentProblem.dividend.length - 1 - broughtDownIdx;
+                    html += `<span class="term-cell term-fixed" id="guided-brought-down">${formatTerm(broughtDownCoef, broughtDownPower, false)}</span>`;
+                }
+            }
+            html += '</div>';
+            workRows.innerHTML += html;
+            document.getElementById('guided-sub-input-0').focus();
+        }
+
+        function checkGuidedStep() {
+            const step = guidedStepData[guidedCurrentStep];
+            let isCorrect = false;
+            let userAnswers = [];
+
+            if (step.type === 'divide') {
+                const input = document.getElementById('guided-current-input');
+                const userVal = parseTermInput(input.value, step.answerPower);
+                userAnswers = [userVal];
+                isCorrect = (userVal === step.answer);
+
+                if (isCorrect) {
+                    input.classList.add('correct');
+                    input.disabled = true;
+                    const quotientCell = document.getElementById(`guided-quotient-${step.position}`);
+                    quotientCell.classList.remove('term-highlight');
+                    quotientCell.innerHTML = `<span class="term-fixed term-result">${formatTerm(step.answer, step.answerPower, step.position === 0)}</span>`;
+                } else {
+                    input.classList.add('incorrect');
+                    setTimeout(() => input.classList.remove('incorrect'), 500);
+                }
+            } else if (step.type === 'multiply') {
+                userAnswers = [];
+                isCorrect = true;
+                for (let i = 0; i < step.answer.length; i++) {
+                    const input = document.getElementById(`guided-mult-input-${i}`);
+                    const power = guidedCurrentProblem.dividend.length - 1 - step.position - i;
+                    const userVal = parseTermInput(input.value, power);
+                    userAnswers.push(userVal);
+                    if (userVal !== step.answer[i]) {
+                        isCorrect = false;
+                        input.classList.add('incorrect');
+                        setTimeout(() => input.classList.remove('incorrect'), 500);
+                    } else {
+                        input.classList.add('correct');
+                    }
+                }
+
+                if (isCorrect) {
+                    const row = document.getElementById(`guided-mult-row-${step.position}`);
+                    let html = '';
+                    for (let s = 0; s < step.position; s++) {
+                        html += `<span class="term-cell"></span>`;
+                    }
+                    for (let i = 0; i < step.answer.length; i++) {
+                        const power = guidedCurrentProblem.dividend.length - 1 - step.position - i;
+                        html += `<span class="term-cell term-fixed">${formatTerm(step.answer[i], power, i === 0)}</span>`;
+                    }
+                    row.innerHTML = html;
+                }
+            } else if (step.type === 'subtract') {
+                userAnswers = [];
+                isCorrect = true;
+                for (let i = 0; i < step.answer.length; i++) {
+                    const input = document.getElementById(`guided-sub-input-${i}`);
+                    const power = guidedCurrentProblem.dividend.length - 1 - step.position - i;
+                    const userVal = parseTermInput(input.value, power);
+                    userAnswers.push(userVal);
+
+                    if (userVal !== step.answer[i]) {
+                        isCorrect = false;
+                        input.classList.add('incorrect');
+                        setTimeout(() => input.classList.remove('incorrect'), 500);
+                    } else {
+                        input.classList.add('correct');
+                    }
+                }
+
+                if (isCorrect) {
+                    const row = document.getElementById(`guided-sub-row-${step.position}`);
+                    let html = '';
+                    for (let s = 0; s < step.position; s++) {
+                        html += `<span class="term-cell"></span>`;
+                    }
+                    for (let i = 0; i < step.answer.length; i++) {
+                        const power = guidedCurrentProblem.dividend.length - 1 - step.position - i;
+                        if (i > 0 || step.answer[i] !== 0) {
+                            html += `<span class="term-cell term-fixed">${formatTerm(step.answer[i], power, i === 0)}</span>`;
+                        } else {
+                            html += `<span class="term-cell term-fixed"></span>`;
+                        }
+                    }
+                    const broughtDown = document.getElementById('guided-brought-down');
+                    if (broughtDown) {
+                        html += broughtDown.outerHTML;
+                    }
+                    row.innerHTML = html;
+                }
+            }
+
+            showGuidedFeedback(isCorrect, step);
+
+            if (isCorrect) {
+                guidedStepsCorrect++;
+                document.getElementById('guided-steps-correct').textContent = guidedStepsCorrect;
+                updateGuidedProgressDot(guidedCurrentStep, 'complete');
+                guidedCurrentStep++;
+                if (guidedCurrentStep < guidedTotalSteps) {
+                    updateGuidedProgressDot(guidedCurrentStep, 'current');
+                }
+                setTimeout(() => {
+                    document.getElementById('guided-feedback').classList.remove('show');
+                    updateGuidedInstruction();
+                }, 800);
+            } else {
+                guidedMistakes++;
+                document.getElementById('guided-mistakes').textContent = guidedMistakes;
+                updateGuidedProgressDot(guidedCurrentStep, 'error');
+                setTimeout(() => {
+                    updateGuidedProgressDot(guidedCurrentStep, 'current');
+                }, 500);
+            }
+        }
+
+        function showGuidedFeedback(isCorrect, step) {
+            const feedback = document.getElementById('guided-feedback');
+            if (isCorrect) {
+                feedback.className = 'feedback-box correct show';
+                feedback.innerHTML = '<strong>Correct!</strong> Great work!';
+            } else {
+                feedback.className = 'feedback-box incorrect show';
+                let hint = '';
+                if (step.type === 'divide') {
+                    hint = `Remember: ${formatTerm(step.leadingDividend, step.leadingDividendPower, true)} ÷ ${formatTerm(step.leadingDivisor, step.leadingDivisorPower, true)} = ${formatTerm(step.answer, step.answerPower, true)}`;
+                } else if (step.type === 'multiply') {
+                    hint = 'Multiply each term of the divisor by the quotient term.';
+                } else if (step.type === 'subtract') {
+                    hint = 'Subtract each term carefully. Remember: subtracting a negative is adding!';
+                }
+                feedback.innerHTML = `<strong>Not quite.</strong> Try again!<br><small>${hint}</small>`;
+            }
+        }
+
+        function showGuidedHint() {
+            const step = guidedStepData[guidedCurrentStep];
+            const feedback = document.getElementById('guided-feedback');
+            feedback.className = 'feedback-box hint show';
+
+            let hint = '';
+            if (step.type === 'divide') {
+                hint = `Divide coefficients: ${step.leadingDividend} ÷ ${step.leadingDivisor} = ${step.answer}. The variable part: x^${step.leadingDividendPower} ÷ x^${step.leadingDivisorPower} = x^${step.answerPower}`;
+            } else if (step.type === 'multiply') {
+                hint = `Multiply ${formatTerm(step.quotientTerm, step.quotientPower, true)} by each term of (${formatPoly(step.divisor)}). Answer: ${formatPolyFromTerms(step.answer, guidedCurrentProblem.dividend.length - 1 - step.position)}`;
+            } else if (step.type === 'subtract') {
+                hint = `The answer should be: ${formatPolyFromTerms(step.answer, guidedCurrentProblem.dividend.length - 1 - step.position)}. Note: the leading term should be 0!`;
+            }
+
+            feedback.innerHTML = `<strong>Hint:</strong> ${hint}`;
+        }
+
+        function skipGuidedStep() {
+            const step = guidedStepData[guidedCurrentStep];
+
+            if (step.type === 'divide') {
+                const quotientCell = document.getElementById(`guided-quotient-${step.position}`);
+                quotientCell.classList.remove('term-highlight');
+                quotientCell.innerHTML = `<span class="term-fixed term-result">${formatTerm(step.answer, step.answerPower, step.position === 0)}</span>`;
+            } else if (step.type === 'multiply') {
+                const row = document.getElementById(`guided-mult-row-${step.position}`);
+                let html = '';
+                for (let s = 0; s < step.position; s++) {
+                    html += `<span class="term-cell"></span>`;
+                }
+                for (let i = 0; i < step.answer.length; i++) {
+                    const power = guidedCurrentProblem.dividend.length - 1 - step.position - i;
+                    html += `<span class="term-cell term-fixed">${formatTerm(step.answer[i], power, i === 0)}</span>`;
+                }
+                row.innerHTML = html;
+            } else if (step.type === 'subtract') {
+                const row = document.getElementById(`guided-sub-row-${step.position}`);
+                let html = '';
+                for (let s = 0; s < step.position; s++) {
+                    html += `<span class="term-cell"></span>`;
+                }
+                for (let i = 0; i < step.answer.length; i++) {
+                    const power = guidedCurrentProblem.dividend.length - 1 - step.position - i;
+                    if (i > 0 || step.answer[i] !== 0) {
+                        html += `<span class="term-cell term-fixed">${formatTerm(step.answer[i], power, i === 0)}</span>`;
+                    } else {
+                        html += `<span class="term-cell term-fixed"></span>`;
+                    }
+                }
+                const broughtDown = document.getElementById('guided-brought-down');
+                if (broughtDown) {
+                    html += broughtDown.outerHTML;
+                }
+                row.innerHTML = html;
+            }
+
+            guidedMistakes++;
+            document.getElementById('guided-mistakes').textContent = guidedMistakes;
+            updateGuidedProgressDot(guidedCurrentStep, 'complete');
+            guidedCurrentStep++;
+            if (guidedCurrentStep < guidedTotalSteps) {
+                updateGuidedProgressDot(guidedCurrentStep, 'current');
+            }
+            document.getElementById('guided-feedback').classList.remove('show');
+            updateGuidedInstruction();
+        }
+
+        function updateGuidedProgressDot(index, state) {
+            const dots = document.querySelectorAll('#guided-progress-steps .progress-dot');
+            if (dots[index]) {
+                dots[index].className = 'progress-dot ' + state;
+            }
+        }
+
+        function showGuidedCompletion() {
+            document.getElementById('guided-step-instruction').style.display = 'none';
+            document.getElementById('guided-workspace').style.display = 'none';
+            document.getElementById('guided-buttons').style.display = 'none';
+
+            const completion = document.getElementById('guided-completion');
+            completion.classList.add('show');
+
+            const quotientStr = formatPoly(guidedCurrentProblem.quotient);
+            const remainderStr = guidedCurrentProblem.remainder;
+
+            let answerHtml = `<strong>Quotient:</strong> ${quotientStr}<br>`;
+            answerHtml += `<strong>Remainder:</strong> ${remainderStr}`;
+
+            if (remainderStr === 0) {
+                answerHtml += `<br><br><em>(${formatPoly(guidedCurrentProblem.divisor)}) is a factor!</em>`;
+            }
+
+            document.getElementById('guided-final-answer').innerHTML = answerHtml;
+        }
+
+        function nextGuidedProblem() {
+            guidedProblemIndex++;
+            loadGuidedProblem();
+        }
+
+        // ==================== SOLO PRACTICE ====================
+        const soloProblems = {
+            easy: [
+                { dividend: [1, 4, 3], divisor: [1, 1], quotient: "x + 3", remainder: "0", hint: "x² + 4x + 3 factors as (x+1)(x+3)" },
+                { dividend: [1, 5, 6], divisor: [1, 3], quotient: "x + 2", remainder: "0", hint: "Start: x² ÷ x = x" },
+                { dividend: [1, -1, -6], divisor: [1, 2], quotient: "x - 3", remainder: "0", hint: "Remember to handle the negative signs" },
+                { dividend: [1, 7, 12], divisor: [1, 4], quotient: "x + 3", remainder: "0", hint: "7x - 4x = 3x after first subtraction" },
+                { dividend: [1, 2, -8], divisor: [1, -2], quotient: "x + 4", remainder: "0", hint: "x - 2 divides evenly" },
+                { dividend: [2, 5, 3], divisor: [1, 1], quotient: "2x + 3", remainder: "0", hint: "2x² ÷ x = 2x" }
+            ],
+            medium: [
+                { dividend: [1, 3, 5], divisor: [1, 2], quotient: "x + 1", remainder: "3", hint: "After x + 1, you get remainder 3" },
+                { dividend: [2, -3, 1], divisor: [1, -1], quotient: "2x - 1", remainder: "0", hint: "2x² ÷ x = 2x" },
+                { dividend: [1, 0, -4], divisor: [1, 2], quotient: "x - 2", remainder: "0", hint: "Don't forget the 0x term!" },
+                { dividend: [3, 2, -1, 4], divisor: [1, 1], quotient: "3x^2 - x", remainder: "4", hint: "This is a cubic ÷ linear" },
+                { dividend: [1, -2, 0, 3], divisor: [1, -1], quotient: "x^2 - x - 1", remainder: "2", hint: "Include the 0x term" },
+                { dividend: [2, 1, -5, 2], divisor: [1, 2], quotient: "2x^2 - 3x + 1", remainder: "0", hint: "Factors completely" }
+            ],
+            hard: [
+                { dividend: [1, 0, 0, -8], divisor: [1, -2], quotient: "x^2 + 2x + 4", remainder: "0", hint: "Difference of cubes pattern" },
+                { dividend: [1, -1, -5, -3], divisor: [1, -3], quotient: "x^2 + 2x + 1", remainder: "0", hint: "x³ ÷ x = x²" },
+                { dividend: [2, 0, -3, 0, 1], divisor: [1, 0, -1], quotient: "2x^2 + 2x - 1", remainder: "2x", hint: "Dividing by x² - 1 (quadratic)" },
+                { dividend: [1, -4, 6, -4, 1], divisor: [1, -1], quotient: "x^3 - 3x^2 + 3x - 1", remainder: "0", hint: "This is (x-1)⁴" },
+                { dividend: [1, 1, 1, 1, 1], divisor: [1, 1], quotient: "x^3 - x + 1", remainder: "0", hint: "Watch the alternating signs" },
+                { dividend: [3, -2, 0, 1, -5], divisor: [1, 0, 1], quotient: "3x^2 - 2x - 3", remainder: "3x - 2", hint: "Dividing by x² + 1" }
+            ]
+        };
+
+        let soloDifficulty = 'easy';
+        let soloCurrentProblem = null;
+        let soloScore = 0;
+        let soloTotal = 0;
+
+        function setSoloDifficulty(level) {
+            soloDifficulty = level;
+            document.querySelectorAll('#solo-difficulty .difficulty-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.classList.contains(level)) btn.classList.add('active');
+            });
+            newSoloProblem();
+        }
+
+        function newSoloProblem() {
+            const problems = soloProblems[soloDifficulty];
+            soloCurrentProblem = problems[Math.floor(Math.random() * problems.length)];
+
+            const dividendStr = formatPoly(soloCurrentProblem.dividend);
+            const divisorStr = formatPoly(soloCurrentProblem.divisor);
+
+            document.getElementById('solo-problem').innerHTML =
+                `(${dividendStr}) ÷ (${divisorStr})`;
+
+            document.getElementById('solo-quotient-input').value = '';
+            document.getElementById('solo-remainder-input').value = '';
+            document.getElementById('solo-quotient-input').className = '';
+            document.getElementById('solo-remainder-input').className = '';
+            document.getElementById('solo-feedback').className = 'feedback';
+        }
+
+        function checkSoloAnswer() {
+            const qInput = document.getElementById('solo-quotient-input');
+            const rInput = document.getElementById('solo-remainder-input');
+            const feedback = document.getElementById('solo-feedback');
+
+            const userQ = normalizeAnswer(qInput.value);
+            const userR = normalizeAnswer(rInput.value);
+            const correctQ = normalizeAnswer(soloCurrentProblem.quotient);
+            const correctR = normalizeAnswer(soloCurrentProblem.remainder);
+
+            const qCorrect = userQ === correctQ;
+            const rCorrect = userR === correctR;
+
+            qInput.className = qCorrect ? 'correct' : 'incorrect';
+            rInput.className = rCorrect ? 'correct' : 'incorrect';
+
+            soloTotal++;
+
+            if (qCorrect && rCorrect) {
+                soloScore++;
+                feedback.className = 'feedback correct show';
+                feedback.innerHTML = '<strong>Correct!</strong> Excellent work on that division!';
+            } else {
+                feedback.className = 'feedback incorrect show';
+                let msg = '<strong>Not quite.</strong><br>';
+                if (!qCorrect) msg += `Quotient should be: <strong>${soloCurrentProblem.quotient}</strong><br>`;
+                if (!rCorrect) msg += `Remainder should be: <strong>${soloCurrentProblem.remainder}</strong>`;
+                feedback.innerHTML = msg;
+            }
+
+            updateSoloScore();
+        }
+
+        function showSoloHint() {
+            const feedback = document.getElementById('solo-feedback');
+            feedback.className = 'feedback hint show';
+            feedback.innerHTML = `<strong>Hint:</strong> ${soloCurrentProblem.hint}`;
+        }
+
+        function showSoloSolution() {
+            const feedback = document.getElementById('solo-feedback');
+            feedback.className = 'feedback hint show';
+            feedback.innerHTML = `<strong>Solution:</strong><br>Quotient: <strong>${soloCurrentProblem.quotient}</strong><br>Remainder: <strong>${soloCurrentProblem.remainder}</strong>`;
+        }
+
+        function updateSoloScore() {
+            document.getElementById('solo-score').textContent = soloScore;
+            document.getElementById('solo-total').textContent = soloTotal;
+            const pct = soloTotal > 0 ? (soloScore / soloTotal * 100) : 0;
+            document.getElementById('solo-progress').style.width = pct + '%';
+        }
+
+        function normalizeAnswer(str) {
+            return str.toLowerCase()
+                .replace(/\s+/g, '')
+                .replace(/\*\*/g, '^')
+                .replace(/−/g, '-')
+                .replace(/\+-/g, '-')
+                .replace(/-\+/g, '-')
+                .replace(/\^1(?![0-9])/g, '')
+                .replace(/^1x/g, 'x')
+                .replace(/([^0-9])1x/g, '$1x');
+        }
+
+        // ==================== FORMATTING ====================
+        function formatPoly(coeffs) {
+            const degree = coeffs.length - 1;
+            let terms = [];
+
+            coeffs.forEach((c, i) => {
+                const power = degree - i;
+                if (c === 0 && coeffs.length > 1) return;
+
+                let term = formatTerm(c, power, terms.length === 0);
+                terms.push(term);
+            });
+
+            return terms.join(' ').replace(/\+ -/g, '- ').replace(/  /g, ' ').trim() || '0';
+        }
+
+        function formatTerm(coef, power, isFirst) {
+            if (coef === 0) return '0';
+
+            let sign = '';
+            if (!isFirst) {
+                sign = coef >= 0 ? '+ ' : '- ';
+            } else if (coef < 0) {
+                sign = '-';
+            }
+
+            const absCoef = Math.abs(coef);
+
+            if (power === 0) {
+                return sign + absCoef;
+            } else if (power === 1) {
+                return sign + (absCoef === 1 ? '' : absCoef) + 'x';
+            } else {
+                return sign + (absCoef === 1 ? '' : absCoef) + 'x<sup>' + power + '</sup>';
+            }
+        }
+
+        function formatPolyFromTerms(coeffs, startPower) {
+            let terms = [];
+            coeffs.forEach((c, i) => {
+                const power = startPower - i;
+                if (c === 0 && coeffs.length > 1) return;
+                terms.push(formatTerm(c, power, terms.length === 0));
+            });
+            return terms.join(' ').replace(/\+ -/g, '- ').replace(/  /g, ' ').trim() || '0';
+        }
+
+        function parseTermInput(input, power) {
+            input = input.trim().toLowerCase().replace(/\s+/g, '');
+
+            if (/^-?\d+$/.test(input)) {
+                return parseInt(input);
+            }
+
+            let match = input.match(/^(-?\d*)x(\^(\d+))?$/);
+            if (match) {
+                let coef = match[1] === '' || match[1] === '+' ? 1 : (match[1] === '-' ? -1 : parseInt(match[1]));
+                return coef;
+            }
+
+            if (input === '0') return 0;
+
+            const num = parseFloat(input);
+            return isNaN(num) ? null : num;
+        }
+
+        // Document-level Enter key handler
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                if (document.activeElement.classList.contains('guided-input')) {
+                    e.preventDefault();
+                    checkGuidedStep();
+                } else if (document.getElementById('solo').classList.contains('active')) {
+                    e.preventDefault();
+                    checkSoloAnswer();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

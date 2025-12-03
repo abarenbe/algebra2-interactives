@@ -121,13 +121,6 @@
             text-align: center;
         }
 
-        .formula-box code {
-            font-family: 'Courier New', monospace;
-            background: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-        }
-
         .problem-card {
             background: #f8f9fa;
             padding: 20px;
@@ -146,11 +139,62 @@
             font-family: 'Times New Roman', serif;
         }
 
+        .step-container {
+            background: #f0f4ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .step-completed {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+        }
+
+        .step-content {
+            margin-left: 47px;
+        }
+
+        .step-completed-text {
+            color: #28a745;
+            font-weight: 500;
+            margin-left: 47px;
+            padding: 8px 12px;
+            background: #d4edda;
+            border-radius: 6px;
+            display: inline-block;
+        }
+
         .input-group {
             display: flex;
             gap: 10px;
             align-items: center;
-            margin: 15px 0;
+            margin: 10px 0;
             flex-wrap: wrap;
         }
 
@@ -160,12 +204,22 @@
             border-radius: 8px;
             font-size: 1.1em;
             flex: 1;
-            min-width: 200px;
+            min-width: 150px;
         }
 
         input[type="text"]:focus {
             border-color: #667eea;
             outline: none;
+        }
+
+        input[type="text"].correct {
+            border-color: #28a745;
+            background: #d4edda;
+        }
+
+        input[type="text"].incorrect {
+            border-color: #dc3545;
+            background: #f8d7da;
         }
 
         .btn {
@@ -200,7 +254,6 @@
         .feedback.show { display: block; }
         .feedback.correct { background: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
         .feedback.incorrect { background: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
-        .feedback.hint { background: #cce5ff; color: #004085; border: 1px solid #b8daff; }
 
         .step-display {
             background: #f8f9fa;
@@ -257,9 +310,29 @@
             transition: all 0.3s ease;
         }
 
-        .option-btn:hover { border-color: #667eea; background: #f0f0ff; }
+        .option-btn:hover:not(:disabled) { border-color: #667eea; background: #f0f0ff; }
         .option-btn.correct { background: #d4edda; border-color: #28a745; }
         .option-btn.incorrect { background: #f8d7da; border-color: #dc3545; }
+        .option-btn:disabled { cursor: default; }
+
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+        }
+
+        .radio-option {
+            padding: 10px 20px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .radio-option:hover { border-color: #667eea; }
+        .radio-option.selected { border-color: #667eea; background: #f0f0ff; }
+        .radio-option.correct { border-color: #28a745; background: #d4edda; }
+        .radio-option.incorrect { border-color: #dc3545; background: #f8d7da; }
 
         .example-grid {
             display: grid;
@@ -290,12 +363,16 @@
             overflow: hidden;
         }
 
+        .hidden { display: none !important; }
+
         @media (max-width: 768px) {
             header h1 { font-size: 1.8em; }
             .tab-btn { padding: 8px 14px; font-size: 0.85em; }
             .polynomial-display { font-size: 1.2em; }
             .site-nav { justify-content: center; }
             .nav-title { width: 100%; text-align: center; }
+            .step-content { margin-left: 0; margin-top: 10px; }
+            .step-completed-text { margin-left: 0; }
         }
     </style>
 </head>
@@ -312,7 +389,7 @@
     <div class="container">
         <header>
             <h1>4.4 Factoring Polynomials</h1>
-            <p>Master factoring techniques and the Factor Theorem</p>
+            <p>Master factoring techniques step by step</p>
         </header>
 
         <div class="tabs">
@@ -391,9 +468,9 @@
             </div>
         </div>
 
-        <!-- GCF FACTORING SECTION -->
+        <!-- GCF FACTORING SECTION - STEP BY STEP -->
         <div id="gcf" class="section">
-            <h2>GCF Factoring Practice</h2>
+            <h2>GCF Factoring - Step by Step</h2>
             <p>Factor out the greatest common factor, then factor completely.</p>
 
             <div class="score-display">
@@ -404,23 +481,67 @@
             <div class="problem-card">
                 <h3>Factor completely:</h3>
                 <div class="polynomial-display" id="gcf-problem"></div>
-                <div class="input-group">
-                    <input type="text" id="gcf-answer" placeholder="Enter factored form, e.g., x(x-2)(x+3)">
-                    <button class="btn btn-primary" onclick="checkGCF()">Check</button>
+
+                <!-- Step 1: Identify GCF -->
+                <div class="step-container" id="gcf-step1">
+                    <div class="step-header">
+                        <div class="step-number" id="gcf-step1-num">1</div>
+                        <div class="step-title">What is the GCF of all terms?</div>
+                    </div>
+                    <div class="step-content" id="gcf-step1-content">
+                        <div class="input-group">
+                            <input type="text" id="gcf-step1-answer" placeholder="e.g., 2x">
+                            <button class="btn btn-primary" onclick="checkGCFStep1()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="gcf-step1-complete"></div>
                 </div>
+
+                <!-- Step 2: Write remaining polynomial -->
+                <div class="step-container hidden" id="gcf-step2">
+                    <div class="step-header">
+                        <div class="step-number" id="gcf-step2-num">2</div>
+                        <div class="step-title">After factoring out the GCF, what's left inside the parentheses?</div>
+                    </div>
+                    <div class="step-content" id="gcf-step2-content">
+                        <div class="input-group">
+                            <span style="font-size:1.2em;" id="gcf-partial"></span>
+                            <input type="text" id="gcf-step2-answer" placeholder="e.g., x²-4x-5">
+                            <span style="font-size:1.2em;">)</span>
+                            <button class="btn btn-primary" onclick="checkGCFStep2()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="gcf-step2-complete"></div>
+                </div>
+
+                <!-- Step 3: Factor remaining if possible -->
+                <div class="step-container hidden" id="gcf-step3">
+                    <div class="step-header">
+                        <div class="step-number" id="gcf-step3-num">3</div>
+                        <div class="step-title">Can the remaining polynomial be factored further? Write the final answer.</div>
+                    </div>
+                    <div class="step-content" id="gcf-step3-content">
+                        <div class="input-group">
+                            <input type="text" id="gcf-step3-answer" placeholder="e.g., x(x-5)(x+1)">
+                            <button class="btn btn-primary" onclick="checkGCFStep3()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="gcf-step3-complete"></div>
+                </div>
+
                 <div class="feedback" id="gcf-feedback"></div>
-                <button class="btn btn-secondary" onclick="showGCFHint()" style="margin-top:10px;">Show Hint</button>
-                <button class="btn btn-success" onclick="newGCFProblem()" style="margin-top:10px;">New Problem</button>
+                <button class="btn btn-success" onclick="newGCFProblem()" style="margin-top:15px;">New Problem</button>
             </div>
         </div>
 
-        <!-- SUM/DIFFERENCE OF CUBES SECTION -->
+        <!-- SUM/DIFFERENCE OF CUBES SECTION - STEP BY STEP -->
         <div id="cubes" class="section">
-            <h2>Sum and Difference of Cubes</h2>
+            <h2>Sum and Difference of Cubes - Step by Step</h2>
 
             <div class="formula-box">
                 <strong>a³ + b³ = (a + b)(a² - ab + b²)</strong><br>
-                <strong>a³ - b³ = (a - b)(a² + ab + b²)</strong>
+                <strong>a³ - b³ = (a - b)(a² + ab + b²)</strong><br><br>
+                <small>SOAP: <u>S</u>ame, <u>O</u>pposite, <u>A</u>lways <u>P</u>ositive</small>
             </div>
 
             <div class="score-display">
@@ -431,15 +552,90 @@
             <div class="problem-card">
                 <h3>Factor completely:</h3>
                 <div class="polynomial-display" id="cubes-problem"></div>
-                <div class="options" id="cubes-options"></div>
+
+                <!-- Step 1: Sum or Difference? -->
+                <div class="step-container" id="cubes-step1">
+                    <div class="step-header">
+                        <div class="step-number" id="cubes-step1-num">1</div>
+                        <div class="step-title">Is this a sum or difference of cubes?</div>
+                    </div>
+                    <div class="step-content" id="cubes-step1-content">
+                        <div class="radio-group">
+                            <div class="radio-option" onclick="selectCubesType('sum')">Sum (+)</div>
+                            <div class="radio-option" onclick="selectCubesType('diff')">Difference (−)</div>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="cubes-step1-complete"></div>
+                </div>
+
+                <!-- Step 2: What is a? -->
+                <div class="step-container hidden" id="cubes-step2">
+                    <div class="step-header">
+                        <div class="step-number" id="cubes-step2-num">2</div>
+                        <div class="step-title">What is "a"? (the cube root of the first term)</div>
+                    </div>
+                    <div class="step-content" id="cubes-step2-content">
+                        <div class="input-group">
+                            <input type="text" id="cubes-step2-answer" placeholder="e.g., x or 3x">
+                            <button class="btn btn-primary" onclick="checkCubesStep2()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="cubes-step2-complete"></div>
+                </div>
+
+                <!-- Step 3: What is b? -->
+                <div class="step-container hidden" id="cubes-step3">
+                    <div class="step-header">
+                        <div class="step-number" id="cubes-step3-num">3</div>
+                        <div class="step-title">What is "b"? (the cube root of the second term)</div>
+                    </div>
+                    <div class="step-content" id="cubes-step3-content">
+                        <div class="input-group">
+                            <input type="text" id="cubes-step3-answer" placeholder="e.g., 2 or 4">
+                            <button class="btn btn-primary" onclick="checkCubesStep3()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="cubes-step3-complete"></div>
+                </div>
+
+                <!-- Step 4: Write binomial factor -->
+                <div class="step-container hidden" id="cubes-step4">
+                    <div class="step-header">
+                        <div class="step-number" id="cubes-step4-num">4</div>
+                        <div class="step-title">Write the binomial factor (a ± b)</div>
+                    </div>
+                    <div class="step-content" id="cubes-step4-content">
+                        <div class="input-group">
+                            <input type="text" id="cubes-step4-answer" placeholder="e.g., (x+2)">
+                            <button class="btn btn-primary" onclick="checkCubesStep4()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="cubes-step4-complete"></div>
+                </div>
+
+                <!-- Step 5: Write trinomial factor -->
+                <div class="step-container hidden" id="cubes-step5">
+                    <div class="step-header">
+                        <div class="step-number" id="cubes-step5-num">5</div>
+                        <div class="step-title">Write the trinomial factor (a² ∓ ab + b²)</div>
+                    </div>
+                    <div class="step-content" id="cubes-step5-content">
+                        <div class="input-group">
+                            <input type="text" id="cubes-step5-answer" placeholder="e.g., (x²-2x+4)">
+                            <button class="btn btn-primary" onclick="checkCubesStep5()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="cubes-step5-complete"></div>
+                </div>
+
                 <div class="feedback" id="cubes-feedback"></div>
                 <button class="btn btn-success" onclick="newCubesProblem()" style="margin-top:15px;">New Problem</button>
             </div>
         </div>
 
-        <!-- FACTOR BY GROUPING SECTION -->
+        <!-- FACTOR BY GROUPING SECTION - STEP BY STEP -->
         <div id="grouping" class="section">
-            <h2>Factor by Grouping</h2>
+            <h2>Factor by Grouping - Step by Step</h2>
             <p>Group terms, factor each group, then factor out the common binomial.</p>
 
             <div class="score-display">
@@ -450,14 +646,69 @@
             <div class="problem-card">
                 <h3>Factor completely:</h3>
                 <div class="polynomial-display" id="group-problem"></div>
-                <div class="input-group">
-                    <input type="text" id="group-answer" placeholder="Enter factored form">
-                    <button class="btn btn-primary" onclick="checkGrouping()">Check</button>
+
+                <!-- Step 1: Factor first pair -->
+                <div class="step-container" id="group-step1">
+                    <div class="step-header">
+                        <div class="step-number" id="group-step1-num">1</div>
+                        <div class="step-title">Factor out the GCF from the first two terms: <span id="group-first-pair"></span></div>
+                    </div>
+                    <div class="step-content" id="group-step1-content">
+                        <div class="input-group">
+                            <input type="text" id="group-step1-answer" placeholder="e.g., x²(x+5)">
+                            <button class="btn btn-primary" onclick="checkGroupStep1()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="group-step1-complete"></div>
                 </div>
+
+                <!-- Step 2: Factor second pair -->
+                <div class="step-container hidden" id="group-step2">
+                    <div class="step-header">
+                        <div class="step-number" id="group-step2-num">2</div>
+                        <div class="step-title">Factor out the GCF from the last two terms: <span id="group-second-pair"></span></div>
+                    </div>
+                    <div class="step-content" id="group-step2-content">
+                        <div class="input-group">
+                            <input type="text" id="group-step2-answer" placeholder="e.g., -4(x+5)">
+                            <button class="btn btn-primary" onclick="checkGroupStep2()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="group-step2-complete"></div>
+                </div>
+
+                <!-- Step 3: Identify common binomial -->
+                <div class="step-container hidden" id="group-step3">
+                    <div class="step-header">
+                        <div class="step-number" id="group-step3-num">3</div>
+                        <div class="step-title">What is the common binomial factor?</div>
+                    </div>
+                    <div class="step-content" id="group-step3-content">
+                        <div class="input-group">
+                            <input type="text" id="group-step3-answer" placeholder="e.g., (x+5)">
+                            <button class="btn btn-primary" onclick="checkGroupStep3()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="group-step3-complete"></div>
+                </div>
+
+                <!-- Step 4: Final factored form -->
+                <div class="step-container hidden" id="group-step4">
+                    <div class="step-header">
+                        <div class="step-number" id="group-step4-num">4</div>
+                        <div class="step-title">Write the completely factored form</div>
+                    </div>
+                    <div class="step-content" id="group-step4-content">
+                        <div class="input-group">
+                            <input type="text" id="group-step4-answer" placeholder="e.g., (x+5)(x-2)(x+2)">
+                            <button class="btn btn-primary" onclick="checkGroupStep4()">Check</button>
+                        </div>
+                    </div>
+                    <div class="step-completed-text hidden" id="group-step4-complete"></div>
+                </div>
+
                 <div class="feedback" id="group-feedback"></div>
-                <div id="group-steps" class="step-display" style="display:none;"></div>
-                <button class="btn btn-secondary" onclick="showGroupingSteps()" style="margin-top:10px;">Show Steps</button>
-                <button class="btn btn-success" onclick="newGroupingProblem()" style="margin-top:10px;">New Problem</button>
+                <button class="btn btn-success" onclick="newGroupingProblem()" style="margin-top:15px;">New Problem</button>
             </div>
         </div>
 
@@ -531,42 +782,147 @@
             if (id === 'practice' && quizTotal === 0) generateQuiz();
         }
 
-        // GCF FACTORING
+        // Normalize answer for comparison
+        function normalizeAnswer(str) {
+            return str.replace(/\s+/g, '').replace(/\*/g, '').replace(/\^/g, '').toLowerCase();
+        }
+
+        function checkAnswerMatch(userAnswer, correctAnswers) {
+            const normalized = normalizeAnswer(userAnswer);
+            return correctAnswers.some(ans => normalizeAnswer(ans) === normalized);
+        }
+
+        // =====================
+        // GCF FACTORING - STEP BY STEP
+        // =====================
         const gcfProblems = [
-            {expr: "x³ - 4x² - 5x", answers: ["x(x-5)(x+1)", "x(x+1)(x-5)"], hint: "Factor out x first, then factor the trinomial"},
-            {expr: "2x³ - 18x", answers: ["2x(x-3)(x+3)", "2x(x+3)(x-3)"], hint: "Factor out 2x, then use difference of squares"},
-            {expr: "3y⁵ - 48y³", answers: ["3y³(y-4)(y+4)", "3y³(y+4)(y-4)"], hint: "Factor out 3y³, then use difference of squares"},
-            {expr: "x⁴ - 16x²", answers: ["x²(x-4)(x+4)", "x²(x+4)(x-4)"], hint: "Factor out x², then use difference of squares"},
-            {expr: "5z⁴ + 30z³ + 45z²", answers: ["5z²(z+3)²", "5z²(z+3)(z+3)"], hint: "Factor out 5z², then recognize perfect square trinomial"},
-            {expr: "4x³ - 36x", answers: ["4x(x-3)(x+3)", "4x(x+3)(x-3)"], hint: "Factor out 4x first"},
-            {expr: "x³ - 7x² + 10x", answers: ["x(x-2)(x-5)", "x(x-5)(x-2)"], hint: "Factor out x, then factor the trinomial"},
+            {
+                expr: "x³ - 4x² - 5x",
+                gcf: ["x"],
+                remaining: ["x²-4x-5", "x^2-4x-5"],
+                final: ["x(x-5)(x+1)", "x(x+1)(x-5)"]
+            },
+            {
+                expr: "2x³ - 18x",
+                gcf: ["2x"],
+                remaining: ["x²-9", "x^2-9"],
+                final: ["2x(x-3)(x+3)", "2x(x+3)(x-3)"]
+            },
+            {
+                expr: "3y⁵ - 48y³",
+                gcf: ["3y³", "3y^3"],
+                remaining: ["y²-16", "y^2-16"],
+                final: ["3y³(y-4)(y+4)", "3y^3(y-4)(y+4)", "3y³(y+4)(y-4)", "3y^3(y+4)(y-4)"]
+            },
+            {
+                expr: "x⁴ - 16x²",
+                gcf: ["x²", "x^2"],
+                remaining: ["x²-16", "x^2-16"],
+                final: ["x²(x-4)(x+4)", "x^2(x-4)(x+4)", "x²(x+4)(x-4)", "x^2(x+4)(x-4)"]
+            },
+            {
+                expr: "4x³ - 36x",
+                gcf: ["4x"],
+                remaining: ["x²-9", "x^2-9"],
+                final: ["4x(x-3)(x+3)", "4x(x+3)(x-3)"]
+            },
+            {
+                expr: "x³ - 7x² + 10x",
+                gcf: ["x"],
+                remaining: ["x²-7x+10", "x^2-7x+10"],
+                final: ["x(x-2)(x-5)", "x(x-5)(x-2)"]
+            },
         ];
+
+        let gcfStep = 1;
 
         function newGCFProblem() {
             currentGCF = gcfProblems[Math.floor(Math.random() * gcfProblems.length)];
+            gcfStep = 1;
+
             document.getElementById('gcf-problem').textContent = currentGCF.expr;
-            document.getElementById('gcf-answer').value = '';
+
+            // Reset all steps
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`gcf-step${i}`).classList.remove('hidden');
+                document.getElementById(`gcf-step${i}-num`).classList.remove('step-completed');
+                document.getElementById(`gcf-step${i}-content`).classList.remove('hidden');
+                document.getElementById(`gcf-step${i}-complete`).classList.add('hidden');
+                if (document.getElementById(`gcf-step${i}-answer`)) {
+                    document.getElementById(`gcf-step${i}-answer`).value = '';
+                    document.getElementById(`gcf-step${i}-answer`).classList.remove('correct', 'incorrect');
+                }
+            }
+
+            // Hide steps 2 and 3 initially
+            document.getElementById('gcf-step2').classList.add('hidden');
+            document.getElementById('gcf-step3').classList.add('hidden');
+
             document.getElementById('gcf-feedback').className = 'feedback';
             document.getElementById('gcf-feedback').style.display = 'none';
         }
 
-        function normalizeAnswer(str) {
-            return str.replace(/\s+/g, '').replace(/\*/g, '').toLowerCase();
+        function checkGCFStep1() {
+            const input = document.getElementById('gcf-step1-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentGCF.gcf);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('gcf-step1-num').classList.add('step-completed');
+                document.getElementById('gcf-step1-content').classList.add('hidden');
+                document.getElementById('gcf-step1-complete').textContent = `GCF: ${currentGCF.gcf[0]}`;
+                document.getElementById('gcf-step1-complete').classList.remove('hidden');
+
+                // Show step 2
+                document.getElementById('gcf-step2').classList.remove('hidden');
+                document.getElementById('gcf-partial').textContent = `${currentGCF.gcf[0]}(`;
+                gcfStep = 2;
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
         }
 
-        function checkGCF() {
-            const userAnswer = normalizeAnswer(document.getElementById('gcf-answer').value);
-            const feedback = document.getElementById('gcf-feedback');
+        function checkGCFStep2() {
+            const input = document.getElementById('gcf-step2-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentGCF.remaining);
 
-            const isCorrect = currentGCF.answers.some(ans => normalizeAnswer(ans) === userAnswer);
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('gcf-step2-num').classList.add('step-completed');
+                document.getElementById('gcf-step2-content').classList.add('hidden');
+                document.getElementById('gcf-step2-complete').textContent = `${currentGCF.gcf[0]}(${currentGCF.remaining[0]})`;
+                document.getElementById('gcf-step2-complete').classList.remove('hidden');
+
+                // Show step 3
+                document.getElementById('gcf-step3').classList.remove('hidden');
+                gcfStep = 3;
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkGCFStep3() {
+            const input = document.getElementById('gcf-step3-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentGCF.final);
 
             gcfTotal++;
+            const feedback = document.getElementById('gcf-feedback');
+
             if (isCorrect) {
                 gcfScore++;
-                feedback.innerHTML = '<strong>Correct!</strong> Great factoring!';
+                input.classList.add('correct');
+                document.getElementById('gcf-step3-num').classList.add('step-completed');
+                document.getElementById('gcf-step3-content').classList.add('hidden');
+                document.getElementById('gcf-step3-complete').textContent = `Final: ${currentGCF.final[0]}`;
+                document.getElementById('gcf-step3-complete').classList.remove('hidden');
+
+                feedback.innerHTML = '<strong>Excellent!</strong> You factored completely!';
                 feedback.className = 'feedback correct show';
             } else {
-                feedback.innerHTML = `<strong>Not quite.</strong> The correct answer is: ${currentGCF.answers[0]}`;
+                input.classList.add('incorrect');
+                feedback.innerHTML = `<strong>Not quite.</strong> The correct answer is: ${currentGCF.final[0]}`;
                 feedback.className = 'feedback incorrect show';
             }
 
@@ -575,49 +931,202 @@
             document.getElementById('gcf-progress').style.width = `${(gcfScore/gcfTotal)*100}%`;
         }
 
-        function showGCFHint() {
-            const feedback = document.getElementById('gcf-feedback');
-            feedback.innerHTML = `<strong>Hint:</strong> ${currentGCF.hint}`;
-            feedback.className = 'feedback hint show';
-        }
-
-        // SUM/DIFFERENCE OF CUBES
+        // =====================
+        // SUM/DIFFERENCE OF CUBES - STEP BY STEP
+        // =====================
         const cubesProblems = [
-            {expr: "x³ + 8", correct: "(x + 2)(x² - 2x + 4)", options: ["(x + 2)(x² - 2x + 4)", "(x + 2)(x² + 2x + 4)", "(x - 2)(x² + 2x + 4)", "(x + 2)³"]},
-            {expr: "x³ - 27", correct: "(x - 3)(x² + 3x + 9)", options: ["(x - 3)(x² + 3x + 9)", "(x - 3)(x² - 3x + 9)", "(x + 3)(x² - 3x + 9)", "(x - 3)³"]},
-            {expr: "8x³ + 1", correct: "(2x + 1)(4x² - 2x + 1)", options: ["(2x + 1)(4x² - 2x + 1)", "(2x + 1)(4x² + 2x + 1)", "(2x - 1)(4x² + 2x + 1)", "(8x + 1)(x² - x + 1)"]},
-            {expr: "27x³ - 64", correct: "(3x - 4)(9x² + 12x + 16)", options: ["(3x - 4)(9x² + 12x + 16)", "(3x - 4)(9x² - 12x + 16)", "(3x + 4)(9x² - 12x + 16)", "(27x - 64)(x² + x + 1)"]},
-            {expr: "x³ + 125", correct: "(x + 5)(x² - 5x + 25)", options: ["(x + 5)(x² - 5x + 25)", "(x + 5)(x² + 5x + 25)", "(x - 5)(x² + 5x + 25)", "(x + 5)³"]},
-            {expr: "64x³ - 1", correct: "(4x - 1)(16x² + 4x + 1)", options: ["(4x - 1)(16x² + 4x + 1)", "(4x - 1)(16x² - 4x + 1)", "(4x + 1)(16x² - 4x + 1)", "(8x - 1)(8x² + x + 1)"]},
+            {
+                expr: "x³ + 8",
+                type: "sum",
+                a: ["x"],
+                b: ["2"],
+                binomial: ["(x+2)", "x+2"],
+                trinomial: ["(x²-2x+4)", "(x^2-2x+4)", "x²-2x+4", "x^2-2x+4"]
+            },
+            {
+                expr: "x³ - 27",
+                type: "diff",
+                a: ["x"],
+                b: ["3"],
+                binomial: ["(x-3)", "x-3"],
+                trinomial: ["(x²+3x+9)", "(x^2+3x+9)", "x²+3x+9", "x^2+3x+9"]
+            },
+            {
+                expr: "8x³ + 1",
+                type: "sum",
+                a: ["2x"],
+                b: ["1"],
+                binomial: ["(2x+1)", "2x+1"],
+                trinomial: ["(4x²-2x+1)", "(4x^2-2x+1)", "4x²-2x+1", "4x^2-2x+1"]
+            },
+            {
+                expr: "27x³ - 64",
+                type: "diff",
+                a: ["3x"],
+                b: ["4"],
+                binomial: ["(3x-4)", "3x-4"],
+                trinomial: ["(9x²+12x+16)", "(9x^2+12x+16)", "9x²+12x+16", "9x^2+12x+16"]
+            },
+            {
+                expr: "x³ + 125",
+                type: "sum",
+                a: ["x"],
+                b: ["5"],
+                binomial: ["(x+5)", "x+5"],
+                trinomial: ["(x²-5x+25)", "(x^2-5x+25)", "x²-5x+25", "x^2-5x+25"]
+            },
+            {
+                expr: "64x³ - 1",
+                type: "diff",
+                a: ["4x"],
+                b: ["1"],
+                binomial: ["(4x-1)", "4x-1"],
+                trinomial: ["(16x²+4x+1)", "(16x^2+4x+1)", "16x²+4x+1", "16x^2+4x+1"]
+            },
         ];
+
+        let cubesStep = 1;
 
         function newCubesProblem() {
             currentCubes = cubesProblems[Math.floor(Math.random() * cubesProblems.length)];
-            document.getElementById('cubes-problem').textContent = currentCubes.expr;
-            document.getElementById('cubes-feedback').className = 'feedback';
+            cubesStep = 1;
 
-            const optionsDiv = document.getElementById('cubes-options');
-            const shuffled = [...currentCubes.options].sort(() => Math.random() - 0.5);
-            optionsDiv.innerHTML = shuffled.map(opt =>
-                `<button class="option-btn" onclick="checkCubes(this, '${opt}')">${opt}</button>`
-            ).join('');
+            document.getElementById('cubes-problem').textContent = currentCubes.expr;
+
+            // Reset all steps
+            for (let i = 1; i <= 5; i++) {
+                const stepEl = document.getElementById(`cubes-step${i}`);
+                const numEl = document.getElementById(`cubes-step${i}-num`);
+                const contentEl = document.getElementById(`cubes-step${i}-content`);
+                const completeEl = document.getElementById(`cubes-step${i}-complete`);
+
+                stepEl.classList.remove('hidden');
+                numEl.classList.remove('step-completed');
+                contentEl.classList.remove('hidden');
+                completeEl.classList.add('hidden');
+
+                if (i >= 2) {
+                    stepEl.classList.add('hidden');
+                    const input = document.getElementById(`cubes-step${i}-answer`);
+                    if (input) {
+                        input.value = '';
+                        input.classList.remove('correct', 'incorrect');
+                    }
+                }
+            }
+
+            // Reset radio options
+            document.querySelectorAll('#cubes-step1 .radio-option').forEach(opt => {
+                opt.classList.remove('selected', 'correct', 'incorrect');
+            });
+
+            document.getElementById('cubes-feedback').className = 'feedback';
+            document.getElementById('cubes-feedback').style.display = 'none';
         }
 
-        function checkCubes(btn, answer) {
-            const feedback = document.getElementById('cubes-feedback');
-            const correct = answer === currentCubes.correct;
+        function selectCubesType(type) {
+            const options = document.querySelectorAll('#cubes-step1 .radio-option');
+            options.forEach(opt => opt.classList.remove('selected'));
 
-            document.querySelectorAll('#cubes-options .option-btn').forEach(b => b.disabled = true);
+            const selectedOpt = type === 'sum' ? options[0] : options[1];
+            selectedOpt.classList.add('selected');
+
+            const isCorrect = type === currentCubes.type;
+
+            if (isCorrect) {
+                selectedOpt.classList.add('correct');
+                document.getElementById('cubes-step1-num').classList.add('step-completed');
+                document.getElementById('cubes-step1-content').classList.add('hidden');
+                const typeText = type === 'sum' ? 'Sum of Cubes' : 'Difference of Cubes';
+                document.getElementById('cubes-step1-complete').textContent = typeText;
+                document.getElementById('cubes-step1-complete').classList.remove('hidden');
+
+                // Show step 2
+                document.getElementById('cubes-step2').classList.remove('hidden');
+                cubesStep = 2;
+            } else {
+                selectedOpt.classList.add('incorrect');
+                setTimeout(() => selectedOpt.classList.remove('incorrect', 'selected'), 500);
+            }
+        }
+
+        function checkCubesStep2() {
+            const input = document.getElementById('cubes-step2-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentCubes.a);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('cubes-step2-num').classList.add('step-completed');
+                document.getElementById('cubes-step2-content').classList.add('hidden');
+                document.getElementById('cubes-step2-complete').textContent = `a = ${currentCubes.a[0]}`;
+                document.getElementById('cubes-step2-complete').classList.remove('hidden');
+
+                document.getElementById('cubes-step3').classList.remove('hidden');
+                cubesStep = 3;
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkCubesStep3() {
+            const input = document.getElementById('cubes-step3-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentCubes.b);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('cubes-step3-num').classList.add('step-completed');
+                document.getElementById('cubes-step3-content').classList.add('hidden');
+                document.getElementById('cubes-step3-complete').textContent = `b = ${currentCubes.b[0]}`;
+                document.getElementById('cubes-step3-complete').classList.remove('hidden');
+
+                document.getElementById('cubes-step4').classList.remove('hidden');
+                cubesStep = 4;
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkCubesStep4() {
+            const input = document.getElementById('cubes-step4-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentCubes.binomial);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('cubes-step4-num').classList.add('step-completed');
+                document.getElementById('cubes-step4-content').classList.add('hidden');
+                document.getElementById('cubes-step4-complete').textContent = `Binomial: ${currentCubes.binomial[0]}`;
+                document.getElementById('cubes-step4-complete').classList.remove('hidden');
+
+                document.getElementById('cubes-step5').classList.remove('hidden');
+                cubesStep = 5;
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkCubesStep5() {
+            const input = document.getElementById('cubes-step5-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentCubes.trinomial);
 
             cubesTotal++;
-            if (correct) {
+            const feedback = document.getElementById('cubes-feedback');
+
+            if (isCorrect) {
                 cubesScore++;
-                btn.classList.add('correct');
-                feedback.innerHTML = '<strong>Correct!</strong> Well done!';
+                input.classList.add('correct');
+                document.getElementById('cubes-step5-num').classList.add('step-completed');
+                document.getElementById('cubes-step5-content').classList.add('hidden');
+                document.getElementById('cubes-step5-complete').textContent = `Trinomial: ${currentCubes.trinomial[0]}`;
+                document.getElementById('cubes-step5-complete').classList.remove('hidden');
+
+                feedback.innerHTML = `<strong>Perfect!</strong> ${currentCubes.binomial[0]}${currentCubes.trinomial[0]}`;
                 feedback.className = 'feedback correct show';
             } else {
-                btn.classList.add('incorrect');
-                feedback.innerHTML = `<strong>Incorrect.</strong> The answer is: ${currentCubes.correct}`;
+                input.classList.add('incorrect');
+                feedback.innerHTML = `<strong>Not quite.</strong> The trinomial factor is: ${currentCubes.trinomial[0]}`;
                 feedback.className = 'feedback incorrect show';
             }
 
@@ -626,35 +1135,156 @@
             document.getElementById('cubes-progress').style.width = `${(cubesScore/cubesTotal)*100}%`;
         }
 
-        // FACTOR BY GROUPING
+        // =====================
+        // FACTOR BY GROUPING - STEP BY STEP
+        // =====================
         const groupingProblems = [
-            {expr: "x³ + 5x² - 4x - 20", answers: ["(x+5)(x-2)(x+2)", "(x+5)(x+2)(x-2)", "(x-2)(x+2)(x+5)"], steps: ["x²(x + 5) - 4(x + 5)", "(x² - 4)(x + 5)", "(x - 2)(x + 2)(x + 5)"]},
-            {expr: "x³ - x² - 9x + 9", answers: ["(x-1)(x-3)(x+3)", "(x-1)(x+3)(x-3)"], steps: ["x²(x - 1) - 9(x - 1)", "(x² - 9)(x - 1)", "(x - 3)(x + 3)(x - 1)"]},
-            {expr: "x³ + 2x² - x - 2", answers: ["(x+2)(x-1)(x+1)", "(x+2)(x+1)(x-1)"], steps: ["x²(x + 2) - 1(x + 2)", "(x² - 1)(x + 2)", "(x - 1)(x + 1)(x + 2)"]},
-            {expr: "x³ - 3x² - 4x + 12", answers: ["(x-3)(x-2)(x+2)", "(x-3)(x+2)(x-2)"], steps: ["x²(x - 3) - 4(x - 3)", "(x² - 4)(x - 3)", "(x - 2)(x + 2)(x - 3)"]},
+            {
+                expr: "x³ + 5x² - 4x - 20",
+                firstPair: "x³ + 5x²",
+                secondPair: "-4x - 20",
+                step1: ["x²(x+5)", "x^2(x+5)"],
+                step2: ["-4(x+5)"],
+                commonBinomial: ["(x+5)", "x+5"],
+                final: ["(x+5)(x-2)(x+2)", "(x+5)(x+2)(x-2)", "(x-2)(x+2)(x+5)", "(x+2)(x-2)(x+5)"]
+            },
+            {
+                expr: "x³ - x² - 9x + 9",
+                firstPair: "x³ - x²",
+                secondPair: "-9x + 9",
+                step1: ["x²(x-1)", "x^2(x-1)"],
+                step2: ["-9(x-1)"],
+                commonBinomial: ["(x-1)", "x-1"],
+                final: ["(x-1)(x-3)(x+3)", "(x-1)(x+3)(x-3)", "(x-3)(x+3)(x-1)", "(x+3)(x-3)(x-1)"]
+            },
+            {
+                expr: "x³ + 2x² - x - 2",
+                firstPair: "x³ + 2x²",
+                secondPair: "-x - 2",
+                step1: ["x²(x+2)", "x^2(x+2)"],
+                step2: ["-1(x+2)", "-(x+2)"],
+                commonBinomial: ["(x+2)", "x+2"],
+                final: ["(x+2)(x-1)(x+1)", "(x+2)(x+1)(x-1)", "(x-1)(x+1)(x+2)", "(x+1)(x-1)(x+2)"]
+            },
+            {
+                expr: "x³ - 3x² - 4x + 12",
+                firstPair: "x³ - 3x²",
+                secondPair: "-4x + 12",
+                step1: ["x²(x-3)", "x^2(x-3)"],
+                step2: ["-4(x-3)"],
+                commonBinomial: ["(x-3)", "x-3"],
+                final: ["(x-3)(x-2)(x+2)", "(x-3)(x+2)(x-2)", "(x-2)(x+2)(x-3)", "(x+2)(x-2)(x-3)"]
+            },
         ];
+
+        let groupStep = 1;
 
         function newGroupingProblem() {
             currentGrouping = groupingProblems[Math.floor(Math.random() * groupingProblems.length)];
+            groupStep = 1;
+
             document.getElementById('group-problem').textContent = currentGrouping.expr;
-            document.getElementById('group-answer').value = '';
+            document.getElementById('group-first-pair').textContent = currentGrouping.firstPair;
+            document.getElementById('group-second-pair').textContent = currentGrouping.secondPair;
+
+            // Reset all steps
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`group-step${i}`).classList.remove('hidden');
+                document.getElementById(`group-step${i}-num`).classList.remove('step-completed');
+                document.getElementById(`group-step${i}-content`).classList.remove('hidden');
+                document.getElementById(`group-step${i}-complete`).classList.add('hidden');
+                if (document.getElementById(`group-step${i}-answer`)) {
+                    document.getElementById(`group-step${i}-answer`).value = '';
+                    document.getElementById(`group-step${i}-answer`).classList.remove('correct', 'incorrect');
+                }
+            }
+
+            // Hide steps 2-4 initially
+            document.getElementById('group-step2').classList.add('hidden');
+            document.getElementById('group-step3').classList.add('hidden');
+            document.getElementById('group-step4').classList.add('hidden');
+
             document.getElementById('group-feedback').className = 'feedback';
-            document.getElementById('group-steps').style.display = 'none';
+            document.getElementById('group-feedback').style.display = 'none';
         }
 
-        function checkGrouping() {
-            const userAnswer = normalizeAnswer(document.getElementById('group-answer').value);
-            const feedback = document.getElementById('group-feedback');
+        function checkGroupStep1() {
+            const input = document.getElementById('group-step1-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentGrouping.step1);
 
-            const isCorrect = currentGrouping.answers.some(ans => normalizeAnswer(ans) === userAnswer);
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('group-step1-num').classList.add('step-completed');
+                document.getElementById('group-step1-content').classList.add('hidden');
+                document.getElementById('group-step1-complete').textContent = currentGrouping.step1[0];
+                document.getElementById('group-step1-complete').classList.remove('hidden');
+
+                document.getElementById('group-step2').classList.remove('hidden');
+                groupStep = 2;
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkGroupStep2() {
+            const input = document.getElementById('group-step2-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentGrouping.step2);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('group-step2-num').classList.add('step-completed');
+                document.getElementById('group-step2-content').classList.add('hidden');
+                document.getElementById('group-step2-complete').textContent = currentGrouping.step2[0];
+                document.getElementById('group-step2-complete').classList.remove('hidden');
+
+                document.getElementById('group-step3').classList.remove('hidden');
+                groupStep = 3;
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkGroupStep3() {
+            const input = document.getElementById('group-step3-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentGrouping.commonBinomial);
+
+            if (isCorrect) {
+                input.classList.add('correct');
+                document.getElementById('group-step3-num').classList.add('step-completed');
+                document.getElementById('group-step3-content').classList.add('hidden');
+                document.getElementById('group-step3-complete').textContent = `Common binomial: ${currentGrouping.commonBinomial[0]}`;
+                document.getElementById('group-step3-complete').classList.remove('hidden');
+
+                document.getElementById('group-step4').classList.remove('hidden');
+                groupStep = 4;
+            } else {
+                input.classList.add('incorrect');
+                setTimeout(() => input.classList.remove('incorrect'), 500);
+            }
+        }
+
+        function checkGroupStep4() {
+            const input = document.getElementById('group-step4-answer');
+            const isCorrect = checkAnswerMatch(input.value, currentGrouping.final);
 
             groupTotal++;
+            const feedback = document.getElementById('group-feedback');
+
             if (isCorrect) {
                 groupScore++;
-                feedback.innerHTML = '<strong>Correct!</strong> Excellent grouping!';
+                input.classList.add('correct');
+                document.getElementById('group-step4-num').classList.add('step-completed');
+                document.getElementById('group-step4-content').classList.add('hidden');
+                document.getElementById('group-step4-complete').textContent = `Final: ${currentGrouping.final[0]}`;
+                document.getElementById('group-step4-complete').classList.remove('hidden');
+
+                feedback.innerHTML = '<strong>Excellent!</strong> Perfect factoring by grouping!';
                 feedback.className = 'feedback correct show';
             } else {
-                feedback.innerHTML = `<strong>Not quite.</strong> The answer is: ${currentGrouping.answers[0]}`;
+                input.classList.add('incorrect');
+                feedback.innerHTML = `<strong>Not quite.</strong> The correct answer is: ${currentGrouping.final[0]}`;
                 feedback.className = 'feedback incorrect show';
             }
 
@@ -663,15 +1293,9 @@
             document.getElementById('group-progress').style.width = `${(groupScore/groupTotal)*100}%`;
         }
 
-        function showGroupingSteps() {
-            const stepsDiv = document.getElementById('group-steps');
-            stepsDiv.style.display = 'block';
-            stepsDiv.innerHTML = '<strong>Steps:</strong><br>' + currentGrouping.steps.map((s, i) =>
-                `<div class="step">${i + 1}. ${s}</div>`
-            ).join('');
-        }
-
+        // =====================
         // FACTOR THEOREM
+        // =====================
         const theoremProblems = [
             {poly: "x³ - 6x² + 11x - 6", coeffs: [1, -6, 11, -6], testValue: 2, isFactor: true},
             {poly: "x³ - 6x² + 11x - 6", coeffs: [1, -6, 11, -6], testValue: 1, isFactor: true},
@@ -710,7 +1334,6 @@
 
             document.querySelectorAll('#theorem .option-btn').forEach(b => b.disabled = true);
 
-            // Calculate f(k) using synthetic division style
             const k = currentTheorem.testValue;
             const coeffs = currentTheorem.coeffs;
             let result = coeffs[0];
@@ -751,7 +1374,6 @@
                 yVals.push(y);
             }
 
-            // Mark the test point
             const k = currentTheorem.testValue;
             let fk = 0;
             for (let i = 0; i < coeffs.length; i++) {
@@ -770,7 +1392,9 @@
             }, {responsive: true});
         }
 
+        // =====================
         // PRACTICE QUIZ
+        // =====================
         function generateQuiz() {
             quizScore = 0;
             quizTotal = 0;
