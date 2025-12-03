@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 4.6: The Fundamental Theorem of Algebra</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            margin-bottom: 30px;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #0891b2;
+            text-decoration: none;
+            margin-bottom: 15px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        .back-link:hover { transform: translateX(-5px); }
+        .back-link::before { content: "←"; margin-right: 8px; font-size: 1.2em; }
+        h1 { color: #2d3748; margin-bottom: 15px; font-size: 2.5em; }
+        .section-intro { color: #4a5568; font-size: 1.1em; line-height: 1.8; margin-bottom: 20px; }
+        .learning-path {
+            background: linear-gradient(135deg, #0891b220 0%, #06b6d420 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #0891b2;
+        }
+        .learning-path h3 { color: #0891b2; margin-bottom: 10px; }
+        .learning-path ol { margin-left: 20px; color: #4a5568; line-height: 2; }
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .topic-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(0,0,0,0.18);
+        }
+        .topic-header {
+            background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+            color: white;
+            padding: 25px;
+        }
+        .topic-header.fundamental { background: linear-gradient(135deg, #0369a1 0%, #0891b2 100%); }
+        .topic-header.zeros { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); }
+        .topic-header.descartes { background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%); }
+        .topic-header h2 { font-size: 1.5em; margin-bottom: 10px; }
+        .topic-description { font-size: 0.95em; opacity: 0.95; line-height: 1.5; }
+        .topic-content { padding: 25px; }
+        .preview-tabs { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .preview-tab {
+            padding: 8px 16px;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            color: #0891b2;
+            transition: all 0.2s;
+        }
+        .preview-tab:hover { background: #0891b2; color: white; border-color: #0891b2; }
+        .topic-link {
+            display: block;
+            background: linear-gradient(135deg, #0891b2 0%, #06b6d4 100%);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .topic-link.fundamental { background: linear-gradient(135deg, #0369a1 0%, #0891b2 100%); }
+        .topic-link.zeros { background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%); }
+        .topic-link.descartes { background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%); }
+        .topic-link:hover { transform: scale(1.02); box-shadow: 0 5px 20px rgba(8,145,178,0.4); }
+        .concept-list { list-style: none; margin: 15px 0; }
+        .concept-list li { padding: 8px 0; color: #4a5568; padding-left: 25px; position: relative; }
+        .concept-list li::before { content: "✓"; position: absolute; left: 0; color: #0891b2; font-weight: bold; }
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            h1 { font-size: 1.8em; }
+            .header { padding: 20px; }
+            .topics-grid { grid-template-columns: 1fr; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="../index.html" class="back-link">Back to Chapter 4</a>
+            <h1>Section 4.6: The Fundamental Theorem of Algebra</h1>
+            <p class="section-intro">
+                The Fundamental Theorem of Algebra is one of the most important results in mathematics.
+                It tells us exactly how many roots a polynomial has and provides powerful tools for
+                finding those roots. Learn to write polynomials from their zeros and use Descartes' Rule
+                to predict the nature of roots before solving.
+            </p>
+            <div class="learning-path">
+                <h3>Recommended Learning Path</h3>
+                <ol>
+                    <li>Start with <strong>The Fundamental Theorem</strong> to understand root counting</li>
+                    <li>Learn to <strong>Write Polynomials from Zeros</strong> working backwards</li>
+                    <li>Use <strong>Descartes' Rule of Signs</strong> to predict root types</li>
+                </ol>
+            </div>
+        </div>
+        <div class="topics-grid">
+            <div class="topic-card">
+                <div class="topic-header fundamental">
+                    <h2>The Fundamental Theorem</h2>
+                    <p class="topic-description">Every polynomial of degree n has exactly n roots (counting multiplicity and complex roots).</p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span>
+                        <span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span>
+                        <span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>Counting roots with multiplicity</li>
+                        <li>Real vs. complex roots</li>
+                        <li>Why degree equals number of roots</li>
+                        <li>Linear factorization theorem</li>
+                    </ul>
+                    <a href="Fundamental_Theorem_Complete.html" class="topic-link fundamental">Start Learning</a>
+                </div>
+            </div>
+            <div class="topic-card">
+                <div class="topic-header zeros">
+                    <h2>Writing Polynomials from Zeros</h2>
+                    <p class="topic-description">Given the zeros of a polynomial, write the polynomial equation.</p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span>
+                        <span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span>
+                        <span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>Converting zeros to factors</li>
+                        <li>Handling irrational conjugates</li>
+                        <li>Handling complex conjugates</li>
+                        <li>Finding leading coefficient</li>
+                    </ul>
+                    <a href="Writing_Polynomial_from_Zeros_Complete.html" class="topic-link zeros">Start Learning</a>
+                </div>
+            </div>
+            <div class="topic-card">
+                <div class="topic-header descartes">
+                    <h2>Descartes' Rule of Signs</h2>
+                    <p class="topic-description">Determine the possible number of positive and negative real roots.</p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span>
+                        <span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span>
+                        <span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>Counting sign changes for positive roots</li>
+                        <li>Using f(-x) for negative roots</li>
+                        <li>Subtracting by 2 for possibilities</li>
+                        <li>Combining with other theorems</li>
+                    </ul>
+                    <a href="Descartes_Rule_Complete.html" class="topic-link descartes">Start Learning</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

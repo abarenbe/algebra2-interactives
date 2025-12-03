@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Irrational Conjugates - Interactive Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: white;
+            padding: 30px;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 15px;
+            opacity: 0.9;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover { opacity: 1; }
+        .back-link::before { content: "←"; margin-right: 8px; font-size: 1.2em; }
+
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .subtitle { font-size: 1.1em; opacity: 0.95; }
+
+        .tabs {
+            display: flex;
+            background: #f7fafc;
+            border-bottom: 3px solid #e2e8f0;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 20px;
+            text-align: center;
+            background: none;
+            border: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #718096;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -3px;
+        }
+
+        .tab:hover { background: #edf2f7; color: #6366f1; }
+        .tab.active { color: #6366f1; border-bottom-color: #6366f1; background: white; }
+
+        .content { padding: 40px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #6366f115 0%, #8b5cf615 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #6366f1;
+        }
+
+        .concept-box h3 { color: #6366f1; margin-bottom: 15px; font-size: 1.3em; }
+        .concept-box p, .concept-box ul { color: #4a5568; line-height: 1.8; margin-bottom: 10px; }
+        .concept-box ul { margin-left: 20px; }
+        .concept-box li { margin: 8px 0; }
+
+        .why-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #f59e0b;
+        }
+
+        .why-box h3 { color: #92400e; margin-bottom: 15px; }
+        .why-box p { color: #78350f; line-height: 1.8; }
+
+        .formula-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: center;
+            font-size: 1.4em;
+            font-weight: 600;
+            border: 2px solid #6366f1;
+            font-family: 'Times New Roman', serif;
+        }
+
+        .example-box {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid #e2e8f0;
+        }
+
+        .example-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .example-counter { font-size: 1.1em; font-weight: 600; color: #6366f1; }
+
+        .nav-buttons { display: flex; gap: 10px; }
+
+        .nav-btn {
+            padding: 8px 20px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .nav-btn:hover:not(:disabled) { background: #8b5cf6; transform: scale(1.05); }
+        .nav-btn:disabled { background: #cbd5e0; cursor: not-allowed; }
+
+        .step-box {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #6366f1;
+        }
+
+        .step-number {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            background: #6366f1;
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .polynomial { font-family: 'Times New Roman', serif; font-size: 1.3em; }
+        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; }
+        .highlight-green { background: #d1fae5; padding: 2px 6px; border-radius: 4px; }
+
+        /* Practice Section */
+        .problem-box {
+            background: #f0f4ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .problem-display {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 15px 0;
+            font-size: 1.3em;
+            font-family: 'Times New Roman', serif;
+            border: 2px solid #6366f1;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin: 15px 0;
+            flex-wrap: wrap;
+        }
+
+        .input-group label { font-weight: 600; color: #374151; min-width: 150px; }
+
+        input[type="text"] {
+            padding: 12px 15px;
+            border: 2px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1.1em;
+            flex: 1;
+            min-width: 200px;
+            font-family: 'Times New Roman', serif;
+        }
+
+        input[type="text"]:focus { border-color: #6366f1; outline: none; }
+        input.correct { border-color: #10b981; background: #d1fae5; }
+        input.incorrect { border-color: #ef4444; background: #fee2e2; }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary { background: #6366f1; color: white; }
+        .btn-primary:hover { background: #8b5cf6; transform: translateY(-2px); }
+        .btn-success { background: #10b981; color: white; }
+        .btn-success:hover { background: #059669; }
+        .btn-hint { background: #f59e0b; color: white; }
+        .btn-hint:hover { background: #d97706; }
+
+        .feedback {
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .feedback.show { display: block; }
+        .feedback.correct { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+        .feedback.incorrect { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+
+        .hint-box {
+            background: #fef3c7;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            display: none;
+            border-left: 4px solid #f59e0b;
+        }
+
+        .hint-box.show { display: block; }
+
+        .score-display {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .score-display h3 { margin-bottom: 10px; }
+        .score-numbers { font-size: 2em; font-weight: bold; }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 5px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 5px;
+            transition: width 0.5s;
+        }
+
+        /* Do Section */
+        .scratch-workspace {
+            background: #fffbeb;
+            border: 2px dashed #f59e0b;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .scratch-workspace h4 { color: #92400e; margin-bottom: 15px; }
+
+        .scratch-row {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .scratch-label { min-width: 180px; font-weight: 500; color: #78716c; }
+
+        .scratch-input {
+            padding: 10px 15px;
+            border: 1px dashed #d4d4d4;
+            border-radius: 8px;
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1em;
+            flex: 1;
+            min-width: 200px;
+            background: rgba(255,255,255,0.8);
+        }
+
+        .scratch-input:focus { border-color: #6366f1; border-style: solid; outline: none; }
+
+        .difficulty-selector {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .diff-btn {
+            padding: 10px 25px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .diff-btn:hover { border-color: #6366f1; }
+        .diff-btn.active { background: #6366f1; color: white; border-color: #6366f1; }
+
+        .final-answer {
+            background: #e0e7ff;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .final-answer h4 { color: #4338ca; margin-bottom: 15px; }
+
+        .flow-guide {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            border: 1px solid #86efac;
+        }
+
+        .flow-guide h3 { color: #166534; margin-bottom: 12px; font-size: 1.1em; }
+
+        .flow-steps {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .flow-step {
+            padding: 8px 16px;
+            background: white;
+            border-radius: 20px;
+            font-size: 0.95em;
+            color: #374151;
+            border: 1px solid #d1d5db;
+        }
+
+        .flow-step.current {
+            background: #6366f1;
+            color: white;
+            border-color: #6366f1;
+            font-weight: 600;
+        }
+
+        .flow-arrow { color: #9ca3af; font-weight: bold; }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .content { padding: 20px; }
+            .tabs { flex-wrap: wrap; }
+            .tab { padding: 15px 10px; font-size: 0.9em; }
+            .input-group { flex-direction: column; align-items: stretch; }
+            .input-group label { min-width: auto; }
+            input[type="text"] { min-width: auto; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="./" class="back-link">Back to 4.5 Solving Polynomial Equations</a>
+            <h1>Irrational Conjugates</h1>
+            <p class="subtitle">Learn, See, Practice, Do</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">
+                <span>1</span> Learn
+            </button>
+            <button class="tab" onclick="showTab('see')">
+                <span>2</span> See
+            </button>
+            <button class="tab" onclick="showTab('practice')">
+                <span>3</span> Practice
+            </button>
+            <button class="tab" onclick="showTab('do')">
+                <span>4</span> Do
+            </button>
+        </div>
+
+        <div class="content">
+            <!-- LEARN TAB -->
+            <div id="learn" class="tab-content active">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step current">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+
+                <h2 style="color: #6366f1; margin-bottom: 20px;">Understanding Irrational Conjugates</h2>
+
+                <div class="concept-box">
+                    <h3>The Irrational Conjugates Theorem</h3>
+                    <p>For a polynomial with <strong>rational coefficients</strong>, if <strong>a + √b</strong> is a root (where √b is irrational), then its conjugate <strong>a - √b</strong> must also be a root.</p>
+                </div>
+
+                <div class="formula-box">
+                    If a + √b is a root, then a - √b is also a root
+                </div>
+
+                <div class="why-box">
+                    <h3>Why Does This Work?</h3>
+                    <p>When we have a polynomial with rational coefficients, the irrational parts must "cancel out" when we multiply factors together. The only way to eliminate √b from the product is if both (x - (a + √b)) and (x - (a - √b)) are factors.</p>
+                    <p style="margin-top: 15px;">When we multiply these factors:</p>
+                    <p style="font-family: 'Times New Roman', serif; font-size: 1.2em; text-align: center; margin-top: 10px;">
+                        (x - (a + √b))(x - (a - √b)) = x² - 2ax + (a² - b)
+                    </p>
+                    <p style="margin-top: 15px;">Notice: the result has only rational coefficients! The √b terms cancel.</p>
+                </div>
+
+                <div class="concept-box">
+                    <h3>Key Points</h3>
+                    <ul>
+                        <li><strong>Only applies to polynomials with rational coefficients</strong> - if coefficients are already irrational, this rule doesn't apply</li>
+                        <li><strong>The conjugate has the opposite sign</strong> before the radical: a + √b becomes a - √b</li>
+                        <li><strong>Both roots have the same rational part (a)</strong> - only the irrational part changes sign</li>
+                        <li><strong>Useful for finding missing roots</strong> - if you know one irrational root, you automatically know another!</li>
+                    </ul>
+                </div>
+
+                <div class="example-box">
+                    <h4 style="color: #6366f1; margin-bottom: 15px;">Quick Example</h4>
+                    <p>If a polynomial with rational coefficients has the root <span class="polynomial">3 + √5</span>, then it must also have the root <span class="polynomial">3 - √5</span>.</p>
+                    <p style="margin-top: 15px;">The corresponding factor is:</p>
+                    <p class="polynomial" style="text-align: center; margin: 15px 0;">(x - (3 + √5))(x - (3 - √5)) = x² - 6x + 4</p>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('see')">Continue to See →</button>
+                </div>
+            </div>
+
+            <!-- SEE TAB -->
+            <div id="see" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+
+                <h2 style="color: #6366f1; margin-bottom: 20px;">Step-by-Step Examples</h2>
+
+                <div class="example-box">
+                    <div class="example-nav">
+                        <span class="example-counter">Example <span id="example-num">1</span> of 3</span>
+                        <div class="nav-buttons">
+                            <button class="nav-btn" id="prev-example" onclick="changeExample(-1)" disabled>← Prev</button>
+                            <button class="nav-btn" id="next-example" onclick="changeExample(1)">Next →</button>
+                        </div>
+                    </div>
+
+                    <div id="example-content">
+                        <!-- Example content will be loaded here -->
+                    </div>
+
+                    <div class="step-box" style="margin-top: 20px;">
+                        <div id="step-content">
+                            <!-- Step content will be loaded here -->
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="nav-btn" id="prev-step" onclick="changeStep(-1)" disabled>← Previous Step</button>
+                            <span style="margin: 0 15px; font-weight: 600; color: #6366f1;">Step <span id="step-num">1</span> of <span id="total-steps">4</span></span>
+                            <button class="nav-btn" id="next-step" onclick="changeStep(1)">Next Step →</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('practice')">Continue to Practice →</button>
+                </div>
+            </div>
+
+            <!-- PRACTICE TAB -->
+            <div id="practice" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+
+                <h2 style="color: #6366f1; margin-bottom: 20px;">Guided Practice</h2>
+
+                <div class="score-display">
+                    <h3>Your Progress</h3>
+                    <div class="score-numbers"><span id="practice-score">0</span> / <span id="practice-total">5</span></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="practice-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="problem-box" id="practice-problem">
+                    <!-- Practice problem will be loaded here -->
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('do')">Continue to Do →</button>
+                </div>
+            </div>
+
+            <!-- DO TAB -->
+            <div id="do" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">4. Do</span>
+                    </div>
+                </div>
+
+                <h2 style="color: #6366f1; margin-bottom: 20px;">Independent Practice</h2>
+
+                <div class="difficulty-selector">
+                    <button class="diff-btn active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="diff-btn" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="diff-btn" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+
+                <div class="score-display">
+                    <h3>Your Score</h3>
+                    <div class="score-numbers"><span id="do-score">0</span> / <span id="do-total">0</span></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="do-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="problem-box" id="do-problem">
+                    <p style="text-align: center; color: #6366f1; font-weight: 600;">Select a difficulty and click "New Problem" to begin!</p>
+                </div>
+
+                <div class="scratch-workspace" id="scratch-area" style="display: none;">
+                    <h4>Scratch Workspace</h4>
+                    <div class="scratch-row">
+                        <span class="scratch-label">Given irrational root:</span>
+                        <input type="text" class="scratch-input" id="scratch-given" readonly>
+                    </div>
+                    <div class="scratch-row">
+                        <span class="scratch-label">Conjugate root:</span>
+                        <input type="text" class="scratch-input" id="scratch-conjugate" placeholder="Write the conjugate...">
+                    </div>
+                    <div class="scratch-row">
+                        <span class="scratch-label">Quadratic factor:</span>
+                        <input type="text" class="scratch-input" id="scratch-factor" placeholder="(x - root₁)(x - root₂) = ...">
+                    </div>
+                </div>
+
+                <div class="final-answer" id="final-section" style="display: none;">
+                    <h4>Your Final Answer</h4>
+                    <div class="input-group">
+                        <label id="answer-label">Conjugate root:</label>
+                        <input type="text" id="final-answer" placeholder="Enter your answer...">
+                        <button class="btn btn-primary" onclick="checkDoAnswer()">Check</button>
+                    </div>
+                    <div class="feedback" id="do-feedback"></div>
+                </div>
+
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-success" onclick="newDoProblem()">New Problem</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+
+            if (tabId === 'see') initExamples();
+            if (tabId === 'practice') initPractice();
+        }
+
+        // Examples data
+        const examples = [
+            {
+                problem: "Given that 2 + √3 is a root of a polynomial with rational coefficients, find the conjugate root.",
+                steps: [
+                    { title: "Identify the irrational root", content: "The given root is <span class='highlight'>2 + √3</span> where a = 2 and √b = √3" },
+                    { title: "Apply the conjugate theorem", content: "Since the polynomial has rational coefficients and 2 + √3 is a root, its conjugate <span class='highlight'>2 - √3</span> must also be a root." },
+                    { title: "Verify with the quadratic factor", content: "(x - (2 + √3))(x - (2 - √3)) = x² - 4x + (4 - 3) = <span class='highlight-green'>x² - 4x + 1</span>" },
+                    { title: "Conclusion", content: "The conjugate root is <span class='highlight-green'>2 - √3</span>. Notice the quadratic factor has only rational coefficients!" }
+                ]
+            },
+            {
+                problem: "If -1 + √7 is a root of f(x) with rational coefficients, find all roots given that f(x) is degree 2.",
+                steps: [
+                    { title: "Apply the conjugate theorem", content: "Since -1 + √7 is a root and coefficients are rational, <span class='highlight'>-1 - √7</span> must also be a root." },
+                    { title: "Count the roots", content: "A degree 2 polynomial has exactly 2 roots. We found both: <span class='highlight'>-1 + √7</span> and <span class='highlight'>-1 - √7</span>" },
+                    { title: "Write the factored form", content: "f(x) = (x - (-1 + √7))(x - (-1 - √7)) = (x + 1 - √7)(x + 1 + √7)" },
+                    { title: "Expand to verify", content: "= x² + 2x + 1 - 7 = <span class='highlight-green'>x² + 2x - 6</span> (rational coefficients!)" }
+                ]
+            },
+            {
+                problem: "A cubic polynomial with rational coefficients has roots 4, and 1 + √2. Find all roots.",
+                steps: [
+                    { title: "List known roots", content: "We know two roots: <span class='highlight'>4</span> (rational) and <span class='highlight'>1 + √2</span> (irrational)" },
+                    { title: "Apply conjugate theorem", content: "Since 1 + √2 is irrational and coefficients are rational, <span class='highlight'>1 - √2</span> must also be a root." },
+                    { title: "Count roots", content: "A cubic has 3 roots. We now have all three: 4, 1 + √2, and 1 - √2" },
+                    { title: "Write the polynomial", content: "f(x) = (x - 4)(x - (1 + √2))(x - (1 - √2)) = (x - 4)(x² - 2x - 1) = <span class='highlight-green'>x³ - 6x² + 7x + 4</span>" }
+                ]
+            }
+        ];
+
+        let currentExample = 0;
+        let currentStep = 0;
+
+        function initExamples() {
+            currentExample = 0;
+            currentStep = 0;
+            loadExample();
+        }
+
+        function loadExample() {
+            const ex = examples[currentExample];
+            document.getElementById('example-num').textContent = currentExample + 1;
+            document.getElementById('example-content').innerHTML = `
+                <h4 style="color: #6366f1;">Problem:</h4>
+                <p class="polynomial" style="font-size: 1.2em; margin: 15px 0;">${ex.problem}</p>
+            `;
+            document.getElementById('total-steps').textContent = ex.steps.length;
+            currentStep = 0;
+            loadStep();
+            updateExampleNav();
+        }
+
+        function loadStep() {
+            const step = examples[currentExample].steps[currentStep];
+            document.getElementById('step-num').textContent = currentStep + 1;
+            document.getElementById('step-content').innerHTML = `
+                <p><span class="step-number">${currentStep + 1}</span><strong>${step.title}</strong></p>
+                <p style="margin-top: 10px; margin-left: 40px;">${step.content}</p>
+            `;
+            updateStepNav();
+        }
+
+        function changeExample(dir) {
+            currentExample += dir;
+            loadExample();
+        }
+
+        function changeStep(dir) {
+            currentStep += dir;
+            loadStep();
+        }
+
+        function updateExampleNav() {
+            document.getElementById('prev-example').disabled = currentExample === 0;
+            document.getElementById('next-example').disabled = currentExample === examples.length - 1;
+        }
+
+        function updateStepNav() {
+            document.getElementById('prev-step').disabled = currentStep === 0;
+            document.getElementById('next-step').disabled = currentStep === examples[currentExample].steps.length - 1;
+        }
+
+        // Practice section
+        const practiceProblems = [
+            { root: "3 + √5", conjugate: "3 - √5", a: 3, b: 5 },
+            { root: "-2 + √7", conjugate: "-2 - √7", a: -2, b: 7 },
+            { root: "5 + √2", conjugate: "5 - √2", a: 5, b: 2 },
+            { root: "1 + √11", conjugate: "1 - √11", a: 1, b: 11 },
+            { root: "-4 + √3", conjugate: "-4 - √3", a: -4, b: 3 }
+        ];
+
+        let practiceIndex = 0;
+        let practiceScore = 0;
+        let practiceAnswered = new Set();
+
+        function initPractice() {
+            practiceIndex = 0;
+            practiceScore = 0;
+            practiceAnswered.clear();
+            loadPracticeProblem();
+            updatePracticeScore();
+        }
+
+        function loadPracticeProblem() {
+            const p = practiceProblems[practiceIndex];
+            document.getElementById('practice-problem').innerHTML = `
+                <h4 style="color: #6366f1;">Problem ${practiceIndex + 1} of ${practiceProblems.length}</h4>
+                <div class="problem-display">
+                    A polynomial with rational coefficients has the root: ${p.root}
+                </div>
+                <div class="input-group">
+                    <label>The conjugate root is:</label>
+                    <input type="text" id="practice-input" placeholder="Enter the conjugate root..." onkeypress="if(event.key==='Enter')checkPractice()">
+                    <button class="btn btn-primary" onclick="checkPractice()">Check</button>
+                    <button class="btn btn-hint" onclick="showPracticeHint()">Hint</button>
+                </div>
+                <div class="hint-box" id="practice-hint">
+                    <strong>Hint:</strong> Change the sign before √${p.b}. If the original has +√${p.b}, the conjugate has -√${p.b}.
+                </div>
+                <div class="feedback" id="practice-feedback"></div>
+                ${practiceIndex < practiceProblems.length - 1 ? '<button class="btn btn-success" id="next-practice" style="display:none; margin-top:15px;" onclick="nextPractice()">Next Problem →</button>' : ''}
+            `;
+        }
+
+        function showPracticeHint() {
+            document.getElementById('practice-hint').classList.add('show');
+        }
+
+        function checkPractice() {
+            const input = document.getElementById('practice-input');
+            const feedback = document.getElementById('practice-feedback');
+            const p = practiceProblems[practiceIndex];
+
+            // Normalize answer
+            const userAnswer = input.value.replace(/\s/g, '').toLowerCase();
+            const correctAnswers = [
+                p.conjugate.replace(/\s/g, '').toLowerCase(),
+                `${p.a}-sqrt(${p.b})`,
+                `${p.a}-√${p.b}`,
+                `${p.a}-sqrt${p.b}`
+            ];
+
+            if (correctAnswers.some(ans => userAnswer.includes(ans.replace(/[()√]/g, '')) || userAnswer === ans)) {
+                input.classList.add('correct');
+                input.classList.remove('incorrect');
+                feedback.className = 'feedback show correct';
+                feedback.textContent = `Correct! The conjugate of ${p.root} is ${p.conjugate}`;
+
+                if (!practiceAnswered.has(practiceIndex)) {
+                    practiceScore++;
+                    practiceAnswered.add(practiceIndex);
+                    updatePracticeScore();
+                }
+
+                const nextBtn = document.getElementById('next-practice');
+                if (nextBtn) nextBtn.style.display = 'inline-block';
+            } else {
+                input.classList.add('incorrect');
+                input.classList.remove('correct');
+                feedback.className = 'feedback show incorrect';
+                feedback.textContent = `Not quite. Remember: change the sign before the radical. Try again!`;
+            }
+        }
+
+        function nextPractice() {
+            practiceIndex++;
+            loadPracticeProblem();
+        }
+
+        function updatePracticeScore() {
+            document.getElementById('practice-score').textContent = practiceScore;
+            document.getElementById('practice-total').textContent = practiceProblems.length;
+            document.getElementById('practice-progress').style.width = (practiceScore / practiceProblems.length * 100) + '%';
+        }
+
+        // Do section
+        const doProblems = {
+            easy: [
+                { root: "2 + √3", conjugate: "2 - √3", type: "conjugate" },
+                { root: "4 + √5", conjugate: "4 - √5", type: "conjugate" },
+                { root: "-1 + √2", conjugate: "-1 - √2", type: "conjugate" },
+                { root: "3 + √7", conjugate: "3 - √7", type: "conjugate" },
+                { root: "6 + √11", conjugate: "6 - √11", type: "conjugate" }
+            ],
+            medium: [
+                { root: "-3 + √5", conjugate: "-3 - √5", quadratic: "x² + 6x + 4", type: "both" },
+                { root: "2 + √7", conjugate: "2 - √7", quadratic: "x² - 4x - 3", type: "both" },
+                { root: "5 + √2", conjugate: "5 - √2", quadratic: "x² - 10x + 23", type: "both" },
+                { root: "-2 + √3", conjugate: "-2 - √3", quadratic: "x² + 4x + 1", type: "both" }
+            ],
+            hard: [
+                { roots: [3, "1 + √5", "1 - √5"], allRoots: "3, 1 + √5, 1 - √5", poly: "x³ - 5x² + 2x + 12", type: "cubic" },
+                { roots: [-2, "2 + √3", "2 - √3"], allRoots: "-2, 2 + √3, 2 - √3", poly: "x³ - 2x² - 7x + 2", type: "cubic" },
+                { roots: [1, "-1 + √2", "-1 - √2"], allRoots: "1, -1 + √2, -1 - √2", poly: "x³ + x² - 3x + 1", type: "cubic" }
+            ]
+        };
+
+        let difficulty = 'easy';
+        let doScore = 0;
+        let doTotal = 0;
+        let currentDoProblem = null;
+
+        function setDifficulty(level) {
+            difficulty = level;
+            document.querySelectorAll('.diff-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function newDoProblem() {
+            const problems = doProblems[difficulty];
+            currentDoProblem = problems[Math.floor(Math.random() * problems.length)];
+
+            document.getElementById('scratch-area').style.display = 'block';
+            document.getElementById('final-section').style.display = 'block';
+
+            let problemHTML = '';
+            let answerLabel = '';
+
+            if (difficulty === 'easy') {
+                problemHTML = `
+                    <h4 style="color: #6366f1;">Find the Conjugate Root</h4>
+                    <div class="problem-display">
+                        A polynomial with rational coefficients has the root: ${currentDoProblem.root}
+                    </div>
+                `;
+                answerLabel = 'Conjugate root:';
+                document.getElementById('scratch-given').value = currentDoProblem.root;
+            } else if (difficulty === 'medium') {
+                problemHTML = `
+                    <h4 style="color: #6366f1;">Find Conjugate and Quadratic Factor</h4>
+                    <div class="problem-display">
+                        Given root: ${currentDoProblem.root}<br>
+                        Find the conjugate root and write the quadratic factor with rational coefficients.
+                    </div>
+                `;
+                answerLabel = 'Quadratic factor (e.g., x² - 4x + 1):';
+                document.getElementById('scratch-given').value = currentDoProblem.root;
+            } else {
+                problemHTML = `
+                    <h4 style="color: #6366f1;">Find All Roots of a Cubic</h4>
+                    <div class="problem-display">
+                        A cubic polynomial with rational coefficients has roots:<br>
+                        ${currentDoProblem.roots[0]} and ${currentDoProblem.roots[1]}<br>
+                        Find all three roots.
+                    </div>
+                `;
+                answerLabel = 'All three roots (comma separated):';
+                document.getElementById('scratch-given').value = `${currentDoProblem.roots[0]}, ${currentDoProblem.roots[1]}`;
+            }
+
+            document.getElementById('do-problem').innerHTML = problemHTML;
+            document.getElementById('answer-label').textContent = answerLabel;
+            document.getElementById('final-answer').value = '';
+            document.getElementById('do-feedback').className = 'feedback';
+            document.getElementById('scratch-conjugate').value = '';
+            document.getElementById('scratch-factor').value = '';
+        }
+
+        function checkDoAnswer() {
+            const input = document.getElementById('final-answer');
+            const feedback = document.getElementById('do-feedback');
+            const userAnswer = input.value.replace(/\s/g, '').toLowerCase();
+
+            let correct = false;
+            let correctAnswer = '';
+
+            if (difficulty === 'easy') {
+                correctAnswer = currentDoProblem.conjugate;
+                const normalized = currentDoProblem.conjugate.replace(/\s/g, '').toLowerCase();
+                correct = userAnswer === normalized || userAnswer.includes(normalized.replace(/[√()]/g, ''));
+            } else if (difficulty === 'medium') {
+                correctAnswer = currentDoProblem.quadratic;
+                const normalized = currentDoProblem.quadratic.replace(/\s/g, '').toLowerCase();
+                correct = userAnswer === normalized || userAnswer.replace(/\^/g, '') === normalized.replace(/²/g, '2');
+            } else {
+                correctAnswer = currentDoProblem.allRoots;
+                // Check if all roots are present
+                const roots = currentDoProblem.roots.map(r => String(r).replace(/\s/g, '').toLowerCase());
+                correct = roots.every(r => userAnswer.includes(r.replace(/[√()]/g, '')) || userAnswer.includes(r));
+            }
+
+            doTotal++;
+            if (correct) {
+                doScore++;
+                input.classList.add('correct');
+                input.classList.remove('incorrect');
+                feedback.className = 'feedback show correct';
+                feedback.textContent = `Correct! Great work!`;
+            } else {
+                input.classList.add('incorrect');
+                input.classList.remove('correct');
+                feedback.className = 'feedback show incorrect';
+                feedback.textContent = `Not quite. The correct answer is: ${correctAnswer}`;
+            }
+
+            updateDoScore();
+        }
+
+        function updateDoScore() {
+            document.getElementById('do-score').textContent = doScore;
+            document.getElementById('do-total').textContent = doTotal;
+            const pct = doTotal > 0 ? (doScore / doTotal * 100) : 0;
+            document.getElementById('do-progress').style.width = pct + '%';
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            initExamples();
+        });
+    </script>
+</body>
+</html>

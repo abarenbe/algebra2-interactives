@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeros and Multiplicity - Interactive Practice</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%); color: white; padding: 30px; }
+        .back-link { color: white; text-decoration: none; display: inline-flex; align-items: center; margin-bottom: 15px; }
+        .back-link::before { content: "←"; margin-right: 8px; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .tabs { display: flex; background: #f7fafc; border-bottom: 3px solid #e2e8f0; }
+        .tab { flex: 1; padding: 20px; text-align: center; background: none; border: none; font-size: 1.1em; font-weight: 600; color: #718096; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -3px; }
+        .tab:hover { background: #edf2f7; color: #ec008c; }
+        .tab.active { color: #ec008c; border-bottom-color: #ec008c; background: white; }
+        .content { padding: 40px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .concept-box { background: linear-gradient(135deg, #ec008c15 0%, #fc676715 100%); padding: 25px; border-radius: 15px; margin: 20px 0; border-left: 5px solid #ec008c; }
+        .concept-box h3 { color: #ec008c; margin-bottom: 15px; }
+        .graph-container { height: 350px; margin: 20px 0; border: 2px solid #e2e8f0; border-radius: 10px; }
+        .comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 20px 0; }
+        .comp-box { background: #f8fafc; padding: 20px; border-radius: 10px; text-align: center; }
+        .comp-box h4 { color: #ec008c; margin-bottom: 10px; }
+        .example-box { background: #f7fafc; padding: 25px; border-radius: 15px; margin: 20px 0; }
+        .nav-btn { padding: 8px 20px; background: #ec008c; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .nav-btn:disabled { background: #cbd5e0; }
+        .problem-box { background: #fdf2f8; padding: 25px; border-radius: 15px; margin: 20px 0; }
+        .problem-display { background: white; padding: 20px; border-radius: 10px; text-align: center; margin: 15px 0; font-size: 1.2em; border: 2px solid #ec008c; }
+        .input-group { display: flex; gap: 10px; align-items: center; margin: 15px 0; flex-wrap: wrap; }
+        select, input { padding: 12px 15px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 1em; }
+        select:focus, input:focus { border-color: #ec008c; outline: none; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: #ec008c; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .feedback { padding: 15px; border-radius: 10px; margin: 15px 0; display: none; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #d1fae5; color: #065f46; }
+        .feedback.incorrect { background: #fee2e2; color: #991b1b; }
+        .score-display { background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%); padding: 20px; border-radius: 15px; color: white; text-align: center; margin: 20px 0; }
+        .score-numbers { font-size: 2em; font-weight: bold; }
+        .progress-bar { height: 10px; background: rgba(255,255,255,0.3); border-radius: 5px; margin-top: 15px; }
+        .progress-fill { height: 100%; background: white; border-radius: 5px; }
+        .difficulty-selector { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+        .diff-btn { padding: 10px 25px; border: 2px solid #e5e7eb; background: white; border-radius: 25px; cursor: pointer; font-weight: 600; }
+        .diff-btn.active { background: #ec008c; color: white; border-color: #ec008c; }
+        .flow-guide { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 20px; border-radius: 12px; margin-bottom: 25px; }
+        .flow-steps { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .flow-step { padding: 8px 16px; background: white; border-radius: 20px; border: 1px solid #d1d5db; }
+        .flow-step.current { background: #ec008c; color: white; border-color: #ec008c; }
+        @media (max-width: 768px) { h1 { font-size: 1.8em; } .content { padding: 20px; } .comparison { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="./" class="back-link">Back to 4.8 Analyzing Graphs</a>
+            <h1>Zeros and Multiplicity</h1>
+            <p style="opacity:0.95">Learn, See, Practice, Do</p>
+        </div>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">1 Learn</button>
+            <button class="tab" onclick="showTab('see')">2 See</button>
+            <button class="tab" onclick="showTab('practice')">3 Practice</button>
+            <button class="tab" onclick="showTab('do')">4 Do</button>
+        </div>
+        <div class="content">
+            <div id="learn" class="tab-content active">
+                <div class="flow-guide">
+                    <h3 style="color:#166534;margin-bottom:12px">Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step current">1. Learn</span>
+                        <span style="color:#9ca3af">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span style="color:#9ca3af">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span style="color:#9ca3af">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #ec008c; margin-bottom: 20px;">Understanding Multiplicity</h2>
+                <div class="concept-box">
+                    <h3>What is Multiplicity?</h3>
+                    <p style="color:#4a5568;line-height:1.8">The <strong>multiplicity</strong> of a zero is the number of times that factor appears. It determines how the graph behaves at that x-intercept.</p>
+                </div>
+                <div class="comparison">
+                    <div class="comp-box">
+                        <h4>Odd Multiplicity (1, 3, 5...)</h4>
+                        <p>Graph <strong>crosses</strong> the x-axis</p>
+                        <p style="color:#666;margin-top:10px">Higher odd = flatter crossing</p>
+                    </div>
+                    <div class="comp-box">
+                        <h4>Even Multiplicity (2, 4, 6...)</h4>
+                        <p>Graph <strong>touches</strong> and bounces back</p>
+                        <p style="color:#666;margin-top:10px">Higher even = flatter touch</p>
+                    </div>
+                </div>
+                <div class="graph-container" id="learn-graph"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('see')">Continue to See →</button>
+                </div>
+            </div>
+            <div id="see" class="tab-content">
+                <div class="flow-guide">
+                    <h3 style="color:#166534;margin-bottom:12px">Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span><span style="color:#9ca3af">→</span>
+                        <span class="flow-step current">2. See</span><span style="color:#9ca3af">→</span>
+                        <span class="flow-step">3. Practice</span><span style="color:#9ca3af">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #ec008c; margin-bottom: 20px;">Step-by-Step Examples</h2>
+                <div class="example-box">
+                    <div id="example-content"></div>
+                    <div class="graph-container" id="example-graph"></div>
+                    <div style="text-align:center;margin-top:15px">
+                        <button class="nav-btn" id="prev-ex" onclick="changeExample(-1)" disabled>← Prev</button>
+                        <span style="margin:0 15px;color:#ec008c">Example <span id="ex-num">1</span>/3</span>
+                        <button class="nav-btn" id="next-ex" onclick="changeExample(1)">Next →</button>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('practice')">Continue to Practice →</button>
+                </div>
+            </div>
+            <div id="practice" class="tab-content">
+                <div class="flow-guide">
+                    <h3 style="color:#166534;margin-bottom:12px">Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span><span style="color:#9ca3af">→</span>
+                        <span class="flow-step">2. See</span><span style="color:#9ca3af">→</span>
+                        <span class="flow-step current">3. Practice</span><span style="color:#9ca3af">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #ec008c; margin-bottom: 20px;">Guided Practice</h2>
+                <div class="score-display">
+                    <h3>Progress</h3>
+                    <div class="score-numbers"><span id="prac-score">0</span>/<span id="prac-total">5</span></div>
+                    <div class="progress-bar"><div class="progress-fill" id="prac-prog" style="width:0%"></div></div>
+                </div>
+                <div class="problem-box" id="prac-problem"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('do')">Continue to Do →</button>
+                </div>
+            </div>
+            <div id="do" class="tab-content">
+                <div class="flow-guide">
+                    <h3 style="color:#166534;margin-bottom:12px">Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span><span style="color:#9ca3af">→</span>
+                        <span class="flow-step">2. See</span><span style="color:#9ca3af">→</span>
+                        <span class="flow-step">3. Practice</span><span style="color:#9ca3af">→</span>
+                        <span class="flow-step current">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #ec008c; margin-bottom: 20px;">Independent Practice</h2>
+                <div class="difficulty-selector">
+                    <button class="diff-btn active" onclick="setDiff('easy')">Easy</button>
+                    <button class="diff-btn" onclick="setDiff('medium')">Medium</button>
+                    <button class="diff-btn" onclick="setDiff('hard')">Hard</button>
+                </div>
+                <div class="score-display">
+                    <h3>Score</h3>
+                    <div class="score-numbers"><span id="do-score">0</span>/<span id="do-total">0</span></div>
+                    <div class="progress-bar"><div class="progress-fill" id="do-prog" style="width:0%"></div></div>
+                </div>
+                <div class="problem-box" id="do-problem"><p style="text-align:center;color:#ec008c;font-weight:600">Click "New Problem" to begin!</p></div>
+                <div id="do-ans-section" style="display:none">
+                    <div class="input-group">
+                        <label style="font-weight:600">At this zero, the graph:</label>
+                        <select id="do-ans">
+                            <option value="">Select...</option>
+                            <option value="crosses">Crosses the x-axis</option>
+                            <option value="touches">Touches and bounces</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="checkDo()">Check</button>
+                    </div>
+                    <div class="feedback" id="do-feedback"></div>
+                </div>
+                <div style="text-align:center;margin-top:20px"><button class="btn btn-success" onclick="newDo()">New Problem</button></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showTab(id) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.tab[onclick="showTab('${id}')"]`).classList.add('active');
+            document.getElementById(id).classList.add('active');
+            if (id === 'learn') drawLearn();
+            if (id === 'see') initEx();
+            if (id === 'practice') initPrac();
+        }
+        function drawLearn() {
+            const x = [], y1 = [], y2 = [];
+            for (let i = -2; i <= 2; i += 0.05) { x.push(i); y1.push(i*(i-1)*(i+1)); y2.push((i-0)*(i-0)*(i-1)); }
+            Plotly.newPlot('learn-graph', [
+                { x, y: y1, name: 'Crosses (mult 1)', line: { color: '#ec008c', width: 3 } },
+                { x, y: y2, name: 'Touches at 0 (mult 2)', line: { color: '#8b5cf6', width: 3, dash: 'dash' } }
+            ], { margin: { t: 20 } }, { responsive: true });
+        }
+        const examples = [
+            { poly: '(x-1)(x+2)', zeros: [{x:1,m:1},{x:-2,m:1}], desc: 'Both zeros have multiplicity 1 - graph crosses at each' },
+            { poly: '(x-2)²(x+1)', zeros: [{x:2,m:2},{x:-1,m:1}], desc: 'At x=2 (mult 2): touches. At x=-1 (mult 1): crosses' },
+            { poly: 'x³(x-1)', zeros: [{x:0,m:3},{x:1,m:1}], desc: 'At x=0 (mult 3): crosses flat. At x=1 (mult 1): crosses' }
+        ];
+        let curEx = 0;
+        function initEx() { curEx = 0; loadEx(); }
+        function loadEx() {
+            const e = examples[curEx];
+            document.getElementById('ex-num').textContent = curEx + 1;
+            document.getElementById('example-content').innerHTML = `<h4 style="color:#ec008c">f(x) = ${e.poly}</h4><p style="margin-top:10px">${e.desc}</p>`;
+            drawEx(); updateExNav();
+        }
+        function drawEx() {
+            const x = [], y = [];
+            for (let i = -3; i <= 3; i += 0.05) {
+                x.push(i);
+                if (curEx === 0) y.push((i-1)*(i+2));
+                else if (curEx === 1) y.push((i-2)*(i-2)*(i+1));
+                else y.push(i*i*i*(i-1));
+            }
+            Plotly.newPlot('example-graph', [{ x, y, line: { color: '#ec008c', width: 3 } }], { margin: { t: 20 } }, { responsive: true });
+        }
+        function changeExample(d) { curEx += d; loadEx(); }
+        function updateExNav() {
+            document.getElementById('prev-ex').disabled = curEx === 0;
+            document.getElementById('next-ex').disabled = curEx === examples.length - 1;
+        }
+        const pracProbs = [
+            { poly: '(x-3)²', zero: 3, mult: 2, behavior: 'touches' },
+            { poly: '(x+1)³', zero: -1, mult: 3, behavior: 'crosses' },
+            { poly: '(x-2)', zero: 2, mult: 1, behavior: 'crosses' },
+            { poly: 'x⁴', zero: 0, mult: 4, behavior: 'touches' },
+            { poly: '(x+4)⁵', zero: -4, mult: 5, behavior: 'crosses' }
+        ];
+        let pracIdx = 0, pracScore = 0, pracDone = new Set();
+        function initPrac() { pracIdx = 0; pracScore = 0; pracDone.clear(); loadPrac(); updatePracScore(); }
+        function loadPrac() {
+            const p = pracProbs[pracIdx];
+            document.getElementById('prac-problem').innerHTML = `
+                <h4 style="color:#ec008c">Problem ${pracIdx+1}/${pracProbs.length}</h4>
+                <div class="problem-display">f(x) = ${p.poly}<br>Zero: x = ${p.zero} (multiplicity ${p.mult})</div>
+                <div class="input-group">
+                    <label>At this zero:</label>
+                    <select id="prac-ans"><option value="">Select...</option><option value="crosses">Crosses</option><option value="touches">Touches</option></select>
+                    <button class="btn btn-primary" onclick="checkPrac()">Check</button>
+                </div>
+                <div class="feedback" id="prac-fb"></div>
+                ${pracIdx < pracProbs.length-1 ? '<button class="btn btn-success" id="next-prac" style="display:none;margin-top:15px" onclick="nextPrac()">Next →</button>' : ''}`;
+        }
+        function checkPrac() {
+            const p = pracProbs[pracIdx], ans = document.getElementById('prac-ans').value, fb = document.getElementById('prac-fb');
+            if (ans === p.behavior) {
+                fb.className = 'feedback show correct';
+                fb.textContent = `Correct! Multiplicity ${p.mult} (${p.mult % 2 === 0 ? 'even' : 'odd'}) means ${p.behavior}.`;
+                if (!pracDone.has(pracIdx)) { pracScore++; pracDone.add(pracIdx); updatePracScore(); }
+                const btn = document.getElementById('next-prac'); if (btn) btn.style.display = 'inline-block';
+            } else {
+                fb.className = 'feedback show incorrect';
+                fb.textContent = `Not quite. Multiplicity ${p.mult} is ${p.mult % 2 === 0 ? 'even (touches)' : 'odd (crosses)'}.`;
+            }
+        }
+        function nextPrac() { pracIdx++; loadPrac(); }
+        function updatePracScore() {
+            document.getElementById('prac-score').textContent = pracScore;
+            document.getElementById('prac-total').textContent = pracProbs.length;
+            document.getElementById('prac-prog').style.width = (pracScore/pracProbs.length*100)+'%';
+        }
+        const doProbs = {
+            easy: [{m:1,b:'crosses'},{m:2,b:'touches'},{m:3,b:'crosses'}],
+            medium: [{m:4,b:'touches'},{m:5,b:'crosses'},{m:6,b:'touches'}],
+            hard: [{m:7,b:'crosses'},{m:8,b:'touches'},{m:9,b:'crosses'}]
+        };
+        let diff = 'easy', doScore = 0, doTotal = 0, curDo = null;
+        function setDiff(d) { diff = d; document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); }
+        function newDo() {
+            const probs = doProbs[diff];
+            curDo = probs[Math.floor(Math.random()*probs.length)];
+            document.getElementById('do-problem').innerHTML = `<div class="problem-display">A zero with multiplicity ${curDo.m}</div>`;
+            document.getElementById('do-ans-section').style.display = 'block';
+            document.getElementById('do-ans').value = '';
+            document.getElementById('do-feedback').className = 'feedback';
+        }
+        function checkDo() {
+            const ans = document.getElementById('do-ans').value, fb = document.getElementById('do-feedback');
+            doTotal++;
+            if (ans === curDo.b) {
+                doScore++;
+                fb.className = 'feedback show correct';
+                fb.textContent = `Correct! Multiplicity ${curDo.m} (${curDo.m % 2 === 0 ? 'even' : 'odd'}) means the graph ${curDo.b}.`;
+            } else {
+                fb.className = 'feedback show incorrect';
+                fb.textContent = `Not quite. Multiplicity ${curDo.m} is ${curDo.m % 2 === 0 ? 'even → touches' : 'odd → crosses'}.`;
+            }
+            updateDoScore();
+        }
+        function updateDoScore() {
+            document.getElementById('do-score').textContent = doScore;
+            document.getElementById('do-total').textContent = doTotal;
+            document.getElementById('do-prog').style.width = (doTotal > 0 ? doScore/doTotal*100 : 0)+'%';
+        }
+        document.addEventListener('DOMContentLoaded', drawLearn);
+    </script>
+</body>
+</html>

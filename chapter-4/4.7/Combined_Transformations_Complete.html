@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combined Transformations - Interactive Practice</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 30px; }
+        .back-link { color: white; text-decoration: none; display: inline-flex; align-items: center; margin-bottom: 15px; opacity: 0.9; }
+        .back-link::before { content: "←"; margin-right: 8px; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .subtitle { font-size: 1.1em; opacity: 0.95; }
+        .tabs { display: flex; background: #f7fafc; border-bottom: 3px solid #e2e8f0; }
+        .tab { flex: 1; padding: 20px; text-align: center; background: none; border: none; font-size: 1.1em; font-weight: 600; color: #718096; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -3px; }
+        .tab:hover { background: #edf2f7; color: #f97316; }
+        .tab.active { color: #f97316; border-bottom-color: #f97316; background: white; }
+        .content { padding: 40px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .concept-box { background: linear-gradient(135deg, #f9731615 0%, #ea580c15 100%); padding: 25px; border-radius: 15px; margin: 20px 0; border-left: 5px solid #f97316; }
+        .concept-box h3 { color: #f97316; margin-bottom: 15px; }
+        .concept-box p, .concept-box ul, .concept-box ol { color: #4a5568; line-height: 1.8; }
+        .formula-box { background: white; padding: 20px; border-radius: 10px; margin: 15px 0; text-align: center; font-size: 1.2em; font-weight: 600; border: 2px solid #f97316; }
+        .graph-container { height: 350px; margin: 20px 0; border: 2px solid #e2e8f0; border-radius: 10px; }
+        .example-box { background: #f7fafc; padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #e2e8f0; }
+        .nav-btn { padding: 8px 20px; background: #f97316; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .nav-btn:hover:not(:disabled) { background: #ea580c; }
+        .nav-btn:disabled { background: #cbd5e0; cursor: not-allowed; }
+        .problem-box { background: #fff7ed; padding: 25px; border-radius: 15px; margin: 20px 0; }
+        .problem-display { background: white; padding: 20px; border-radius: 10px; text-align: center; margin: 15px 0; font-size: 1.3em; border: 2px solid #f97316; }
+        .input-group { display: flex; gap: 10px; align-items: center; margin: 15px 0; flex-wrap: wrap; }
+        .input-group label { font-weight: 600; color: #374151; min-width: 150px; }
+        input[type="text"] { padding: 12px 15px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 1.1em; flex: 1; min-width: 200px; }
+        input:focus { border-color: #f97316; outline: none; }
+        input.correct { border-color: #10b981; background: #d1fae5; }
+        input.incorrect { border-color: #ef4444; background: #fee2e2; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: #f97316; color: white; }
+        .btn-primary:hover { background: #ea580c; }
+        .btn-success { background: #10b981; color: white; }
+        .feedback { padding: 15px; border-radius: 10px; margin: 15px 0; display: none; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #d1fae5; color: #065f46; }
+        .feedback.incorrect { background: #fee2e2; color: #991b1b; }
+        .score-display { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); padding: 20px; border-radius: 15px; color: white; text-align: center; margin: 20px 0; }
+        .score-numbers { font-size: 2em; font-weight: bold; }
+        .progress-bar { height: 10px; background: rgba(255,255,255,0.3); border-radius: 5px; margin-top: 15px; }
+        .progress-fill { height: 100%; background: white; border-radius: 5px; transition: width 0.5s; }
+        .difficulty-selector { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+        .diff-btn { padding: 10px 25px; border: 2px solid #e5e7eb; background: white; border-radius: 25px; cursor: pointer; font-weight: 600; }
+        .diff-btn:hover { border-color: #f97316; }
+        .diff-btn.active { background: #f97316; color: white; border-color: #f97316; }
+        .flow-guide { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #86efac; }
+        .flow-guide h3 { color: #166534; margin-bottom: 12px; }
+        .flow-steps { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .flow-step { padding: 8px 16px; background: white; border-radius: 20px; font-size: 0.95em; color: #374151; border: 1px solid #d1d5db; }
+        .flow-step.current { background: #f97316; color: white; border-color: #f97316; }
+        .flow-arrow { color: #9ca3af; }
+        .order-box { background: #fef3c7; padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #f59e0b; }
+        .order-box h4 { color: #92400e; margin-bottom: 15px; }
+        .order-steps { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+        .order-step { background: white; padding: 10px 15px; border-radius: 8px; font-weight: 600; }
+        .order-arrow { color: #f59e0b; font-size: 1.5em; }
+        @media (max-width: 768px) { h1 { font-size: 1.8em; } .content { padding: 20px; } .order-steps { flex-direction: column; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="./" class="back-link">Back to 4.7 Transformations</a>
+            <h1>Combined Transformations</h1>
+            <p class="subtitle">Learn, See, Practice, Do</p>
+        </div>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">1 Learn</button>
+            <button class="tab" onclick="showTab('see')">2 See</button>
+            <button class="tab" onclick="showTab('practice')">3 Practice</button>
+            <button class="tab" onclick="showTab('do')">4 Do</button>
+        </div>
+        <div class="content">
+            <div id="learn" class="tab-content active">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step current">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #f97316; margin-bottom: 20px;">Combining Multiple Transformations</h2>
+                <div class="concept-box">
+                    <h3>The General Form</h3>
+                    <div class="formula-box">y = a · f(b(x - h)) + k</div>
+                    <ul style="margin: 20px;">
+                        <li><strong>a</strong> = vertical stretch/compression and reflection over x-axis</li>
+                        <li><strong>b</strong> = horizontal stretch/compression and reflection over y-axis</li>
+                        <li><strong>h</strong> = horizontal shift (right if positive)</li>
+                        <li><strong>k</strong> = vertical shift (up if positive)</li>
+                    </ul>
+                </div>
+                <div class="order-box">
+                    <h4>Order of Transformations (Inside → Outside)</h4>
+                    <div class="order-steps">
+                        <span class="order-step">1. Horizontal shift (h)</span>
+                        <span class="order-arrow">→</span>
+                        <span class="order-step">2. Horizontal stretch (b)</span>
+                        <span class="order-arrow">→</span>
+                        <span class="order-step">3. Reflect y-axis (if b < 0)</span>
+                        <span class="order-arrow">→</span>
+                        <span class="order-step">4. Vertical stretch (a)</span>
+                        <span class="order-arrow">→</span>
+                        <span class="order-step">5. Reflect x-axis (if a < 0)</span>
+                        <span class="order-arrow">→</span>
+                        <span class="order-step">6. Vertical shift (k)</span>
+                    </div>
+                </div>
+                <div class="graph-container" id="learn-graph"></div>
+                <div class="concept-box">
+                    <h3>Example: y = -2(x - 3)² + 4</h3>
+                    <ol style="margin-left: 20px;">
+                        <li>Start with f(x) = x²</li>
+                        <li>Shift right 3: (x - 3)²</li>
+                        <li>Stretch vertically by 2: 2(x - 3)²</li>
+                        <li>Reflect over x-axis: -2(x - 3)²</li>
+                        <li>Shift up 4: -2(x - 3)² + 4</li>
+                    </ol>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('see')">Continue to See →</button>
+                </div>
+            </div>
+            <div id="see" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #f97316; margin-bottom: 20px;">Step-by-Step Examples</h2>
+                <div class="example-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <span style="font-weight: 600; color: #f97316;">Example <span id="example-num">1</span> of 3</span>
+                        <div>
+                            <button class="nav-btn" id="prev-example" onclick="changeExample(-1)" disabled>← Prev</button>
+                            <button class="nav-btn" id="next-example" onclick="changeExample(1)">Next →</button>
+                        </div>
+                    </div>
+                    <div id="example-content"></div>
+                    <div class="graph-container" id="example-graph"></div>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('practice')">Continue to Practice →</button>
+                </div>
+            </div>
+            <div id="practice" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #f97316; margin-bottom: 20px;">Guided Practice</h2>
+                <div class="score-display">
+                    <h3>Your Progress</h3>
+                    <div class="score-numbers"><span id="practice-score">0</span> / <span id="practice-total">5</span></div>
+                    <div class="progress-bar"><div class="progress-fill" id="practice-progress" style="width: 0%"></div></div>
+                </div>
+                <div class="problem-box" id="practice-problem"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('do')">Continue to Do →</button>
+                </div>
+            </div>
+            <div id="do" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #f97316; margin-bottom: 20px;">Independent Practice</h2>
+                <div class="difficulty-selector">
+                    <button class="diff-btn active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="diff-btn" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="diff-btn" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+                <div class="score-display">
+                    <h3>Your Score</h3>
+                    <div class="score-numbers"><span id="do-score">0</span> / <span id="do-total">0</span></div>
+                    <div class="progress-bar"><div class="progress-fill" id="do-progress" style="width: 0%"></div></div>
+                </div>
+                <div class="problem-box" id="do-problem">
+                    <p style="text-align: center; color: #f97316; font-weight: 600;">Click "New Problem" to begin!</p>
+                </div>
+                <div id="do-answer-section" style="display: none;">
+                    <div class="input-group">
+                        <label>Transformed equation:</label>
+                        <input type="text" id="do-answer" placeholder="y = ..." onkeypress="if(event.key==='Enter')checkDoAnswer()">
+                        <button class="btn btn-primary" onclick="checkDoAnswer()">Check</button>
+                    </div>
+                    <div class="feedback" id="do-feedback"></div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-success" onclick="newDoProblem()">New Problem</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            if (tabId === 'learn') drawLearnGraph();
+            if (tabId === 'see') { initExamples(); drawExampleGraph(); }
+            if (tabId === 'practice') initPractice();
+        }
+        function drawLearnGraph() {
+            const x = [], y1 = [], y2 = [];
+            for (let i = -2; i <= 8; i += 0.1) {
+                x.push(i);
+                y1.push(i * i);
+                y2.push(-2 * (i - 3) * (i - 3) + 4);
+            }
+            Plotly.newPlot('learn-graph', [
+                { x, y: y1, name: 'f(x) = x²', line: { color: '#94a3b8', width: 2 } },
+                { x, y: y2, name: 'y = -2(x-3)² + 4', line: { color: '#f97316', width: 3 } }
+            ], { title: 'Combined Transformations Example', margin: { t: 40 } }, { responsive: true });
+        }
+        const examples = [
+            { desc: 'y = 2(x + 1)² - 3', steps: ['Start: x²', 'Shift left 1: (x+1)²', 'Stretch by 2: 2(x+1)²', 'Shift down 3: 2(x+1)² - 3'] },
+            { desc: 'y = -(x - 2)² + 5', steps: ['Start: x²', 'Shift right 2: (x-2)²', 'Reflect: -(x-2)²', 'Shift up 5: -(x-2)² + 5'] },
+            { desc: 'y = 3(x - 1)³ + 2', steps: ['Start: x³', 'Shift right 1: (x-1)³', 'Stretch by 3: 3(x-1)³', 'Shift up 2: 3(x-1)³ + 2'] }
+        ];
+        let currentExample = 0;
+        function initExamples() { currentExample = 0; loadExample(); }
+        function loadExample() {
+            const ex = examples[currentExample];
+            document.getElementById('example-num').textContent = currentExample + 1;
+            let stepsHtml = '<ol style="margin-left:20px;line-height:2">';
+            ex.steps.forEach(s => stepsHtml += `<li>${s}</li>`);
+            stepsHtml += '</ol>';
+            document.getElementById('example-content').innerHTML = `<h4 style="color:#f97316">${ex.desc}</h4>${stepsHtml}`;
+            updateExampleNav();
+            drawExampleGraph();
+        }
+        function drawExampleGraph() {
+            const x = [], y1 = [], y2 = [];
+            for (let i = -4; i <= 6; i += 0.1) {
+                x.push(i);
+                if (currentExample === 0) { y1.push(i*i); y2.push(2*(i+1)*(i+1)-3); }
+                else if (currentExample === 1) { y1.push(i*i); y2.push(-(i-2)*(i-2)+5); }
+                else { y1.push(i*i*i); y2.push(3*(i-1)*(i-1)*(i-1)+2); }
+            }
+            Plotly.newPlot('example-graph', [
+                { x, y: y1, name: 'Original', line: { color: '#94a3b8', width: 2 } },
+                { x, y: y2, name: 'Transformed', line: { color: '#f97316', width: 3 } }
+            ], { margin: { t: 20 } }, { responsive: true });
+        }
+        function changeExample(dir) { currentExample += dir; loadExample(); }
+        function updateExampleNav() {
+            document.getElementById('prev-example').disabled = currentExample === 0;
+            document.getElementById('next-example').disabled = currentExample === examples.length - 1;
+        }
+        const practiceProblems = [
+            { q: 'f(x) = x², shift right 2, shift up 3', a: '(x-2)² + 3' },
+            { q: 'f(x) = x², stretch by 2, shift down 1', a: '2x² - 1' },
+            { q: 'f(x) = x², shift left 4, reflect over x-axis', a: '-(x+4)²' },
+            { q: 'f(x) = x³, shift right 1, shift up 2', a: '(x-1)³ + 2' },
+            { q: 'f(x) = x², stretch by 3, shift left 2, shift up 5', a: '3(x+2)² + 5' }
+        ];
+        let practiceIndex = 0, practiceScore = 0, practiceAnswered = new Set();
+        function initPractice() { practiceIndex = 0; practiceScore = 0; practiceAnswered.clear(); loadPracticeProblem(); updatePracticeScore(); }
+        function loadPracticeProblem() {
+            const p = practiceProblems[practiceIndex];
+            document.getElementById('practice-problem').innerHTML = `
+                <h4 style="color:#f97316">Problem ${practiceIndex+1} of ${practiceProblems.length}</h4>
+                <div class="problem-display">${p.q}</div>
+                <div class="input-group">
+                    <label>Transformed equation:</label>
+                    <input type="text" id="prac-input" placeholder="y = ..." onkeypress="if(event.key==='Enter')checkPractice()">
+                    <button class="btn btn-primary" onclick="checkPractice()">Check</button>
+                </div>
+                <div class="feedback" id="prac-feedback"></div>
+                ${practiceIndex < practiceProblems.length-1 ? '<button class="btn btn-success" id="next-prac" style="display:none;margin-top:15px" onclick="nextPractice()">Next →</button>' : ''}`;
+        }
+        function checkPractice() {
+            const p = practiceProblems[practiceIndex];
+            const user = document.getElementById('prac-input').value.replace(/\s/g,'').toLowerCase().replace('y=','');
+            const correct = p.a.replace(/\s/g,'').toLowerCase();
+            const feedback = document.getElementById('prac-feedback');
+            const normalize = s => s.replace(/[²³]/g, m => ({'²':'^2','³':'^3'})[m]);
+            if (normalize(user) === normalize(correct)) {
+                feedback.className = 'feedback show correct';
+                feedback.textContent = `Correct! y = ${p.a}`;
+                if (!practiceAnswered.has(practiceIndex)) { practiceScore++; practiceAnswered.add(practiceIndex); updatePracticeScore(); }
+                const btn = document.getElementById('next-prac'); if(btn) btn.style.display = 'inline-block';
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.textContent = `Not quite. The answer is y = ${p.a}`;
+            }
+        }
+        function nextPractice() { practiceIndex++; loadPracticeProblem(); }
+        function updatePracticeScore() {
+            document.getElementById('practice-score').textContent = practiceScore;
+            document.getElementById('practice-total').textContent = practiceProblems.length;
+            document.getElementById('practice-progress').style.width = (practiceScore/practiceProblems.length*100)+'%';
+        }
+        const doProblems = {
+            easy: [
+                { q: 'f(x) = x², shift up 4', a: 'x² + 4' },
+                { q: 'f(x) = x², shift right 3', a: '(x-3)²' },
+                { q: 'f(x) = x², shift left 2, up 1', a: '(x+2)² + 1' }
+            ],
+            medium: [
+                { q: 'f(x) = x², stretch by 2, shift right 1', a: '2(x-1)²' },
+                { q: 'f(x) = x², reflect, shift up 3', a: '-x² + 3' },
+                { q: 'f(x) = x³, shift left 2, down 4', a: '(x+2)³ - 4' }
+            ],
+            hard: [
+                { q: 'f(x) = x², stretch by 3, reflect, shift right 2, up 5', a: '-3(x-2)² + 5' },
+                { q: 'f(x) = x², compress by ½, shift left 1, down 2', a: '½(x+1)² - 2' },
+                { q: 'f(x) = x³, stretch by 2, shift right 3, up 1', a: '2(x-3)³ + 1' }
+            ]
+        };
+        let difficulty = 'easy', doScore = 0, doTotal = 0, currentDo = null;
+        function setDifficulty(level) {
+            difficulty = level;
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        function newDoProblem() {
+            const probs = doProblems[difficulty];
+            currentDo = probs[Math.floor(Math.random()*probs.length)];
+            document.getElementById('do-problem').innerHTML = `<div class="problem-display">${currentDo.q}</div>`;
+            document.getElementById('do-answer-section').style.display = 'block';
+            document.getElementById('do-answer').value = '';
+            document.getElementById('do-feedback').className = 'feedback';
+        }
+        function checkDoAnswer() {
+            const user = document.getElementById('do-answer').value.replace(/\s/g,'').toLowerCase().replace('y=','');
+            const correct = currentDo.a.replace(/\s/g,'').toLowerCase();
+            const feedback = document.getElementById('do-feedback');
+            doTotal++;
+            const normalize = s => s.replace(/[²³½]/g, m => ({'²':'^2','³':'^3','½':'1/2'})[m] || m);
+            if (normalize(user) === normalize(correct)) {
+                doScore++;
+                feedback.className = 'feedback show correct';
+                feedback.textContent = 'Correct!';
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.textContent = `Not quite. Answer: y = ${currentDo.a}`;
+            }
+            updateDoScore();
+        }
+        function updateDoScore() {
+            document.getElementById('do-score').textContent = doScore;
+            document.getElementById('do-total').textContent = doTotal;
+            document.getElementById('do-progress').style.width = (doTotal > 0 ? doScore/doTotal*100 : 0)+'%';
+        }
+        document.addEventListener('DOMContentLoaded', drawLearnGraph);
+    </script>
+</body>
+</html>

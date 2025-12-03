@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descartes' Rule of Signs - Interactive Practice</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+            color: white;
+            padding: 30px;
+        }
+        .back-link {
+            color: white; text-decoration: none; display: inline-flex;
+            align-items: center; margin-bottom: 15px; opacity: 0.9;
+        }
+        .back-link:hover { opacity: 1; }
+        .back-link::before { content: "←"; margin-right: 8px; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .subtitle { font-size: 1.1em; opacity: 0.95; }
+        .tabs { display: flex; background: #f7fafc; border-bottom: 3px solid #e2e8f0; }
+        .tab {
+            flex: 1; padding: 20px; text-align: center; background: none; border: none;
+            font-size: 1.1em; font-weight: 600; color: #718096; cursor: pointer;
+            border-bottom: 3px solid transparent; margin-bottom: -3px;
+        }
+        .tab:hover { background: #edf2f7; color: #7c3aed; }
+        .tab.active { color: #7c3aed; border-bottom-color: #7c3aed; background: white; }
+        .content { padding: 40px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .concept-box {
+            background: linear-gradient(135deg, #7c3aed15 0%, #8b5cf615 100%);
+            padding: 25px; border-radius: 15px; margin: 20px 0; border-left: 5px solid #7c3aed;
+        }
+        .concept-box h3 { color: #7c3aed; margin-bottom: 15px; }
+        .concept-box p, .concept-box ul { color: #4a5568; line-height: 1.8; }
+        .concept-box ul { margin-left: 20px; }
+        .why-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            padding: 25px; border-radius: 15px; margin: 20px 0; border-left: 5px solid #f59e0b;
+        }
+        .why-box h3 { color: #92400e; margin-bottom: 15px; }
+        .why-box p { color: #78350f; line-height: 1.8; }
+        .formula-box {
+            background: white; padding: 20px; border-radius: 10px; margin: 15px 0;
+            text-align: center; font-size: 1.2em; font-weight: 600; border: 2px solid #7c3aed;
+        }
+        .example-box { background: #f7fafc; padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #e2e8f0; }
+        .nav-btn {
+            padding: 8px 20px; background: #7c3aed; color: white; border: none;
+            border-radius: 8px; cursor: pointer; font-weight: 600;
+        }
+        .nav-btn:hover:not(:disabled) { background: #8b5cf6; }
+        .nav-btn:disabled { background: #cbd5e0; cursor: not-allowed; }
+        .step-number {
+            display: inline-block; width: 30px; height: 30px; background: #7c3aed;
+            color: white; border-radius: 50%; text-align: center; line-height: 30px;
+            font-weight: bold; margin-right: 10px;
+        }
+        .highlight { background: #fef3c7; padding: 2px 6px; border-radius: 4px; }
+        .highlight-green { background: #d1fae5; padding: 2px 6px; border-radius: 4px; }
+        .highlight-red { background: #fee2e2; padding: 2px 6px; border-radius: 4px; }
+        .problem-box { background: #f0f4ff; padding: 25px; border-radius: 15px; margin: 20px 0; }
+        .problem-display {
+            background: white; padding: 20px; border-radius: 10px; text-align: center;
+            margin: 15px 0; font-size: 1.3em; font-family: 'Times New Roman', serif; border: 2px solid #7c3aed;
+        }
+        .input-group { display: flex; gap: 10px; align-items: center; margin: 15px 0; flex-wrap: wrap; }
+        .input-group label { font-weight: 600; color: #374151; min-width: 200px; }
+        input[type="text"], input[type="number"] {
+            padding: 12px 15px; border: 2px solid #d1d5db; border-radius: 8px;
+            font-size: 1.1em; width: 100px;
+        }
+        input:focus { border-color: #7c3aed; outline: none; }
+        input.correct { border-color: #10b981; background: #d1fae5; }
+        input.incorrect { border-color: #ef4444; background: #fee2e2; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: #7c3aed; color: white; }
+        .btn-primary:hover { background: #8b5cf6; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-hint { background: #f59e0b; color: white; }
+        .feedback { padding: 15px; border-radius: 10px; margin: 15px 0; display: none; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #d1fae5; color: #065f46; }
+        .feedback.incorrect { background: #fee2e2; color: #991b1b; }
+        .hint-box { background: #fef3c7; padding: 15px; border-radius: 10px; margin: 15px 0; display: none; border-left: 4px solid #f59e0b; }
+        .hint-box.show { display: block; }
+        .score-display {
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+            padding: 20px; border-radius: 15px; color: white; text-align: center; margin: 20px 0;
+        }
+        .score-numbers { font-size: 2em; font-weight: bold; }
+        .progress-bar { height: 10px; background: rgba(255,255,255,0.3); border-radius: 5px; margin-top: 15px; }
+        .progress-fill { height: 100%; background: white; border-radius: 5px; transition: width 0.5s; }
+        .scratch-workspace { background: #fffbeb; border: 2px dashed #f59e0b; border-radius: 15px; padding: 25px; margin: 20px 0; }
+        .scratch-workspace h4 { color: #92400e; margin-bottom: 15px; }
+        .scratch-row { display: flex; gap: 15px; align-items: center; margin: 10px 0; flex-wrap: wrap; }
+        .scratch-label { min-width: 180px; font-weight: 500; color: #78716c; }
+        .scratch-input {
+            padding: 10px 15px; border: 1px dashed #d4d4d4; border-radius: 8px;
+            font-size: 1.1em; flex: 1; min-width: 200px; background: rgba(255,255,255,0.8);
+        }
+        .difficulty-selector { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+        .diff-btn { padding: 10px 25px; border: 2px solid #e5e7eb; background: white; border-radius: 25px; cursor: pointer; font-weight: 600; }
+        .diff-btn:hover { border-color: #7c3aed; }
+        .diff-btn.active { background: #7c3aed; color: white; border-color: #7c3aed; }
+        .final-answer { background: #ede9fe; padding: 25px; border-radius: 15px; margin: 20px 0; }
+        .final-answer h4 { color: #5b21b6; margin-bottom: 15px; }
+        .flow-guide { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #86efac; }
+        .flow-guide h3 { color: #166534; margin-bottom: 12px; }
+        .flow-steps { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .flow-step { padding: 8px 16px; background: white; border-radius: 20px; font-size: 0.95em; color: #374151; border: 1px solid #d1d5db; }
+        .flow-step.current { background: #7c3aed; color: white; border-color: #7c3aed; font-weight: 600; }
+        .flow-arrow { color: #9ca3af; font-weight: bold; }
+        .sign-display { font-size: 1.5em; margin: 20px 0; text-align: center; font-family: monospace; }
+        .sign-positive { color: #10b981; font-weight: bold; }
+        .sign-negative { color: #ef4444; font-weight: bold; }
+        .sign-change { background: #fef3c7; padding: 0 5px; border-radius: 4px; }
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .content { padding: 20px; }
+            .tabs { flex-wrap: wrap; }
+            .tab { padding: 15px 10px; font-size: 0.9em; }
+            .input-group { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="./" class="back-link">Back to 4.6 Fundamental Theorem</a>
+            <h1>Descartes' Rule of Signs</h1>
+            <p class="subtitle">Learn, See, Practice, Do</p>
+        </div>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">1 Learn</button>
+            <button class="tab" onclick="showTab('see')">2 See</button>
+            <button class="tab" onclick="showTab('practice')">3 Practice</button>
+            <button class="tab" onclick="showTab('do')">4 Do</button>
+        </div>
+        <div class="content">
+            <!-- LEARN TAB -->
+            <div id="learn" class="tab-content active">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step current">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #7c3aed; margin-bottom: 20px;">Understanding Descartes' Rule of Signs</h2>
+                <div class="concept-box">
+                    <h3>What Is Descartes' Rule?</h3>
+                    <p>Descartes' Rule of Signs helps predict the number of <strong>positive</strong> and <strong>negative</strong> real roots of a polynomial without actually solving it.</p>
+                </div>
+                <div class="formula-box">
+                    <p><strong>Positive real roots:</strong> Count sign changes in f(x)</p>
+                    <p style="margin-top: 10px;"><strong>Negative real roots:</strong> Count sign changes in f(-x)</p>
+                </div>
+                <div class="concept-box">
+                    <h3>The Rule</h3>
+                    <ul>
+                        <li>The number of <strong>positive real roots</strong> equals the number of sign changes in f(x), or less by an even number</li>
+                        <li>The number of <strong>negative real roots</strong> equals the number of sign changes in f(-x), or less by an even number</li>
+                        <li>A <strong>sign change</strong> occurs when consecutive nonzero coefficients have opposite signs</li>
+                    </ul>
+                </div>
+                <div class="why-box">
+                    <h3>Why Does This Work?</h3>
+                    <p>Each real root corresponds to a factor that crosses the x-axis. Complex roots come in pairs and don't affect the sign pattern. When we subtract by 2, we're accounting for pairs of complex conjugate roots that could replace real roots.</p>
+                </div>
+                <div class="example-box">
+                    <h4 style="color: #7c3aed; margin-bottom: 15px;">Quick Example</h4>
+                    <p>For f(x) = x³ - 2x² - 5x + 6:</p>
+                    <div class="sign-display">
+                        <span class="sign-positive">+</span>x³
+                        <span class="sign-change">→</span>
+                        <span class="sign-negative">-</span>2x²
+                        <span class="sign-negative">-</span>5x
+                        <span class="sign-change">→</span>
+                        <span class="sign-positive">+</span>6
+                    </div>
+                    <p>Sign changes: 2 (+ to -, then - to +)</p>
+                    <p style="margin-top: 10px;"><strong>Positive real roots:</strong> 2 or 0</p>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('see')">Continue to See →</button>
+                </div>
+            </div>
+            <!-- SEE TAB -->
+            <div id="see" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #7c3aed; margin-bottom: 20px;">Step-by-Step Examples</h2>
+                <div class="example-box">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <span style="font-weight: 600; color: #7c3aed;">Example <span id="example-num">1</span> of 3</span>
+                        <div>
+                            <button class="nav-btn" id="prev-example" onclick="changeExample(-1)" disabled>← Prev</button>
+                            <button class="nav-btn" id="next-example" onclick="changeExample(1)">Next →</button>
+                        </div>
+                    </div>
+                    <div id="example-content"></div>
+                    <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 15px; border-left: 4px solid #7c3aed;">
+                        <div id="step-content"></div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="nav-btn" id="prev-step" onclick="changeStep(-1)" disabled>← Prev</button>
+                            <span style="margin: 0 15px; color: #7c3aed; font-weight: 600;">Step <span id="step-num">1</span>/<span id="total-steps">4</span></span>
+                            <button class="nav-btn" id="next-step" onclick="changeStep(1)">Next →</button>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('practice')">Continue to Practice →</button>
+                </div>
+            </div>
+            <!-- PRACTICE TAB -->
+            <div id="practice" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #7c3aed; margin-bottom: 20px;">Guided Practice</h2>
+                <div class="score-display">
+                    <h3>Your Progress</h3>
+                    <div class="score-numbers"><span id="practice-score">0</span> / <span id="practice-total">5</span></div>
+                    <div class="progress-bar"><div class="progress-fill" id="practice-progress" style="width: 0%"></div></div>
+                </div>
+                <div class="problem-box" id="practice-problem"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('do')">Continue to Do →</button>
+                </div>
+            </div>
+            <!-- DO TAB -->
+            <div id="do" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #7c3aed; margin-bottom: 20px;">Independent Practice</h2>
+                <div class="difficulty-selector">
+                    <button class="diff-btn active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="diff-btn" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="diff-btn" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+                <div class="score-display">
+                    <h3>Your Score</h3>
+                    <div class="score-numbers"><span id="do-score">0</span> / <span id="do-total">0</span></div>
+                    <div class="progress-bar"><div class="progress-fill" id="do-progress" style="width: 0%"></div></div>
+                </div>
+                <div class="problem-box" id="do-problem">
+                    <p style="text-align: center; color: #7c3aed; font-weight: 600;">Click "New Problem" to begin!</p>
+                </div>
+                <div class="scratch-workspace" id="scratch-area" style="display: none;">
+                    <h4>Scratch Workspace</h4>
+                    <div class="scratch-row">
+                        <span class="scratch-label">f(x) coefficients:</span>
+                        <input type="text" class="scratch-input" id="scratch-fx" placeholder="List the signs: + - - +">
+                    </div>
+                    <div class="scratch-row">
+                        <span class="scratch-label">Sign changes in f(x):</span>
+                        <input type="text" class="scratch-input" id="scratch-pos" placeholder="Count sign changes">
+                    </div>
+                    <div class="scratch-row">
+                        <span class="scratch-label">f(-x) coefficients:</span>
+                        <input type="text" class="scratch-input" id="scratch-fnegx" placeholder="Flip signs of odd powers">
+                    </div>
+                    <div class="scratch-row">
+                        <span class="scratch-label">Sign changes in f(-x):</span>
+                        <input type="text" class="scratch-input" id="scratch-neg" placeholder="Count sign changes">
+                    </div>
+                </div>
+                <div class="final-answer" id="final-section" style="display: none;">
+                    <h4>Your Final Answer</h4>
+                    <div class="input-group">
+                        <label>Possible positive roots:</label>
+                        <input type="text" id="pos-answer" placeholder="e.g., 2 or 0" style="width: 150px;">
+                    </div>
+                    <div class="input-group">
+                        <label>Possible negative roots:</label>
+                        <input type="text" id="neg-answer" placeholder="e.g., 1" style="width: 150px;">
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <button class="btn btn-primary" onclick="checkDoAnswer()">Check</button>
+                    </div>
+                    <div class="feedback" id="do-feedback"></div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-success" onclick="newDoProblem()">New Problem</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            if (tabId === 'see') initExamples();
+            if (tabId === 'practice') initPractice();
+        }
+        const examples = [
+            {
+                problem: "f(x) = x⁴ - 3x³ + 2x² - x + 5",
+                steps: [
+                    { title: "Write the signs of f(x)", content: "Coefficients: <span class='sign-positive'>+1</span>, <span class='sign-negative'>-3</span>, <span class='sign-positive'>+2</span>, <span class='sign-negative'>-1</span>, <span class='sign-positive'>+5</span>" },
+                    { title: "Count sign changes in f(x)", content: "+ to - (1), - to + (2), + to - (3), - to + (4)<br><span class='highlight'>4 sign changes</span> → 4, 2, or 0 positive real roots" },
+                    { title: "Find f(-x)", content: "f(-x) = (-x)⁴ - 3(-x)³ + 2(-x)² - (-x) + 5<br>= x⁴ + 3x³ + 2x² + x + 5<br>Signs: <span class='sign-positive'>+ + + + +</span>" },
+                    { title: "Count sign changes in f(-x)", content: "<span class='highlight'>0 sign changes</span> → 0 negative real roots" }
+                ]
+            },
+            {
+                problem: "f(x) = 2x³ + x² - 5x - 3",
+                steps: [
+                    { title: "Write the signs of f(x)", content: "Coefficients: <span class='sign-positive'>+2</span>, <span class='sign-positive'>+1</span>, <span class='sign-negative'>-5</span>, <span class='sign-negative'>-3</span>" },
+                    { title: "Count sign changes in f(x)", content: "+ to + (no change), + to - (1), - to - (no change)<br><span class='highlight'>1 sign change</span> → exactly 1 positive real root" },
+                    { title: "Find f(-x)", content: "f(-x) = 2(-x)³ + (-x)² - 5(-x) - 3<br>= -2x³ + x² + 5x - 3<br>Signs: <span class='sign-negative'>-</span> <span class='sign-positive'>+</span> <span class='sign-positive'>+</span> <span class='sign-negative'>-</span>" },
+                    { title: "Count sign changes in f(-x)", content: "- to + (1), + to + (no), + to - (2)<br><span class='highlight'>2 sign changes</span> → 2 or 0 negative real roots" }
+                ]
+            },
+            {
+                problem: "f(x) = x⁵ - x⁴ + x³ - x² + x - 1",
+                steps: [
+                    { title: "Write the signs of f(x)", content: "All alternating: <span class='sign-positive'>+</span> <span class='sign-negative'>-</span> <span class='sign-positive'>+</span> <span class='sign-negative'>-</span> <span class='sign-positive'>+</span> <span class='sign-negative'>-</span>" },
+                    { title: "Count sign changes in f(x)", content: "Every consecutive pair changes sign!<br><span class='highlight'>5 sign changes</span> → 5, 3, or 1 positive real roots" },
+                    { title: "Find f(-x)", content: "f(-x) = -x⁵ - x⁴ - x³ - x² - x - 1<br>Signs: All <span class='sign-negative'>negative</span>" },
+                    { title: "Count sign changes in f(-x)", content: "<span class='highlight'>0 sign changes</span> → 0 negative real roots<br><br>Since degree 5 must have at least 1 real root, we have 5, 3, or 1 positive roots." }
+                ]
+            }
+        ];
+        let currentExample = 0, currentStep = 0;
+        function initExamples() { currentExample = 0; currentStep = 0; loadExample(); }
+        function loadExample() {
+            const ex = examples[currentExample];
+            document.getElementById('example-num').textContent = currentExample + 1;
+            document.getElementById('example-content').innerHTML = `<h4 style="color:#7c3aed">Problem:</h4><p style="font-size:1.2em;margin:15px 0;font-family:'Times New Roman',serif">${ex.problem}</p>`;
+            document.getElementById('total-steps').textContent = ex.steps.length;
+            currentStep = 0; loadStep(); updateExampleNav();
+        }
+        function loadStep() {
+            const step = examples[currentExample].steps[currentStep];
+            document.getElementById('step-num').textContent = currentStep + 1;
+            document.getElementById('step-content').innerHTML = `<p><span class="step-number">${currentStep+1}</span><strong>${step.title}</strong></p><p style="margin:10px 0 0 40px">${step.content}</p>`;
+            updateStepNav();
+        }
+        function changeExample(dir) { currentExample += dir; loadExample(); }
+        function changeStep(dir) { currentStep += dir; loadStep(); }
+        function updateExampleNav() {
+            document.getElementById('prev-example').disabled = currentExample === 0;
+            document.getElementById('next-example').disabled = currentExample === examples.length - 1;
+        }
+        function updateStepNav() {
+            document.getElementById('prev-step').disabled = currentStep === 0;
+            document.getElementById('next-step').disabled = currentStep === examples[currentExample].steps.length - 1;
+        }
+        const practiceProblems = [
+            { poly: "x³ + 2x² - x - 2", posChanges: 1, negChanges: 2, posRoots: "1", negRoots: "2 or 0" },
+            { poly: "x⁴ - 5x² + 4", posChanges: 2, negChanges: 2, posRoots: "2 or 0", negRoots: "2 or 0" },
+            { poly: "2x³ - 3x² + 4x - 1", posChanges: 3, negChanges: 0, posRoots: "3 or 1", negRoots: "0" },
+            { poly: "x⁵ + x³ + x", posChanges: 0, negChanges: 0, posRoots: "0", negRoots: "0" },
+            { poly: "x⁴ + 2x³ - 3x² - 4x + 4", posChanges: 2, negChanges: 2, posRoots: "2 or 0", negRoots: "2 or 0" }
+        ];
+        let practiceIndex = 0, practiceScore = 0, practiceAnswered = new Set();
+        function initPractice() { practiceIndex = 0; practiceScore = 0; practiceAnswered.clear(); loadPracticeProblem(); updatePracticeScore(); }
+        function loadPracticeProblem() {
+            const p = practiceProblems[practiceIndex];
+            document.getElementById('practice-problem').innerHTML = `
+                <h4 style="color:#7c3aed">Problem ${practiceIndex+1} of ${practiceProblems.length}</h4>
+                <div class="problem-display">f(x) = ${p.poly}</div>
+                <div class="input-group">
+                    <label>Sign changes in f(x):</label>
+                    <input type="number" id="prac-pos-changes" min="0" max="10" style="width:80px">
+                </div>
+                <div class="input-group">
+                    <label>Possible positive real roots:</label>
+                    <input type="text" id="prac-pos-roots" placeholder="e.g., 2 or 0" style="width:150px">
+                </div>
+                <div style="margin-top:15px">
+                    <button class="btn btn-primary" onclick="checkPractice()">Check</button>
+                    <button class="btn btn-hint" onclick="document.getElementById('practice-hint').classList.add('show')">Hint</button>
+                </div>
+                <div class="hint-box" id="practice-hint">Count how many times the sign changes between consecutive terms. Remember: subtract by 2 for each possibility.</div>
+                <div class="feedback" id="practice-feedback"></div>
+                ${practiceIndex < practiceProblems.length-1 ? '<button class="btn btn-success" id="next-practice" style="display:none;margin-top:15px" onclick="nextPractice()">Next →</button>' : ''}`;
+        }
+        function checkPractice() {
+            const p = practiceProblems[practiceIndex];
+            const changes = parseInt(document.getElementById('prac-pos-changes').value);
+            const roots = document.getElementById('prac-pos-roots').value.replace(/\s/g,'').toLowerCase();
+            const feedback = document.getElementById('practice-feedback');
+            const correctRoots = p.posRoots.replace(/\s/g,'').toLowerCase();
+            if (changes === p.posChanges && (roots === correctRoots || roots.includes(String(p.posChanges)))) {
+                feedback.className = 'feedback show correct';
+                feedback.textContent = `Correct! ${p.posChanges} sign changes means ${p.posRoots} positive real roots.`;
+                if (!practiceAnswered.has(practiceIndex)) { practiceScore++; practiceAnswered.add(practiceIndex); updatePracticeScore(); }
+                const btn = document.getElementById('next-practice'); if(btn) btn.style.display = 'inline-block';
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.textContent = `Not quite. There are ${p.posChanges} sign changes, so ${p.posRoots} positive real roots.`;
+            }
+        }
+        function nextPractice() { practiceIndex++; loadPracticeProblem(); }
+        function updatePracticeScore() {
+            document.getElementById('practice-score').textContent = practiceScore;
+            document.getElementById('practice-total').textContent = practiceProblems.length;
+            document.getElementById('practice-progress').style.width = (practiceScore/practiceProblems.length*100)+'%';
+        }
+        const doProblems = {
+            easy: [
+                { poly: "x² + 3x - 4", posRoots: "1", negRoots: "1" },
+                { poly: "x³ - 4x", posRoots: "1", negRoots: "1" },
+                { poly: "x² - 5x + 6", posRoots: "2 or 0", negRoots: "0" }
+            ],
+            medium: [
+                { poly: "x⁴ - x³ - 7x² + x + 6", posRoots: "2 or 0", negRoots: "2 or 0" },
+                { poly: "2x³ + x² - 5x + 2", posRoots: "2 or 0", negRoots: "1" },
+                { poly: "x⁴ + 3x³ - x² - 3x", posRoots: "1", negRoots: "1" }
+            ],
+            hard: [
+                { poly: "x⁵ - 2x⁴ + x³ - x² + 2x - 1", posRoots: "5, 3, or 1", negRoots: "0" },
+                { poly: "x⁶ - x⁵ + x⁴ - x³ + x² - x + 1", posRoots: "6, 4, 2, or 0", negRoots: "0" },
+                { poly: "x⁴ - 6x³ + 11x² - 6x", posRoots: "3 or 1", negRoots: "0" }
+            ]
+        };
+        let difficulty = 'easy', doScore = 0, doTotal = 0, currentDo = null;
+        function setDifficulty(level) {
+            difficulty = level;
+            document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+        function newDoProblem() {
+            const probs = doProblems[difficulty];
+            currentDo = probs[Math.floor(Math.random()*probs.length)];
+            document.getElementById('scratch-area').style.display = 'block';
+            document.getElementById('final-section').style.display = 'block';
+            document.getElementById('do-problem').innerHTML = `
+                <h4 style="color:#7c3aed">Apply Descartes' Rule</h4>
+                <div class="problem-display">f(x) = ${currentDo.poly}</div>
+                <p style="color:#666">Find the possible number of positive and negative real roots.</p>`;
+            document.getElementById('pos-answer').value = '';
+            document.getElementById('neg-answer').value = '';
+            document.getElementById('do-feedback').className = 'feedback';
+        }
+        function checkDoAnswer() {
+            const posAns = document.getElementById('pos-answer').value.replace(/\s/g,'').toLowerCase();
+            const negAns = document.getElementById('neg-answer').value.replace(/\s/g,'').toLowerCase();
+            const feedback = document.getElementById('do-feedback');
+            const correctPos = currentDo.posRoots.replace(/\s/g,'').toLowerCase();
+            const correctNeg = currentDo.negRoots.replace(/\s/g,'').toLowerCase();
+            const posCorrect = posAns === correctPos || posAns.includes(correctPos) || correctPos.includes(posAns);
+            const negCorrect = negAns === correctNeg || negAns.includes(correctNeg) || correctNeg.includes(negAns);
+            doTotal++;
+            if (posCorrect && negCorrect) {
+                doScore++;
+                feedback.className = 'feedback show correct';
+                feedback.textContent = 'Correct! Great job applying Descartes\' Rule!';
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.textContent = `Not quite. Positive roots: ${currentDo.posRoots}. Negative roots: ${currentDo.negRoots}.`;
+            }
+            updateDoScore();
+        }
+        function updateDoScore() {
+            document.getElementById('do-score').textContent = doScore;
+            document.getElementById('do-total').textContent = doTotal;
+            document.getElementById('do-progress').style.width = (doTotal > 0 ? doScore/doTotal*100 : 0)+'%';
+        }
+        document.addEventListener('DOMContentLoaded', initExamples);
+    </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Section 4.7: Transformations of Polynomial Functions</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            margin-bottom: 30px;
+        }
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            color: #ea580c;
+            text-decoration: none;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        .back-link:hover { transform: translateX(-5px); }
+        .back-link::before { content: "←"; margin-right: 8px; }
+        h1 { color: #2d3748; margin-bottom: 15px; font-size: 2.5em; }
+        .section-intro { color: #4a5568; font-size: 1.1em; line-height: 1.8; margin-bottom: 20px; }
+        .learning-path {
+            background: linear-gradient(135deg, #f9731620 0%, #ea580c20 100%);
+            padding: 20px; border-radius: 10px; margin-top: 20px; border-left: 4px solid #ea580c;
+        }
+        .learning-path h3 { color: #ea580c; margin-bottom: 10px; }
+        .learning-path ol { margin-left: 20px; color: #4a5568; line-height: 2; }
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        .topic-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .topic-card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(0,0,0,0.18); }
+        .topic-header { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 25px; }
+        .topic-header.vertical { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
+        .topic-header.horizontal { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .topic-header.reflect { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .topic-header.stretch { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
+        .topic-header.combined { background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); }
+        .topic-header h2 { font-size: 1.4em; margin-bottom: 10px; }
+        .topic-description { font-size: 0.95em; opacity: 0.95; line-height: 1.5; }
+        .topic-content { padding: 25px; }
+        .preview-tabs { display: flex; gap: 8px; margin-bottom: 15px; flex-wrap: wrap; }
+        .preview-tab {
+            padding: 6px 14px; background: #f7fafc; border: 2px solid #e2e8f0;
+            border-radius: 8px; font-size: 0.85em; font-weight: 600; color: #ea580c;
+        }
+        .topic-link {
+            display: block; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white; text-align: center; padding: 15px; border-radius: 10px;
+            text-decoration: none; font-weight: 600; font-size: 1.1em;
+        }
+        .topic-link.vertical { background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%); }
+        .topic-link.horizontal { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .topic-link.reflect { background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%); }
+        .topic-link.stretch { background: linear-gradient(135deg, #ec4899 0%, #db2777 100%); }
+        .topic-link:hover { transform: scale(1.02); }
+        .concept-list { list-style: none; margin: 15px 0; }
+        .concept-list li { padding: 6px 0; color: #4a5568; padding-left: 25px; position: relative; }
+        .concept-list li::before { content: "✓"; position: absolute; left: 0; color: #ea580c; font-weight: bold; }
+        @media (max-width: 768px) {
+            body { padding: 15px; }
+            h1 { font-size: 1.8em; }
+            .topics-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="../index.html" class="back-link">Back to Chapter 4</a>
+            <h1>Section 4.7: Transformations of Polynomial Functions</h1>
+            <p class="section-intro">
+                Learn how to transform polynomial functions by shifting, reflecting, and stretching.
+                Understanding transformations allows you to graph complex functions by starting with
+                a parent function and applying systematic changes.
+            </p>
+            <div class="learning-path">
+                <h3>Recommended Learning Path</h3>
+                <ol>
+                    <li>Start with <strong>Vertical Shifts</strong> - the simplest transformation</li>
+                    <li>Learn <strong>Horizontal Shifts</strong> - watch for the sign change!</li>
+                    <li>Master <strong>Reflections</strong> - over x-axis and y-axis</li>
+                    <li>Understand <strong>Stretches & Compressions</strong> - vertical and horizontal</li>
+                    <li>Combine everything in <strong>Combined Transformations</strong></li>
+                </ol>
+            </div>
+        </div>
+        <div class="topics-grid">
+            <div class="topic-card">
+                <div class="topic-header vertical">
+                    <h2>Vertical Shifts</h2>
+                    <p class="topic-description">Move graphs up or down by adding or subtracting constants.</p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span><span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span><span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>f(x) + k shifts up k units</li>
+                        <li>f(x) - k shifts down k units</li>
+                    </ul>
+                    <a href="Vertical_Shifts_Complete.html" class="topic-link vertical">Start Learning</a>
+                </div>
+            </div>
+            <div class="topic-card">
+                <div class="topic-header horizontal">
+                    <h2>Horizontal Shifts</h2>
+                    <p class="topic-description">Move graphs left or right - watch the sign!</p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span><span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span><span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>f(x - h) shifts right h units</li>
+                        <li>f(x + h) shifts left h units</li>
+                    </ul>
+                    <a href="Horizontal_Shifts_Complete.html" class="topic-link horizontal">Start Learning</a>
+                </div>
+            </div>
+            <div class="topic-card">
+                <div class="topic-header reflect">
+                    <h2>Reflections</h2>
+                    <p class="topic-description">Flip graphs over the x-axis or y-axis.</p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span><span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span><span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>-f(x) reflects over x-axis</li>
+                        <li>f(-x) reflects over y-axis</li>
+                    </ul>
+                    <a href="Reflections_Complete.html" class="topic-link reflect">Start Learning</a>
+                </div>
+            </div>
+            <div class="topic-card">
+                <div class="topic-header stretch">
+                    <h2>Stretches & Compressions</h2>
+                    <p class="topic-description">Make graphs taller/shorter or wider/narrower.</p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span><span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span><span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>a·f(x) vertical stretch/compress</li>
+                        <li>f(bx) horizontal stretch/compress</li>
+                    </ul>
+                    <a href="Stretches_Compressions_Complete.html" class="topic-link stretch">Start Learning</a>
+                </div>
+            </div>
+            <div class="topic-card">
+                <div class="topic-header combined">
+                    <h2>Combined Transformations</h2>
+                    <p class="topic-description">Apply multiple transformations in the correct order.</p>
+                </div>
+                <div class="topic-content">
+                    <div class="preview-tabs">
+                        <span class="preview-tab">Learn</span><span class="preview-tab">See</span>
+                        <span class="preview-tab">Practice</span><span class="preview-tab">Do</span>
+                    </div>
+                    <ul class="concept-list">
+                        <li>Order: horizontal → stretch → reflect → vertical</li>
+                        <li>Write equations from graphs</li>
+                    </ul>
+                    <a href="Combined_Transformations_Complete.html" class="topic-link">Start Learning</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

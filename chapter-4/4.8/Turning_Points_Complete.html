@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Turning Points - Interactive Practice</title>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%); min-height: 100vh; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        .header { background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%); color: white; padding: 30px; }
+        .back-link { color: white; text-decoration: none; display: inline-flex; align-items: center; margin-bottom: 15px; }
+        .back-link::before { content: "←"; margin-right: 8px; }
+        h1 { font-size: 2.5em; margin-bottom: 10px; }
+        .tabs { display: flex; background: #f7fafc; border-bottom: 3px solid #e2e8f0; }
+        .tab { flex: 1; padding: 20px; text-align: center; background: none; border: none; font-size: 1.1em; font-weight: 600; color: #718096; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -3px; }
+        .tab:hover { background: #edf2f7; color: #ec008c; }
+        .tab.active { color: #ec008c; border-bottom-color: #ec008c; background: white; }
+        .content { padding: 40px; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .concept-box { background: linear-gradient(135deg, #ec008c15 0%, #fc676715 100%); padding: 25px; border-radius: 15px; margin: 20px 0; border-left: 5px solid #ec008c; }
+        .concept-box h3 { color: #ec008c; margin-bottom: 15px; }
+        .concept-box p, .concept-box ul { color: #4a5568; line-height: 1.8; }
+        .formula-box { background: white; padding: 20px; border-radius: 10px; margin: 15px 0; text-align: center; font-size: 1.2em; font-weight: 600; border: 2px solid #ec008c; }
+        .graph-container { height: 350px; margin: 20px 0; border: 2px solid #e2e8f0; border-radius: 10px; }
+        .example-box { background: #f7fafc; padding: 25px; border-radius: 15px; margin: 20px 0; border: 2px solid #e2e8f0; }
+        .nav-btn { padding: 8px 20px; background: #ec008c; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+        .nav-btn:hover:not(:disabled) { background: #d6006e; }
+        .nav-btn:disabled { background: #cbd5e0; cursor: not-allowed; }
+        .problem-box { background: #fdf2f8; padding: 25px; border-radius: 15px; margin: 20px 0; }
+        .problem-display { background: white; padding: 20px; border-radius: 10px; text-align: center; margin: 15px 0; font-size: 1.3em; border: 2px solid #ec008c; }
+        .input-group { display: flex; gap: 10px; align-items: center; margin: 15px 0; flex-wrap: wrap; }
+        input[type="text"], input[type="number"] { padding: 12px 15px; border: 2px solid #d1d5db; border-radius: 8px; font-size: 1.1em; width: 100px; }
+        input:focus { border-color: #ec008c; outline: none; }
+        input.correct { border-color: #10b981; background: #d1fae5; }
+        input.incorrect { border-color: #ef4444; background: #fee2e2; }
+        .btn { padding: 12px 24px; border: none; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; }
+        .btn-primary { background: #ec008c; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .feedback { padding: 15px; border-radius: 10px; margin: 15px 0; display: none; }
+        .feedback.show { display: block; }
+        .feedback.correct { background: #d1fae5; color: #065f46; }
+        .feedback.incorrect { background: #fee2e2; color: #991b1b; }
+        .score-display { background: linear-gradient(135deg, #ec008c 0%, #fc6767 100%); padding: 20px; border-radius: 15px; color: white; text-align: center; margin: 20px 0; }
+        .score-numbers { font-size: 2em; font-weight: bold; }
+        .progress-bar { height: 10px; background: rgba(255,255,255,0.3); border-radius: 5px; margin-top: 15px; }
+        .progress-fill { height: 100%; background: white; border-radius: 5px; transition: width 0.5s; }
+        .difficulty-selector { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+        .diff-btn { padding: 10px 25px; border: 2px solid #e5e7eb; background: white; border-radius: 25px; cursor: pointer; font-weight: 600; }
+        .diff-btn:hover { border-color: #ec008c; }
+        .diff-btn.active { background: #ec008c; color: white; border-color: #ec008c; }
+        .flow-guide { background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #86efac; }
+        .flow-guide h3 { color: #166534; margin-bottom: 12px; }
+        .flow-steps { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+        .flow-step { padding: 8px 16px; background: white; border-radius: 20px; font-size: 0.95em; border: 1px solid #d1d5db; }
+        .flow-step.current { background: #ec008c; color: white; border-color: #ec008c; }
+        .flow-arrow { color: #9ca3af; }
+        @media (max-width: 768px) { h1 { font-size: 1.8em; } .content { padding: 20px; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <a href="./" class="back-link">Back to 4.8 Analyzing Graphs</a>
+            <h1>Turning Points</h1>
+            <p style="opacity:0.95">Learn, See, Practice, Do</p>
+        </div>
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('learn')">1 Learn</button>
+            <button class="tab" onclick="showTab('see')">2 See</button>
+            <button class="tab" onclick="showTab('practice')">3 Practice</button>
+            <button class="tab" onclick="showTab('do')">4 Do</button>
+        </div>
+        <div class="content">
+            <div id="learn" class="tab-content active">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step current">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #ec008c; margin-bottom: 20px;">Understanding Turning Points</h2>
+                <div class="concept-box">
+                    <h3>What is a Turning Point?</h3>
+                    <p>A <strong>turning point</strong> is where a polynomial function changes from increasing to decreasing (local maximum) or from decreasing to increasing (local minimum).</p>
+                </div>
+                <div class="formula-box">A polynomial of degree n has <strong>at most n - 1</strong> turning points</div>
+                <div class="graph-container" id="learn-graph"></div>
+                <div class="concept-box">
+                    <h3>Key Facts</h3>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>Local maximum</strong>: highest point in a region (hill top)</li>
+                        <li><strong>Local minimum</strong>: lowest point in a region (valley bottom)</li>
+                        <li>Degree 2: at most 1 turning point</li>
+                        <li>Degree 3: at most 2 turning points</li>
+                        <li>Degree 4: at most 3 turning points</li>
+                    </ul>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('see')">Continue to See →</button>
+                </div>
+            </div>
+            <div id="see" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #ec008c; margin-bottom: 20px;">Step-by-Step Examples</h2>
+                <div class="example-box">
+                    <div id="example-content"></div>
+                    <div class="graph-container" id="example-graph"></div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="nav-btn" id="prev-example" onclick="changeExample(-1)" disabled>← Prev</button>
+                        <span style="margin: 0 15px; color: #ec008c;">Example <span id="example-num">1</span>/3</span>
+                        <button class="nav-btn" id="next-example" onclick="changeExample(1)">Next →</button>
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('practice')">Continue to Practice →</button>
+                </div>
+            </div>
+            <div id="practice" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #ec008c; margin-bottom: 20px;">Guided Practice</h2>
+                <div class="score-display">
+                    <h3>Your Progress</h3>
+                    <div class="score-numbers"><span id="practice-score">0</span> / <span id="practice-total">5</span></div>
+                    <div class="progress-bar"><div class="progress-fill" id="practice-progress" style="width: 0%"></div></div>
+                </div>
+                <div class="problem-box" id="practice-problem"></div>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-primary" onclick="showTab('do')">Continue to Do →</button>
+                </div>
+            </div>
+            <div id="do" class="tab-content">
+                <div class="flow-guide">
+                    <h3>Your Learning Path</h3>
+                    <div class="flow-steps">
+                        <span class="flow-step">1. Learn</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">2. See</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step">3. Practice</span>
+                        <span class="flow-arrow">→</span>
+                        <span class="flow-step current">4. Do</span>
+                    </div>
+                </div>
+                <h2 style="color: #ec008c; margin-bottom: 20px;">Independent Practice</h2>
+                <div class="difficulty-selector">
+                    <button class="diff-btn active" onclick="setDifficulty('easy')">Easy</button>
+                    <button class="diff-btn" onclick="setDifficulty('medium')">Medium</button>
+                    <button class="diff-btn" onclick="setDifficulty('hard')">Hard</button>
+                </div>
+                <div class="score-display">
+                    <h3>Your Score</h3>
+                    <div class="score-numbers"><span id="do-score">0</span> / <span id="do-total">0</span></div>
+                    <div class="progress-bar"><div class="progress-fill" id="do-progress" style="width: 0%"></div></div>
+                </div>
+                <div class="problem-box" id="do-problem">
+                    <p style="text-align: center; color: #ec008c; font-weight: 600;">Click "New Problem" to begin!</p>
+                </div>
+                <div id="do-answer-section" style="display: none;">
+                    <div class="input-group">
+                        <label style="font-weight:600">Maximum turning points:</label>
+                        <input type="number" id="do-answer" min="0" max="20" onkeypress="if(event.key==='Enter')checkDoAnswer()">
+                        <button class="btn btn-primary" onclick="checkDoAnswer()">Check</button>
+                    </div>
+                    <div class="feedback" id="do-feedback"></div>
+                </div>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-success" onclick="newDoProblem()">New Problem</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+            if (tabId === 'learn') drawLearnGraph();
+            if (tabId === 'see') { initExamples(); }
+            if (tabId === 'practice') initPractice();
+        }
+        function drawLearnGraph() {
+            const x = [], y = [];
+            for (let i = -3; i <= 3; i += 0.1) {
+                x.push(i);
+                y.push(i*i*i - 3*i);
+            }
+            Plotly.newPlot('learn-graph', [{
+                x, y, name: 'f(x) = x³ - 3x', line: { color: '#ec008c', width: 3 },
+                mode: 'lines'
+            }], {
+                title: 'Cubic with 2 Turning Points',
+                shapes: [
+                    { type: 'circle', x0: -0.9, x1: -1.1, y0: 1.8, y1: 2.2, fillcolor: '#10b981', line: { color: '#10b981' } },
+                    { type: 'circle', x0: 0.9, x1: 1.1, y0: -2.2, y1: -1.8, fillcolor: '#ef4444', line: { color: '#ef4444' } }
+                ],
+                annotations: [
+                    { x: -1, y: 2.5, text: 'Local max', showarrow: false },
+                    { x: 1, y: -2.5, text: 'Local min', showarrow: false }
+                ],
+                margin: { t: 40 }
+            }, { responsive: true });
+        }
+        const examples = [
+            { poly: 'x² + 2x + 1', degree: 2, maxTP: 1, desc: 'Quadratic - at most 1 turning point' },
+            { poly: 'x³ - 3x', degree: 3, maxTP: 2, desc: 'Cubic - at most 2 turning points' },
+            { poly: 'x⁴ - 4x² + 3', degree: 4, maxTP: 3, desc: 'Quartic - at most 3 turning points' }
+        ];
+        let currentExample = 0;
+        function initExamples() { currentExample = 0; loadExample(); }
+        function loadExample() {
+            const ex = examples[currentExample];
+            document.getElementById('example-num').textContent = currentExample + 1;
+            document.getElementById('example-content').innerHTML = `
+                <h4 style="color:#ec008c">${ex.desc}</h4>
+                <p>f(x) = ${ex.poly}</p>
+                <p>Degree: ${ex.degree} → Maximum turning points: <strong>${ex.maxTP}</strong></p>`;
+            drawExampleGraph();
+            updateExampleNav();
+        }
+        function drawExampleGraph() {
+            const x = [], y = [];
+            for (let i = -3; i <= 3; i += 0.1) {
+                x.push(i);
+                if (currentExample === 0) y.push((i+1)*(i+1));
+                else if (currentExample === 1) y.push(i*i*i - 3*i);
+                else y.push(i*i*i*i - 4*i*i + 3);
+            }
+            Plotly.newPlot('example-graph', [{ x, y, line: { color: '#ec008c', width: 3 } }], { margin: { t: 20 } }, { responsive: true });
+        }
+        function changeExample(dir) { currentExample += dir; loadExample(); }
+        function updateExampleNav() {
+            document.getElementById('prev-example').disabled = currentExample === 0;
+            document.getElementById('next-example').disabled = currentExample === examples.length - 1;
+        }
+        const practiceProblems = [
+            { poly: 'x³ + 2x² - x + 1', degree: 3, maxTP: 2 },
+            { poly: 'x⁵ - 3x³ + x', degree: 5, maxTP: 4 },
+            { poly: 'x² - 4x + 4', degree: 2, maxTP: 1 },
+            { poly: 'x⁴ + x³ - x', degree: 4, maxTP: 3 },
+            { poly: 'x⁶ - 2x⁴ + x²', degree: 6, maxTP: 5 }
+        ];
+        let practiceIndex = 0, practiceScore = 0, practiceAnswered = new Set();
+        function initPractice() { practiceIndex = 0; practiceScore = 0; practiceAnswered.clear(); loadPracticeProblem(); updatePracticeScore(); }
+        function loadPracticeProblem() {
+            const p = practiceProblems[practiceIndex];
+            document.getElementById('practice-problem').innerHTML = `
+                <h4 style="color:#ec008c">Problem ${practiceIndex+1} of ${practiceProblems.length}</h4>
+                <div class="problem-display">f(x) = ${p.poly}</div>
+                <p style="margin:15px 0">What is the maximum number of turning points?</p>
+                <div class="input-group">
+                    <input type="number" id="prac-input" min="0" max="20" onkeypress="if(event.key==='Enter')checkPractice()">
+                    <button class="btn btn-primary" onclick="checkPractice()">Check</button>
+                </div>
+                <div class="feedback" id="prac-feedback"></div>
+                ${practiceIndex < practiceProblems.length-1 ? '<button class="btn btn-success" id="next-prac" style="display:none;margin-top:15px" onclick="nextPractice()">Next →</button>' : ''}`;
+        }
+        function checkPractice() {
+            const p = practiceProblems[practiceIndex];
+            const user = parseInt(document.getElementById('prac-input').value);
+            const feedback = document.getElementById('prac-feedback');
+            if (user === p.maxTP) {
+                feedback.className = 'feedback show correct';
+                feedback.textContent = `Correct! Degree ${p.degree} means at most ${p.maxTP} turning points.`;
+                if (!practiceAnswered.has(practiceIndex)) { practiceScore++; practiceAnswered.add(practiceIndex); updatePracticeScore(); }
+                const btn = document.getElementById('next-prac'); if(btn) btn.style.display = 'inline-block';
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.textContent = `Not quite. Degree ${p.degree} - 1 = ${p.maxTP} turning points max.`;
+            }
+        }
+        function nextPractice() { practiceIndex++; loadPracticeProblem(); }
+        function updatePracticeScore() {
+            document.getElementById('practice-score').textContent = practiceScore;
+            document.getElementById('practice-total').textContent = practiceProblems.length;
+            document.getElementById('practice-progress').style.width = (practiceScore/practiceProblems.length*100)+'%';
+        }
+        const doProblems = {
+            easy: [{ degree: 2 }, { degree: 3 }, { degree: 4 }],
+            medium: [{ degree: 5 }, { degree: 6 }, { degree: 7 }],
+            hard: [{ degree: 8 }, { degree: 10 }, { degree: 12 }]
+        };
+        let difficulty = 'easy', doScore = 0, doTotal = 0, currentDo = null;
+        function setDifficulty(level) { difficulty = level; document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active')); event.target.classList.add('active'); }
+        function newDoProblem() {
+            const probs = doProblems[difficulty];
+            currentDo = probs[Math.floor(Math.random()*probs.length)];
+            document.getElementById('do-problem').innerHTML = `<div class="problem-display">A polynomial of degree ${currentDo.degree}</div>`;
+            document.getElementById('do-answer-section').style.display = 'block';
+            document.getElementById('do-answer').value = '';
+            document.getElementById('do-feedback').className = 'feedback';
+        }
+        function checkDoAnswer() {
+            const user = parseInt(document.getElementById('do-answer').value);
+            const correct = currentDo.degree - 1;
+            const feedback = document.getElementById('do-feedback');
+            doTotal++;
+            if (user === correct) {
+                doScore++;
+                feedback.className = 'feedback show correct';
+                feedback.textContent = `Correct! Degree ${currentDo.degree} - 1 = ${correct} turning points max.`;
+            } else {
+                feedback.className = 'feedback show incorrect';
+                feedback.textContent = `Not quite. The answer is ${correct} (degree - 1).`;
+            }
+            updateDoScore();
+        }
+        function updateDoScore() {
+            document.getElementById('do-score').textContent = doScore;
+            document.getElementById('do-total').textContent = doTotal;
+            document.getElementById('do-progress').style.width = (doTotal > 0 ? doScore/doTotal*100 : 0)+'%';
+        }
+        document.addEventListener('DOMContentLoaded', drawLearnGraph);
+    </script>
+</body>
+</html>
